@@ -1,0 +1,26 @@
+# Smart Contract init
+Service Will initialize Streamrs Smart Contracts
+
+Parity Default Private Key 
+* 0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7
+
+Private Keys:
+* 0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0,
+* 0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb,
+* 0x4059de411f15511a85ce332e7a428f36492ab4e87c7830099dadbf130f1896ae,
+* 0x633a182fb8975f22aaad41e9008cb49a432e9fdfef37f151e9e7c54e96258ef9,
+* 0x957a8212980a9a39bf7c03dcbeea3c722d66f2b359c669feceb0e3ba8209a297,
+* 0xfe1d528b7e204a5bdfb7668a1ed3adfee45b4b96960a175c9ef0ad16dd58d728,
+* 0xd7609ae3a29375768fac8bc0f8c2f6ac81c5f2ffca2b981e6cf15460f01efe14,
+* 0xb1abdb742d3924a45b0a54f780f0f21b9d9283b231a0a0b35ce5e455fa5375e7,
+* 0x2cd9855d17e01ce041953829398af7e48b24ece04ff9d0e183414de54dc52285,
+* 0x2c326a4c139eced39709b235fffa1fde7c252f3f7b505103f7b251586c35d543,
+
+
+Generates the following Ethereum addresses:
+* DATAcoin address: 0x731a10897d267e19B34503aD902d0A29173Ba4B1
+* Marketplace2 address: 0x62d69f6867A0A084C6d313943dC22023Bc263691
+* OTHERcoin address: 0xd5F051401ca478B34C80D0B5A119e437Dc6D9df5
+* UniswapAdaptor address: 0x3f85D0b6119B38b7E6B119F7550290fec4BE0e3c
+* UniswapFactory address: 0xee35211C4D9126D520bBfeaf3cFee5FE7B86F221
+
