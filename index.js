@@ -24,8 +24,8 @@ const log = process.env.QUIET ? (() => {
 }) : console.log // eslint-disable-line no-console
 const futureTime = 4449513600
 
-// Parity Default Private Key from parity
-defaultPrivateKey = "0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7"
+// Default Private Key
+defaultPrivateKey = "0x3DF8095DFBAE93D8C7F1143B217A483D57A7F745E2542425DFE2FA25264CB2E8"
 
 const privateKeys = [
     "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0",
@@ -58,7 +58,7 @@ async function smartContractInitialization() {
 
     // wait until ganache is up and ethers.js ready
     const web3 = new Web3(chainURL)
-    let provider = new Web3Provider(web3.currentProvider);
+    let provider = await new Web3Provider(web3.currentProvider);
     try {
         await provider.getNetwork()
     } catch (e) {
@@ -75,7 +75,7 @@ async function smartContractInitialization() {
     const wallet = new Wallet(defaultPrivateKey, provider)
 
     log(`Deploying test DATAcoin from ${wallet.address}`)
-    const tokenDeployer = new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
+    const tokenDeployer = await new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
     const tokenDeployTx = await tokenDeployer.deploy("Test DATAcoin", "\ud83e\udd84")
     const token = await tokenDeployTx.deployed()
     log(`DATACOIN ERC20 deployed at ${token.address}`)
