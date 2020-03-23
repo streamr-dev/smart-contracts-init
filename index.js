@@ -25,7 +25,7 @@ const log = process.env.QUIET ? (() => {
 const futureTime = 4449513600
 
 // Default Private Key
-defaultPrivateKey = "0x3DF8095DFBAE93D8C7F1143B217A483D57A7F745E2542425DFE2FA25264CB2E8"
+defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
 
 const privateKeys = [
     "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0",
@@ -43,18 +43,13 @@ const privateKeys = [
 async function getProducts() {
     return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
 }
-
+function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms)
+    })
+}
 
 async function smartContractInitialization() {
-    log("Getting products from E&E")
-    // this get the products and also checks if EE is up
-    let products
-    try {
-        products = await getProducts()
-    } catch (e) {
-        console.error(e)
-        process.exit(1)
-    }
 
     // wait until ganache is up and ethers.js ready
     const web3 = new Web3(chainURL)
@@ -66,12 +61,6 @@ async function smartContractInitialization() {
         process.exit(1)
     }
 
-    // Create Accounts based on Private Keys
-    for (const privateKey of privateKeys) {
-        web3.eth.accounts.privateKeyToAccount(privateKey);
-    }
-    // All other operations done on the list should include the default key
-    privateKeys.push(defaultPrivateKey)
     const wallet = new Wallet(defaultPrivateKey, provider)
 
     log(`Deploying test DATAcoin from ${wallet.address}`)
@@ -160,6 +149,22 @@ async function smartContractInitialization() {
     log(`1 DATAtoken buys ${formatEther(rate)} ETH`)
     rate = await othertokenExchange.getTokenToEthInputPrice(ethwei)
     log(`1 OTHERtoken buys ${formatEther(rate)} ETH`)
+
+
+
+    const EEwaitms = 60000
+    log("Getting products from E&E")
+    log(`waiting ${EEwaitms}ms for E&E to start`)
+    await sleep(EEwaitms)
+    // this get the products and also checks if EE is up
+    let products
+    try {
+        products = await getProducts()
+    } catch (e) {
+        console.error(e)
+        process.exit(1)
+    }
+
 
     log(`Adding ${products.length} products to Marketplace`)
     for (const p of products) {
