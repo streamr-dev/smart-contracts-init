@@ -23,4 +23,5 @@ Generates the following Ethereum addresses:
 * OTHERcoin address: 0xd5F051401ca478B34C80D0B5A119e437Dc6D9df5
 * UniswapAdaptor address: 0x3f85D0b6119B38b7E6B119F7550290fec4BE0e3c
 * UniswapFactory address: 0xee35211C4D9126D520bBfeaf3cFee5FE7B86F221
+* SimpleTrackerRegistry: 0xBFCF120a8fD17670536f1B27D9737B775b2FD4CF
 

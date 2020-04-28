@@ -1,5 +1,5 @@
 {
-  "name": "streamr-parity",
+  "name": "streamr-smart-contracts-init",
   "version": "1.0.0",
   "description": "Locally run Ethereum client for developing the Streamr services",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ethers": "^4.0.33",
+    "ethers": "^4.0.47",
     "node-fetch": "^2.6.0",
     "web3": "1.2.4"
   }
