@@ -64,6 +64,20 @@ async function smartContractInitialization() {
 
     const wallet = new Wallet(defaultPrivateKey, provider)
 
+    log(`Deploying SimpleTrackerRegistry contract from ${wallet.address}`)
+    const strDeploy = new ContractFactory(SimpleTrackerRegistry.abi, SimpleTrackerRegistry.bytecode, wallet)
+    const strDeployTx = await strDeploy.deploy(wallet.address, false, {gasLimit: 6000000} )
+    const str = await strDeployTx.deployed()
+    log(`SimpleTrackerRegistry deployed at ${str.address}`)
+    let tx = await str.createOrUpdateNode('0xb9e7cEBF7b03AE26458E32a059488386b05798e8', 'ws://10.200.10.1:30301')
+    await tx.wait()
+    tx = await str.createOrUpdateNode('0x0540A3e144cdD81F402e7772C76a5808B71d2d30', 'ws://10.200.10.1:30302')
+    await tx.wait()
+    tx = await str.createOrUpdateNode('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2', 'ws://10.200.10.1:30303')
+    await tx.wait()
+    let nodes = await str.getNodes();
+    log(`TrackerRegistry nodes : ${JSON.stringify(nodes)}`)
+
     log(`Deploying test DATAcoin from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
     const tokenDeployTx = await tokenDeployer.deploy("Test DATAcoin", "\ud83e\udd84")
@@ -114,7 +128,7 @@ async function smartContractInitialization() {
     }
 
     log("Init Uniswap factory")
-    let tx = await uniswapFactory.initializeFactory(uniswapExchangeTemplate.address)
+    tx = await uniswapFactory.initializeFactory(uniswapExchangeTemplate.address)
     await tx.wait()
     log(`Init Uniswap exchange for DATAcoin token ${token.address}`)
     tx = await uniswapFactory.createExchange(token.address, {gasLimit: 6000000})
@@ -151,20 +165,6 @@ async function smartContractInitialization() {
     log(`1 DATAtoken buys ${formatEther(rate)} ETH`)
     rate = await othertokenExchange.getTokenToEthInputPrice(ethwei)
     log(`1 OTHERtoken buys ${formatEther(rate)} ETH`)
-
-    log(`Deploying SimpleTrackerRegistry contract from ${wallet.address}`)
-    const strDeploy = new ContractFactory(SimpleTrackerRegistry.abi, SimpleTrackerRegistry.bytecode, wallet)
-    const strDeployTx = await strDeploy.deploy(wallet.address, false, {gasLimit: 6000000} )
-    const str = await strDeployTx.deployed()
-    log(`SimpleTrackerRegistry deployed at ${str.address}`)
-    tx = await str.createOrUpdateNode('0xb9e7cEBF7b03AE26458E32a059488386b05798e8', 'ws://10.200.10.1:30301')
-    await tx.wait()
-    tx = await str.createOrUpdateNode('0x0540A3e144cdD81F402e7772C76a5808B71d2d30', 'ws://10.200.10.1:30302')
-    await tx.wait()
-    tx = await str.createOrUpdateNode('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2', 'ws://10.200.10.1:30303')
-    await tx.wait()
-    let nodes = await str.getNodes();
-    log(`TrackerRegistry nodes : ${JSON.stringify(nodes)}`)
 
     const EEwaitms = 60000
     log("Getting products from E&E")
