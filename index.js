@@ -129,12 +129,13 @@ async function smartContractInitialization() {
 
     log("Init Uniswap factory")
     let tx = await uniswapFactory.initializeFactory(uniswapExchangeTemplate.address)
-    await tx.wait()
+    //await tx.wait()
     log(`Init Uniswap exchange for DATAcoin token ${token.address}`)
     tx = await uniswapFactory.createExchange(token.address, {gasLimit: 6000000})
-    await tx.wait()
+    //await tx.wait()
     log(`Init Uniswap exchange for OTHERcoin token ${token2.address}`)
     tx = await uniswapFactory.createExchange(token2.address, {gasLimit: 6000000})
+    // need wait here to call read methods below
     await tx.wait()
 
     let datatoken_exchange_address = await uniswapFactory.getExchange(token.address)
@@ -207,12 +208,14 @@ async function smartContractInitialization() {
         if (p.pricePerSecond == 0) {
             continue
         }
-
+        console.log(`create ${p.id}`)
         const tx = await market.createProduct(`0x${p.id}`, p.name, wallet.address, p.pricePerSecond, p.priceCurrency == "DATA" ? 0 : 1, p.minimumSubscriptionInSeconds)
-        await tx.wait(1)
+        //await tx.wait(1)
         if (p.state == "NOT_DEPLOYED") {
+            console.log(`delete ${p.id}`)
+            await tx.wait(1)
             const tx2 = await market.deleteProduct(`0x${p.id}`)
-            await tx2.wait(1)
+            //await tx2.wait(1)
         }
     }
 }
