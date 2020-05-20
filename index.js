@@ -49,6 +49,20 @@ function sleep(ms) {
         setTimeout(resolve, ms)
     })
 }
+//from https://github.com/ethers-io/ethers.js/issues/319
+class AutoNonceWallet extends Wallet {
+    _noncePromise = null;
+    sendTransaction(transaction) {
+        if (transaction.nonce == null) {
+            if (this._noncePromise == null) {
+                this._noncePromise = this.provider.getTransactionCount(this.address);
+            }
+            transaction.nonce = this._noncePromise;
+            this._noncePromise = this._noncePromise.then((nonce) => (nonce + 1))
+        }
+        return super.sendTransaction(transaction);
+    }
+}
 
 async function smartContractInitialization() {
 
@@ -62,7 +76,7 @@ async function smartContractInitialization() {
         process.exit(1)
     }
 
-    const wallet = new Wallet(defaultPrivateKey, provider)
+    const wallet = new AutoNonceWallet(defaultPrivateKey, provider)
 
     log(`Deploying test DATAcoin from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
@@ -110,7 +124,7 @@ async function smartContractInitialization() {
     for (const address of privateKeys.map(computeAddress)) {
         log("    " + address)
         const mintTx = await token.mint(address, "1000000")
-        await mintTx.wait()
+        //await mintTx.wait()
     }
 
     log("Init Uniswap factory")
@@ -137,20 +151,14 @@ async function smartContractInitialization() {
     let amt_token2 = parseEther("10000") // 1 ETH ~= 100 OTHERcoin
 
     tx = await token.approve(datatoken_exchange_address, amt_token)
-    await tx.wait()
+    //await tx.wait()
     tx = await token2.approve(othertoken_exchange_address, amt_token2)
-    await tx.wait()
+    //await tx.wait()
 
     tx = await datatokenExchange.addLiquidity(amt_token, amt_token, futureTime, {gasLimit: 6000000, value: amt_eth})
-    await tx.wait()
+    //await tx.wait()
     tx = await othertokenExchange.addLiquidity(amt_token2, amt_token2, futureTime, {gasLimit: 6000000, value: amt_eth})
-    await tx.wait()
-    log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
-    const ethwei = parseEther("1")
-    let rate = await datatokenExchange.getTokenToEthInputPrice(ethwei)
-    log(`1 DATAtoken buys ${formatEther(rate)} ETH`)
-    rate = await othertokenExchange.getTokenToEthInputPrice(ethwei)
-    log(`1 OTHERtoken buys ${formatEther(rate)} ETH`)
+    //await tx.wait()
 
     log(`Deploying SimpleTrackerRegistry contract from ${wallet.address}`)
     const strDeploy = new ContractFactory(SimpleTrackerRegistry.abi, SimpleTrackerRegistry.bytecode, wallet)
@@ -158,13 +166,26 @@ async function smartContractInitialization() {
     const str = await strDeployTx.deployed()
     log(`SimpleTrackerRegistry deployed at ${str.address}`)
     tx = await str.createOrUpdateNode('0xb9e7cEBF7b03AE26458E32a059488386b05798e8', 'ws://10.200.10.1:30301')
-    await tx.wait()
+    //await tx.wait()
     tx = await str.createOrUpdateNode('0x0540A3e144cdD81F402e7772C76a5808B71d2d30', 'ws://10.200.10.1:30302')
-    await tx.wait()
+    //await tx.wait()
     tx = await str.createOrUpdateNode('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2', 'ws://10.200.10.1:30303')
+    //block for last TX:
     await tx.wait()
+
+    //all TXs should now be confirmed:
+
     let nodes = await str.getNodes();
     log(`TrackerRegistry nodes : ${JSON.stringify(nodes)}`)
+
+    log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
+    const ethwei = parseEther("1")
+    let rate = await datatokenExchange.getTokenToEthInputPrice(ethwei)
+    log(`1 DATAtoken buys ${formatEther(rate)} ETH`)
+    rate = await othertokenExchange.getTokenToEthInputPrice(ethwei)
+    log(`1 OTHERtoken buys ${formatEther(rate)} ETH`)
+
+
 
     const EEwaitms = 60000
     log("Getting products from E&E")
