@@ -18,10 +18,9 @@ Private Keys:
 
 
 Generates the following Ethereum addresses:
-
 * DATAcoin address: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
 * Marketplace2 address: 0xF1371c0f40528406dc4f4cAf89924eA9Da49E866
-* OTHERcoin address: 0xd5F051401ca478B34C80D0B5A119e437Dc6D9df5 (not confirmed)
+* OTHERcoin address: 0x642D2B84A32A9A92FEc78CeAA9488388b3704898
 * UniswapAdaptor address: 0xE4eA76e830a659282368cA2e7E4d18C4AE52D8B3
 * UniswapFactory address: 0xd2D23b73A67208a90CBfEE1381415329954f54E2
 * SimpleTrackerRegistry: 0xBFCF120a8fD17670536f1B27D9737B775b2FD4CF
