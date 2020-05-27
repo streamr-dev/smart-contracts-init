@@ -14,7 +14,7 @@ const TokenJson = require("./TestToken.json")
 const MarketplaceJson = require("./Marketplace.json")
 const Marketplace2Json = require("./Marketplace2.json")
 const UniswapAdaptor = require("./UniswapAdaptor.json")
-const SimpleTrackerRegistry = require("./SimpleTrackerRegistry.json")
+const NodeRegistry = require("./NodeRegistry.json")
 const uniswap_exchange_abi = JSON.parse(fs.readFileSync("./abi/uniswap_exchange.json", "utf-8"))
 const uniswap_factory_abi = JSON.parse(fs.readFileSync("./abi/uniswap_factory.json", "utf-8"))
 const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.txt", "utf-8")
@@ -161,23 +161,24 @@ async function smartContractInitialization() {
     tx = await othertokenExchange.addLiquidity(amt_token2, amt_token2, futureTime, {gasLimit: 6000000, value: amt_eth})
     //await tx.wait()
 
-    log(`Deploying SimpleTrackerRegistry contract from ${wallet.address}`)
-    const strDeploy = new ContractFactory(SimpleTrackerRegistry.abi, SimpleTrackerRegistry.bytecode, wallet)
-    const strDeployTx = await strDeploy.deploy(wallet.address, false, {gasLimit: 6000000} )
+    log(`Deploying NodeRegistry contract from ${wallet.address}`)
+    var initialNodes = []
+    var initialUrls = []
+    initialNodes.push('0xb9e7cEBF7b03AE26458E32a059488386b05798e8')
+    initialUrls.push('ws://10.200.10.1:30301')
+    initialNodes.push('0x0540A3e144cdD81F402e7772C76a5808B71d2d30')
+    initialUrls.push('ws://10.200.10.1:30302')
+    initialNodes.push('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2')
+    initialUrls.push('ws://10.200.10.1:30303')
+    const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
+    const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialUrls, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
-    log(`SimpleTrackerRegistry deployed at ${str.address}`)
-    tx = await str.createOrUpdateNode('0xb9e7cEBF7b03AE26458E32a059488386b05798e8', 'ws://10.200.10.1:30301')
-    //await tx.wait()
-    tx = await str.createOrUpdateNode('0x0540A3e144cdD81F402e7772C76a5808B71d2d30', 'ws://10.200.10.1:30302')
-    //await tx.wait()
-    tx = await str.createOrUpdateNode('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2', 'ws://10.200.10.1:30303')
-    //block for last TX:
-    await tx.wait()
+    log(`NodeRegistry deployed at ${str.address}`)
 
     //all TXs should now be confirmed:
 
     let nodes = await str.getNodes();
-    log(`TrackerRegistry nodes : ${JSON.stringify(nodes)}`)
+    log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
 
     log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
     const ethwei = parseEther("1")
