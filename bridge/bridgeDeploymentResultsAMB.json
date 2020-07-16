@@ -1,10 +1,10 @@
 {
     "homeBridge": {
         "address": "0xE4eA76e830a659282368cA2e7E4d18C4AE52D8B3",
-        "deployedBlockNumber": 11
+        "deployedBlockNumber": 8
     },
     "foreignBridge": {
-        "address": "0x70Cef9625FF4c809E700894d838648736Ec3bE81",
-        "deployedBlockNumber": 85312
+        "address": "0x256D4CB67452b6b8280B2b67F040fD22f1C378f4",
+        "deployedBlockNumber": 25
     }
 }

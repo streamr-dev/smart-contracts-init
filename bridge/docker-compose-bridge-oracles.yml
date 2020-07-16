@@ -33,10 +33,10 @@ services:
     cpus: 0.1
     mem_limit: 500m
     image: poanetwork/tokenbridge-oracle:latest
-    env_file: ./oracles.env
+    env_file: 
+      - ./oracles.env
     environment: 
       - NODE_ENV=production 
-      - ORACLE_VALIDATOR_ADDRESS_PRIVATE_KEY=${ORACLE_VALIDATOR_ADDRESS_PRIVATE_KEY}
       - COMMON_HOME_BRIDGE_ADDRESS=${HOME_AMB_BRIDGE}
       - COMMON_FOREIGN_BRIDGE_ADDRESS=${FOREIGN_AMB_BRIDGE}
     restart: unless-stopped
@@ -48,7 +48,8 @@ services:
     cpus: 0.1
     mem_limit: 500m
     image: poanetwork/tokenbridge-oracle:latest
-    env_file: ./oracles.env
+    env_file:
+      - ./oracles.env
     environment: 
       - NODE_ENV=production 
       - ORACLE_VALIDATOR_ADDRESS=${ORACLE_VALIDATOR_ADDRESS}
@@ -63,7 +64,8 @@ services:
     cpus: 0.1
     mem_limit: 500m
     image: poanetwork/tokenbridge-oracle:latest
-    env_file: ./oracles.env
+    env_file:
+      - ./oracles.env
     environment: 
       - NODE_ENV=production 
       - ORACLE_VALIDATOR_ADDRESS=${ORACLE_VALIDATOR_ADDRESS}
@@ -78,10 +80,10 @@ services:
     cpus: 0.1
     mem_limit: 500m
     image: poanetwork/tokenbridge-oracle:latest
-    env_file: ./oracles.env
+    env_file:
+      - ./oracles.env
     environment: 
       - NODE_ENV=production 
-      - ORACLE_VALIDATOR_ADDRESS_PRIVATE_KEY=${ORACLE_VALIDATOR_ADDRESS_PRIVATE_KEY}
       - COMMON_HOME_BRIDGE_ADDRESS=${HOME_AMB_BRIDGE}
       - COMMON_FOREIGN_BRIDGE_ADDRESS=${FOREIGN_AMB_BRIDGE}
     restart: unless-stopped
@@ -93,10 +95,10 @@ services:
     cpus: 0.1
     mem_limit: 500m
     image: poanetwork/tokenbridge-oracle:latest
-    env_file: ./oracles.env
+    env_file:
+      - ./oracles.env
     environment: 
       - NODE_ENV=production 
-      - ORACLE_VALIDATOR_ADDRESS_PRIVATE_KEY=${ORACLE_VALIDATOR_ADDRESS_PRIVATE_KEY}
       - COMMON_HOME_BRIDGE_ADDRESS=${HOME_AMB_BRIDGE}
       - COMMON_FOREIGN_BRIDGE_ADDRESS=${FOREIGN_AMB_BRIDGE}
     restart: unless-stopped

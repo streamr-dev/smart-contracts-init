@@ -32,13 +32,13 @@ const foreign_erc_mediator = process.env.FOREIGN_ERC677_MEDIATOR
 async function deployDUFactories(){
     log(`Deploying template DU home contract from ${wallet_home.address}`)
     let deployer = new ContractFactory(DataUnionSidechain.abi, DataUnionSidechain.bytecode, wallet_home)
-    let dtx = await deployer.deploy({ gasLimit: 7900000 })
+    let dtx = await deployer.deploy({ gasLimit: 6000000 })
     let duhome = await dtx.deployed()
     console.log(`duhome template: ${duhome.address}`)
 
     log(`Deploying template DU mainnet contract from ${wallet_foreign.address}`)
     deployer = new ContractFactory(DataUnionMainnet.abi, DataUnionMainnet.bytecode, wallet_foreign)
-    dtx = await deployer.deploy({ gasLimit: 7900000 })
+    dtx = await deployer.deploy({ gasLimit: 6000000 })
     duforeign = await dtx.deployed()
     console.log(`duforeign template: ${duforeign.address}`)
 
@@ -46,7 +46,7 @@ async function deployDUFactories(){
     // constructor( address _token_mediator, address _data_union_sidechain_template) public {
     log(`Deploying sidechain DU factory contract from ${wallet_home.address}`)
     deployer = new ContractFactory(DataUnionFactorySidechain.abi, DataUnionFactorySidechain.bytecode, wallet_home)
-    dtx = await deployer.deploy(home_erc_mediator, duhome.address, { gasLimit: 7900000 })
+    dtx = await deployer.deploy(home_erc_mediator, duhome.address, { gasLimit: 6000000 })
     let factSidechain = await dtx.deployed()
     console.log(`factorySidechain: ${factSidechain.address}`)
 
@@ -60,7 +60,7 @@ async function deployDUFactories(){
     // constructor( address _token_mediator, address _data_union_sidechain_template) public {
     log(`Deploying DU mainnet factory contract from ${wallet_foreign.address}`)
     deployer = new ContractFactory(DataUnionFactoryMainnet.abi, DataUnionFactoryMainnet.bytecode, wallet_foreign)
-    dtx = await deployer.deploy(foreign_erc_mediator, duforeign.address, duhome.address, factSidechain.address, 2000000, { gasLimit: 7900000 })
+    dtx = await deployer.deploy(foreign_erc_mediator, duforeign.address, duhome.address, factSidechain.address, 2000000, { gasLimit: 6000000 })
     let factMainnet = await dtx.deployed()
     console.log(`factMainnet: ${factMainnet.address}`)
 

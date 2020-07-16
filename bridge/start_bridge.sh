@@ -7,8 +7,6 @@ AMBRESULTS="bridgeDeploymentResultsAMB.json"
 ERC677TASK="deploy_erc677"
 ERC677RESULTS="bridgeDeploymentResultsERC677.json"
 
-#$DU2_HOME=${DU2_HOME:-../}
-
 echo "1. Deploying AMB"
 #docker run --name $AMBTASK --env-file amb.env poanetwork/tokenbridge-contracts deploy.sh
 #docker cp $AMBTASK:/contracts/deploy/bridgeDeploymentResults.json $AMBRESULTS
@@ -24,9 +22,10 @@ ENV="-e HOME_AMB_BRIDGE=$HOME_AMB_BRIDGE -e FOREIGN_AMB_BRIDGE=$FOREIGN_AMB_BRID
 export HOME_ERC677_MEDIATOR=`jq -r .homeBridge.homeBridgeMediator.address < $ERC677RESULTS`
 export FOREIGN_ERC677_MEDIATOR=`jq -r .foreignBridge.foreignBridgeMediator.address < $ERC677RESULTS`
 
-echo "3. Deploying DataUnion and Factory Contracts"
+#docker rm $AMBTASK $ERC677TASK
+
+echo "3. Starting Oracles"
+docker-compose -f docker-compose-bridge-oracles.yml up -d
+
+echo "4. Deploying DataUnion and Factory Contracts"
 node ../deploy_du2_factories.js
-
-echo "4. Starting Oracles"
-docker-compose -f docker-compose-bridge-oracles.yml up
-
