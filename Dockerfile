@@ -27,7 +27,10 @@ COPY --from=builder --chown=root:root /node-$NODE_VERSION-linux-x64/ /node-$NODE
 RUN useradd -ms /bin/bash node
 RUN apt-get update && apt-get install -y docker.io docker-compose jq
 RUN usermod -a -G docker node
-USER node
+# sockets permissions dont work for user node, so I use root.
+# ANY user that can read/write to docker socket CAN ROOT THE HOST MACHINE
+# USER node
 WORKDIR /home/node
 COPY --from=builder --chown=node:node /home/node/ ./
 CMD node index.js && ./bridge/start_bridge.sh
+
