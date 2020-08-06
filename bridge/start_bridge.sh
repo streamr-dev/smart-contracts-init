@@ -24,8 +24,5 @@ export FOREIGN_ERC677_MEDIATOR=`jq -r .foreignBridge.foreignBridgeMediator.addre
 
 docker rm $AMBTASK $ERC677TASK
 
-echo "3. Starting Oracles"
-docker-compose -f docker-compose-bridge-oracles.yml up -d
-
-echo "4. Deploying DataUnion and Factory Contracts"
+echo "3. Deploying DataUnion and Factory Contracts"
 node ../deploy_du2_factories.js

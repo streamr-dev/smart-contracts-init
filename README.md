@@ -1,5 +1,11 @@
 # Smart Contract init
-Service Will initialize Streamrs Smart Contracts
+Service Will initialize Streamr's Smart Contracts
+
+smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images streamr/open-ethereum-poa-mainchain-preload1 and streamr/open-ethereum-poa-sidechain-preload1.
+
+To build images:
+./preload_parity_images.sh
+
 
 Parity Default Private Key 
 * 0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7
