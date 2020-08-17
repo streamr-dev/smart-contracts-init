@@ -4,8 +4,6 @@ This repo is used to build the parity images streamr/open-ethereum-poa-mainchain
  2. The token bridge (AMB) and mediator
  3. the DU2 factories and templates. 
  
- These images are used 
-
 smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images 
 
 To build images:
