@@ -1,10 +1,12 @@
 # Smart Contract init
-This repo is used to build the parity images for mainchain and sidechain preloaded with:
+This repo is used to build the parity images streamr/open-ethereum-poa-mainchain-preload1 and streamr/open-ethereum-poa-sidechain-preload1, which are preloaded mainchain and sidechain images for use with streamr-docker.dev. The following are setup:
  1. Streamr's smart contracts: Marketplace Uniswap Adaptor, loads products,
  2. The token bridge (AMB) and mediator
  3. the DU2 factories and templates. 
+ 
+ These images are used 
 
-smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images streamr/open-ethereum-poa-mainchain-preload1 and streamr/open-ethereum-poa-sidechain-preload1.
+smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images 
 
 To build images:
 ./preload_parity_images.sh
