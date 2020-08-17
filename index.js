@@ -19,8 +19,8 @@ const uniswap_exchange_abi = JSON.parse(fs.readFileSync("./abi/uniswap_exchange.
 const uniswap_factory_abi = JSON.parse(fs.readFileSync("./abi/uniswap_factory.json", "utf-8"))
 const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.txt", "utf-8")
 const uniswap_factory_bytecode = fs.readFileSync("./bytecode/uniswap_factory.txt", "utf-8")
-const chainURL = process.env.CHAIN_URL || "http://localhost:8545"
-const streamrUrl = process.env.EE_URL || "http://localhost:8081/streamr-core" // production: "https://www.streamr.com"
+const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
+const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
 const log = process.env.QUIET ? (() => {
 }) : console.log // eslint-disable-line no-console
 const futureTime = 4449513600

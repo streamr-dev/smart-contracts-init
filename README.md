@@ -1,5 +1,16 @@
 # Smart Contract init
-Service Will initialize Streamrs Smart Contracts
+This repo is used to build the parity images streamr/open-ethereum-poa-mainchain-preload1 and streamr/open-ethereum-poa-sidechain-preload1, which are preloaded mainchain and sidechain images for use with streamr-docker.dev. The following are setup:
+ 1. Streamr's smart contracts: Marketplace Uniswap Adaptor, loads products,
+ 2. The token bridge (AMB) and mediator
+ 3. the DU2 factories and templates. 
+ 
+smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images 
+
+To build images:
+./preload_parity_images.sh
+
+This will tag the images locally and echo the command to push to dockerhub.
+
 
 Parity Default Private Key 
 * 0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7
@@ -24,3 +35,14 @@ Generates the following Ethereum addresses:
 * UniswapAdaptor address: 0xE4eA76e830a659282368cA2e7E4d18C4AE52D8B3
 * UniswapFactory address: 0xd2D23b73A67208a90CBfEE1381415329954f54E2
 * NodeRegistry: 0xBFCF120a8fD17670536f1B27D9737B775b2FD4CF
+
+Bridge Address:
+* home_amb: 0xE4eA76e830a659282368cA2e7E4d18C4AE52D8B3
+* foreign_amb: 0xD13D34d37e2c94cb35EA8D5DE7498Cb7830d26e0
+* home_erc677: 0x3b11D489411BF11e843Cb28f8824dedBfcB75Df3
+* home_erc_mediator: 0x6cCdd5d866ea766f6DF5965aA98DeCCD629ff222
+* foreign_erc_mediator: 0x3AE0ad89b0e094fD09428589849C161f0F7f4E6A
+* foreign_erc20: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
+* home_du_factory: 0xA90CeCcA042312b8f2e8B924C04Ce62516CBF7b2
+* foreign_du_factory: 0xb23dffE7267Ec8ffcE409D5623B7a73f536e7D9B
+
