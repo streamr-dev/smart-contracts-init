@@ -1,6 +1,7 @@
 const fetch = require("node-fetch")
 const fs = require("fs")
 const Web3 = require("web3")
+const namehash = require('eth-ens-namehash').hash
 const {
     Contract,
     ContractFactory,
@@ -15,6 +16,9 @@ const MarketplaceJson = require("./Marketplace.json")
 const Marketplace2Json = require("./Marketplace2.json")
 const UniswapAdaptor = require("./UniswapAdaptor.json")
 const NodeRegistry = require("./NodeRegistry.json")
+const ENSRegistry = require("./ENSRegistry.json")
+const FIFSRegistrar = require("./FIFSRegistrar.json")
+
 const uniswap_exchange_abi = JSON.parse(fs.readFileSync("./abi/uniswap_exchange.json", "utf-8"))
 const uniswap_factory_abi = JSON.parse(fs.readFileSync("./abi/uniswap_factory.json", "utf-8"))
 const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.txt", "utf-8")
@@ -63,6 +67,22 @@ class AutoNonceWallet extends Wallet {
         return super.sendTransaction(transaction);
     }
 }
+
+
+/**
+ * 
+ * From https://github.com/ensdomains/ens/blob/master/migrations/2_deploy_contracts.js
+ * 
+ * Calculate root node hashes given the top level domain(tld)
+ *
+ * @param {string} tld plain text tld, for example: 'eth'
+ */
+function getRootNodeFromTLD(tld) {
+    return {
+      namehash: namehash(tld),
+      sha3: Web3.utils.sha3(tld)
+    };
+  }
 
 async function smartContractInitialization() {
 
@@ -119,11 +139,12 @@ async function smartContractInitialization() {
     const tokenDeployer2 = new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
     const tokenDeployTx2 = await tokenDeployer2.deploy("Test OTHERcoin", "\ud83e\udd84")
     const token2 = await tokenDeployTx2.deployed()
-
-    log("Minting 1000000 tokens to following addresses:")
+    //1000 ETH tokens
+    const mintTokens = "1000000000000000000000"
+    log(`Minting ${mintTokens} tokens to following addresses:`)
     for (const address of privateKeys.map(computeAddress)) {
         log("    " + address)
-        const mintTx = await token.mint(address, "1000000")
+        const mintTx = await token.mint(address, mintTokens)
         //await mintTx.wait()
     }
 
@@ -161,6 +182,8 @@ async function smartContractInitialization() {
     tx = await othertokenExchange.addLiquidity(amt_token2, amt_token2, futureTime, {gasLimit: 6000000, value: amt_eth})
     //await tx.wait()
 
+    log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
+
     log(`Deploying NodeRegistry contract from ${wallet.address}`)
     var initialNodes = []
     var initialUrls = []
@@ -174,18 +197,50 @@ async function smartContractInitialization() {
     const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialUrls, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
     log(`NodeRegistry deployed at ${str.address}`)
-
-    //all TXs should now be confirmed:
-
     let nodes = await str.getNodes();
     log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
 
-    log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
     const ethwei = parseEther("1")
     let rate = await datatokenExchange.getTokenToEthInputPrice(ethwei)
     log(`1 DATAtoken buys ${formatEther(rate)} ETH`)
     rate = await othertokenExchange.getTokenToEthInputPrice(ethwei)
     log(`1 OTHERtoken buys ${formatEther(rate)} ETH`)
+
+
+/*
+deployer.deploy(ENS)
+    .then(() => {
+      // Deploy the FIFSRegistrar and bind it with ENS
+      return deployer.deploy(FIFSRegistrar, ENS.address, rootNode.namehash);
+    })
+    .then(function() {
+      // Transfer the owner of the `rootNode` to the FIFSRegistrar
+      return ENS.at(ENS.address).then((c) => c.setSubnodeOwner('0x0', rootNode.sha3, FIFSRegistrar.address));
+    });
+}
+*/
+
+    log("Deploying ENS")
+    const ensDeploy = new ContractFactory(ENSRegistry.abi, ENSRegistry.bytecode, wallet)
+    const ensDeployTx = await ensDeploy.deploy()
+    const ens = await ensDeployTx.deployed()
+    log(`ENS deployed at ${ens.address}`)
+    const rootNode = getRootNodeFromTLD('eth')
+    log("Deploying FIFSRegistrar")
+    const fifsDeploy = new ContractFactory(FIFSRegistrar.abi, FIFSRegistrar.bytecode, wallet)
+    const fifsDeployTx = await fifsDeploy.deploy(ens.address, rootNode.namehash)
+    const fifs = await fifsDeployTx.deployed()
+    log(`FIFSRegistrar deployed at ${fifs.address}`)
+
+    tx = await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000000000000000000000000000', rootNode.sha3, fifs.address)
+    await tx.wait()
+    log("ENS init complete")
+
+
+
+    //all TXs should now be confirmed:
+
+
 
 
 
