@@ -33,14 +33,14 @@ services:
             retries: 3
          command: --chain ./streamr-spec.json --config ./node0.toml
     smart-contracts-init:
-        container_name: streamr-dev-smart-contracts-init
-        image: streamr/smart-contracts-init:dev
-        depends_on:
+         container_name: streamr-dev-smart-contracts-init
+         image: streamr/smart-contracts-init:dev
+         depends_on:
            - parity-node0
            - parity-sidechain-node0
-        restart: on-failure # exits when successful
-        environment:
+         restart: on-failure # exits when successful
+         environment:
             EE_URL: http://10.200.10.1
             CHAIN_URL: http://10.200.10.1:8545
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
+         volumes:
+           - /var/run/docker.sock:/var/run/docker.sock
