@@ -64,16 +64,6 @@ async function deployDUFactories(){
     let factMainnet = await dtx.deployed()
     console.log(`factMainnet: ${factMainnet.address}`)
 
-    const duname = "test"
-
-    let tx = await factMainnet.deployNewDataUnion(wallet_foreign.address, 0, [wallet_foreign.address], duname)
-    let rslt = await tx.wait();
-    let mainnet_addresss = await factMainnet.mainnetAddress(wallet_foreign.address, duname)
-    console.log(`rslt ${JSON.stringify(rslt)}`)
-    console.log(`mainnet_addresss ${mainnet_addresss}`)
-        
-
-    
 }
 
 async function start() {
