@@ -207,19 +207,7 @@ async function smartContractInitialization() {
     log(`1 OTHERtoken buys ${formatEther(rate)} ETH`)
 
 
-/*
-deployer.deploy(ENS)
-    .then(() => {
-      // Deploy the FIFSRegistrar and bind it with ENS
-      return deployer.deploy(FIFSRegistrar, ENS.address, rootNode.namehash);
-    })
-    .then(function() {
-      // Transfer the owner of the `rootNode` to the FIFSRegistrar
-      return ENS.at(ENS.address).then((c) => c.setSubnodeOwner('0x0', rootNode.sha3, FIFSRegistrar.address));
-    });
-}
-*/
-
+    //deployment steps based on https://github.com/ensdomains/ens/blob/2a6785c3b5fc27269eb3bb18b9d1245d1f01d6c8/migrations/2_deploy_contracts.js#L30
     log("Deploying ENS")
     const ensDeploy = new ContractFactory(ENSRegistry.abi, ENSRegistry.bytecode, wallet)
     const ensDeployTx = await ensDeploy.deploy()
