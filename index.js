@@ -139,7 +139,7 @@ async function smartContractInitialization() {
     const tokenDeployer2 = new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
     const tokenDeployTx2 = await tokenDeployer2.deploy("Test OTHERcoin", "\ud83e\udd84")
     const token2 = await tokenDeployTx2.deployed()
-    //1000 ETH tokens
+    //1000 DATA tokens
     const mintTokens = "1000000000000000000000"
     log(`Minting ${mintTokens} tokens to following addresses:`)
     for (const address of privateKeys.map(computeAddress)) {
