@@ -38,11 +38,14 @@ Generates the following Ethereum addresses:
 
 Bridge Address:
 * home_amb: 0xE4eA76e830a659282368cA2e7E4d18C4AE52D8B3
-* foreign_amb: 0xD13D34d37e2c94cb35EA8D5DE7498Cb7830d26e0
+* foreign_amb: 0x0bADa0acE1d16ABf1ce1aAED9Bc7Ce231ECc35b5
 * home_erc677: 0x3b11D489411BF11e843Cb28f8824dedBfcB75Df3
 * home_erc_mediator: 0x6cCdd5d866ea766f6DF5965aA98DeCCD629ff222
-* foreign_erc_mediator: 0x3AE0ad89b0e094fD09428589849C161f0F7f4E6A
+* foreign_erc_mediator: 0x01f26Ca429FbE59617C5Fcdcb7f2214dcD09fB75
 * foreign_erc20: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
 * home_du_factory: 0xA90CeCcA042312b8f2e8B924C04Ce62516CBF7b2
 * foreign_du_factory: 0xb23dffE7267Ec8ffcE409D5623B7a73f536e7D9B
 
+ENS:
+* ENS: 0x92E8435EB56fD01BF4C79B66d47AC1A94338BB03
+* FIFSRegistrar for TLD (top level domain) 'eth': 0x57B81a9442805f88c4617B506206531e72d96290
