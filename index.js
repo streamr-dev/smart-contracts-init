@@ -236,12 +236,12 @@ async function smartContractInitialization() {
         const domain = domains[i]
         const owner = wallet.address
         const domainAddress = wallet.address
-        log(`setting up ENS domain ${domain} with owner ${owner}, pointing to address ${domainAddress}`)
+        const fullname = domain + ".eth"
+        const fullhash = namehash(fullname)
+        log(`setting up ENS domain ${fullname} with owner ${owner}, pointing to address ${domainAddress}`)
         tx = await fifs.register(Web3.utils.sha3(domain), owner)
         tr = await tx.wait()
         log(`called regsiter`)
-        const fullname = domain + ".eth"
-        const fullhash = namehash(fullname)
         tx = await ens.setResolver(fullhash, resolver.address)
         tr = await tx.wait()
         log('called setResolver')
