@@ -54,7 +54,7 @@ function sleep(ms) {
         setTimeout(resolve, ms)
     })
 }
-/*
+
 //from https://github.com/ethers-io/ethers.js/issues/319
 class AutoNonceWallet extends Wallet {
     _noncePromise = null;
@@ -69,7 +69,7 @@ class AutoNonceWallet extends Wallet {
         return super.sendTransaction(transaction);
     }
 }
-*/
+
 
 
 /**
@@ -101,9 +101,8 @@ async function smartContractInitialization() {
         process.exit(1)
     }
 
-    const wallet = new Wallet(defaultPrivateKey, provider)
-//    const wallet = new AutoNonceWallet(defaultPrivateKey, provider)
-/*
+    const wallet = new AutoNonceWallet(defaultPrivateKey, provider)
+
     log(`Deploying test DATAcoin from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
     const tokenDeployTx = await tokenDeployer.deploy("Test DATAcoin", "\ud83e\udd84")
@@ -211,7 +210,7 @@ async function smartContractInitialization() {
     log(`1 DATAtoken buys ${formatEther(rate)} ETH`)
     rate = await othertokenExchange.getTokenToEthInputPrice(ethwei)
     log(`1 OTHERtoken buys ${formatEther(rate)} ETH`)
-*/
+
 
     //deployment steps based on https://github.com/ensdomains/ens/blob/2a6785c3b5fc27269eb3bb18b9d1245d1f01d6c8/migrations/2_deploy_contracts.js#L30
     log("Deploying ENS")
