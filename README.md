@@ -49,3 +49,4 @@ Bridge Addresses:
 ENS:
 * ENS: 0x92E8435EB56fD01BF4C79B66d47AC1A94338BB03
 * FIFSRegistrar for TLD (top level domain) 'eth': 0x57B81a9442805f88c4617B506206531e72d96290
+* PublicResolver (reusable): 0xBc0c81a318D57ae54dA28DE69184A9c3aE9a1e1c
