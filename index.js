@@ -188,11 +188,11 @@ async function smartContractInitialization() {
     var initialNodes = []
     var initialUrls = []
     initialNodes.push('0xb9e7cEBF7b03AE26458E32a059488386b05798e8')
-    initialUrls.push('ws://10.200.10.1:30301')
+    initialUrls.push('{"ws": "ws://10.200.10.1:30301", "http": "http://10.200.10.1:11111"}')
     initialNodes.push('0x0540A3e144cdD81F402e7772C76a5808B71d2d30')
-    initialUrls.push('ws://10.200.10.1:30302')
+    initialUrls.push('{"ws": "ws://10.200.10.1:30302", "http": "http://10.200.10.1:11112"}')
     initialNodes.push('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2')
-    initialUrls.push('ws://10.200.10.1:30303')
+    initialUrls.push('{"ws": "ws://10.200.10.1:30303", "http": "http://10.200.10.1:11113"}')
     const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
     const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialUrls, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
