@@ -246,7 +246,7 @@ async function smartContractInitialization() {
         tr = await tx.wait()
         log('called setResolver')
         //Ethers wont call the 2-arg setAddr. 60 is default = COIN_TYPE_ETH. 
-        //see https://github.com/ensdomains/resolvers/blob/master/contracts/profiles/AddrResolver.solsee 
+        //see https://github.com/ensdomains/resolvers/blob/master/contracts/profiles/AddrResolver.sol
         tx = await resolver.setAddr(fullhash, 60, domainAddress)
         tr = await tx.wait()
         log(`called setAddr. done registering ${fullname} as ${domainAddress}`)
