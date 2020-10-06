@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "eth-ens-namehash": "2.0.8",
     "ethers": "^4.0.47",
     "node-fetch": "^2.6.0",
     "web3": "1.2.4"
