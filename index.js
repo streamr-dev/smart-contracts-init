@@ -1,11 +1,10 @@
 const fetch = require("node-fetch")
 const fs = require("fs")
 const Web3 = require("web3")
-const namehash = require('eth-ens-namehash').hash
 const {
     Contract,
     ContractFactory,
-    utils: {computeAddress, parseEther, formatEther},
+    utils: {computeAddress, parseEther, formatEther, namehash},
     Wallet,
     providers: {Web3Provider}
 } = require("ethers")
@@ -18,6 +17,8 @@ const UniswapAdaptor = require("./UniswapAdaptor.json")
 const NodeRegistry = require("./NodeRegistry.json")
 const ENSRegistry = require("./ENSRegistry.json")
 const FIFSRegistrar = require("./FIFSRegistrar.json")
+const PublicResolver = require("./PublicResolver.json")
+
 
 const uniswap_exchange_abi = JSON.parse(fs.readFileSync("./abi/uniswap_exchange.json", "utf-8"))
 const uniswap_factory_abi = JSON.parse(fs.readFileSync("./abi/uniswap_factory.json", "utf-8"))
@@ -53,6 +54,7 @@ function sleep(ms) {
         setTimeout(resolve, ms)
     })
 }
+
 //from https://github.com/ethers-io/ethers.js/issues/319
 class AutoNonceWallet extends Wallet {
     _noncePromise = null;
@@ -69,6 +71,7 @@ class AutoNonceWallet extends Wallet {
 }
 
 
+
 /**
  * 
  * From https://github.com/ensdomains/ens/blob/master/migrations/2_deploy_contracts.js
@@ -83,6 +86,8 @@ function getRootNodeFromTLD(tld) {
       sha3: Web3.utils.sha3(tld)
     };
   }
+
+
 
 async function smartContractInitialization() {
 
@@ -219,17 +224,36 @@ async function smartContractInitialization() {
     const fifsDeployTx = await fifsDeploy.deploy(ens.address, rootNode.namehash)
     const fifs = await fifsDeployTx.deployed()
     log(`FIFSRegistrar deployed at ${fifs.address}`)
-
     tx = await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000000000000000000000000000', rootNode.sha3, fifs.address)
     await tx.wait()
+    const resDeploy = new ContractFactory(PublicResolver.abi, PublicResolver.bytecode, wallet)
+    const resDeployTx = await resDeploy.deploy(ens.address)
+    const resolver = await resDeployTx.deployed()
+    log(`PublicResolver deployed at ${resolver.address}`)
+
+    const domains = ['subdomain1', 'subdomain2']
+    for (var i = 0; i < domains.length; i++){
+        const domain = domains[i]
+        const owner = wallet.address
+        const domainAddress = wallet.address
+        const fullname = domain + ".eth"
+        const fullhash = namehash(fullname)
+        log(`setting up ENS domain ${fullname} with owner ${owner}, pointing to address ${domainAddress}`)
+        tx = await fifs.register(Web3.utils.sha3(domain), owner)
+        tr = await tx.wait()
+        log(`called regsiter`)
+        tx = await ens.setResolver(fullhash, resolver.address)
+        tr = await tx.wait()
+        log('called setResolver')
+        //Ethers wont call the 2-arg setAddr. 60 is default = COIN_TYPE_ETH. 
+        //see https://github.com/ensdomains/resolvers/blob/master/contracts/profiles/AddrResolver.sol
+        tx = await resolver.setAddr(fullhash, 60, domainAddress)
+        tr = await tx.wait()
+        log(`called setAddr. done registering ${fullname} as ${domainAddress}`)
+    }
     log("ENS init complete")
 
-
-
-    //all TXs should now be confirmed:
-
-
-
+   //all TXs should now be confirmed:
 
 
     const EEwaitms = 60000
