@@ -231,25 +231,34 @@ async function smartContractInitialization() {
     const resolver = await resDeployTx.deployed()
     log(`PublicResolver deployed at ${resolver.address}`)
 
-    const domains = ['subdomain1', 'subdomain2']
+    const domains = ['testdomain1', 'testdomain2']
+    const addresses = ['0x4178baBE9E5148c6D5fd431cD72884B07Ad855a0', '0xdC353aA3d81fC3d67Eb49F443df258029B01D8aB']
     for (var i = 0; i < domains.length; i++){
         const domain = domains[i]
         const owner = wallet.address
-        const domainAddress = wallet.address
+        const domainAddress = addresses[i]
         const fullname = domain + ".eth"
         const fullhash = namehash(fullname)
-        log(`setting up ENS domain ${fullname} with owner ${owner}, pointing to address ${domainAddress}`)
+        
+        log(`setting up ENS domain ${domain} with owner ${owner}, pointing to address ${domainAddress}`)
         tx = await fifs.register(Web3.utils.sha3(domain), owner)
         tr = await tx.wait()
         log(`called regsiter`)
+        
         tx = await ens.setResolver(fullhash, resolver.address)
         tr = await tx.wait()
         log('called setResolver')
+        
         //Ethers wont call the 2-arg setAddr. 60 is default = COIN_TYPE_ETH. 
         //see https://github.com/ensdomains/resolvers/blob/master/contracts/profiles/AddrResolver.sol
         tx = await resolver.setAddr(fullhash, 60, domainAddress)
         tr = await tx.wait()
         log(`called setAddr. done registering ${fullname} as ${domainAddress}`)
+    
+        //transfer ownership
+        tx = await ens.setOwner(fullhash, addresses[i])
+        tr = await tx.wait()
+        log(`transferred ownership to ${addresses[i]}`)
     }
     log("ENS init complete")
 
