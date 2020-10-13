@@ -24,8 +24,8 @@ class LoggingProvider extends JsonRpcProvider {
 const provider_foreign = new JsonRpcProvider('http://10.200.10.1:8545');
 const provider_home = new JsonRpcProvider('http://10.200.10.1:8546');
 
-const wallet_home = new Wallet('0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0', provider_home)
-const wallet_foreign = new Wallet('0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0', provider_foreign)
+const wallet_home = new Wallet('0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb', provider_home)
+const wallet_foreign = new Wallet('0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb', provider_foreign)
 const home_erc_mediator = process.env.HOME_ERC677_MEDIATOR
 const foreign_erc_mediator = process.env.FOREIGN_ERC677_MEDIATOR
 
