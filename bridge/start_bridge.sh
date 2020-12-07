@@ -19,10 +19,13 @@ ENV="-e HOME_AMB_BRIDGE=$HOME_AMB_BRIDGE -e FOREIGN_AMB_BRIDGE=$FOREIGN_AMB_BRID
 docker run --name $ERC677TASK $ENV --env-file erc677.env poanetwork/tokenbridge-contracts deploy.sh
 docker cp $ERC677TASK:/contracts/deploy/bridgeDeploymentResults.json $ERC677RESULTS
 
-export HOME_ERC677_MEDIATOR=`jq -r .homeBridge.homeBridgeMediator.address < $ERC677RESULTS`
-export FOREIGN_ERC677_MEDIATOR=`jq -r .foreignBridge.foreignBridgeMediator.address < $ERC677RESULTS`
-
 docker rm $AMBTASK $ERC677TASK
+
+source erc677.env
+export ERC20_TOKEN_ADDRESS
+export HOME_ERC677_MEDIATOR=`jq -r .homeBridge.homeBridgeMediator.address < $ERC677RESULTS`
+export HOME_ERC677=`jq -r .homeBridge.bridgeableErc677.address < $ERC677RESULTS`
+export FOREIGN_ERC677_MEDIATOR=`jq -r .foreignBridge.foreignBridgeMediator.address < $ERC677RESULTS`
 
 echo "3. Deploying DataUnion and Factory Contracts"
 node ../deploy_du2_factories.js

@@ -29,6 +29,10 @@ const wallet_foreign = new Wallet('0xe5af7834455b7239881b85be89d905d6881dcb47510
 const home_erc_mediator = process.env.HOME_ERC677_MEDIATOR
 const foreign_erc_mediator = process.env.FOREIGN_ERC677_MEDIATOR
 
+const foreign_erc20 = process.env.ERC20_TOKEN_ADDRESS
+const home_erc677 = process.env.HOME_ERC677
+log(`foreign_erc20 ${foreign_erc20} home_erc677 ${home_erc677}`)
+
 async function deployDUFactories(){
     log(`Deploying template DU home contract from ${wallet_home.address}`)
     let deployer = new ContractFactory(DataUnionSidechain.abi, DataUnionSidechain.bytecode, wallet_home)
@@ -46,7 +50,7 @@ async function deployDUFactories(){
     // constructor( address _token_mediator, address _data_union_sidechain_template) public {
     log(`Deploying sidechain DU factory contract from ${wallet_home.address}`)
     deployer = new ContractFactory(DataUnionFactorySidechain.abi, DataUnionFactorySidechain.bytecode, wallet_home)
-    dtx = await deployer.deploy(home_erc_mediator, duhome.address, { gasLimit: 6000000 })
+    dtx = await deployer.deploy(home_erc677, home_erc_mediator, duhome.address, { gasLimit: 6000000 })
     let factSidechain = await dtx.deployed()
     console.log(`factorySidechain: ${factSidechain.address}`)
 
@@ -60,7 +64,7 @@ async function deployDUFactories(){
     // constructor( address _token_mediator, address _data_union_sidechain_template) public {
     log(`Deploying DU mainnet factory contract from ${wallet_foreign.address}`)
     deployer = new ContractFactory(DataUnionFactoryMainnet.abi, DataUnionFactoryMainnet.bytecode, wallet_foreign)
-    dtx = await deployer.deploy(foreign_erc_mediator, duforeign.address, duhome.address, factSidechain.address, 2000000, { gasLimit: 6000000 })
+    dtx = await deployer.deploy(foreign_erc20, foreign_erc_mediator, duforeign.address, duhome.address, factSidechain.address, 2000000, { gasLimit: 6000000 })
     let factMainnet = await dtx.deployed()
     console.log(`factMainnet: ${factMainnet.address}`)
 
