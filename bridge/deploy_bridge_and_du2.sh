@@ -16,7 +16,10 @@ export FOREIGN_AMB_BRIDGE=`jq -r .foreignBridge.address < $AMBRESULTS`
 
 echo "2. Deploying ERC677 mediator over AMB"
 ENV="-e HOME_AMB_BRIDGE=$HOME_AMB_BRIDGE -e FOREIGN_AMB_BRIDGE=$FOREIGN_AMB_BRIDGE"
-docker run --name $ERC677TASK $ENV --env-file erc677.env poanetwork/tokenbridge-contracts deploy.sh
+# we replace the default mediator with a mediator that calls transferAndCall()
+# this is a temp fix and should be removed when tokenbridge supports callback:
+VOLS="-v `pwd`/HomeAMBErc677ToErc677.json:/contracts/build/contracts/HomeAMBErc677ToErc677.json"
+docker run --name $ERC677TASK $ENV $VOLS --env-file erc677.env poanetwork/tokenbridge-contracts deploy.sh
 docker cp $ERC677TASK:/contracts/deploy/bridgeDeploymentResults.json $ERC677RESULTS
 
 docker rm $AMBTASK $ERC677TASK
