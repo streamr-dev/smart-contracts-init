@@ -22,7 +22,7 @@ export FOREIGN_AMB_BRIDGE=`jq -r .foreignBridge.address < $AMBRESULTS`
 
 echo "2. Deploying ERC677 mediator over AMB"
 ENV="-e HOME_AMB_BRIDGE=$HOME_AMB_BRIDGE -e FOREIGN_AMB_BRIDGE=$FOREIGN_AMB_BRIDGE"
-docker run --name $ERC677TASK $ENV $VOLS --env-file erc677.env $CONTRACTS deploy.sh
+docker run --name $ERC677TASK $ENV --env-file erc677.env $CONTRACTS deploy.sh
 docker cp $ERC677TASK:/contracts/deploy/bridgeDeploymentResults.json $ERC677RESULTS
 
 docker rm $AMBTASK $ERC677TASK

@@ -11,6 +11,8 @@ To build images:
 
 This will tag the images locally and echo the command to push to dockerhub.
 
+Tokenbridge:
+The bridge dir contains code related to the setup of tokenbridge between the mainchain and sidechain images. bridge/tokenbridge-contracts contains some custom modifications Streamr has made to tokenbridge contracts. When tokenbridge implements transferAndCall for bridge tokens, this should be REPLACED with the tokenbridge image.
 
 Parity Default Private Key 
 * 0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7

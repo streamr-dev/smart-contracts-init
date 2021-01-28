@@ -1,12 +1,13 @@
 #!/bin/bash -eux
-WD=`dirname $0`
-cd $WD
+cd `dirname $0`
 LOG=smartContractInit.log
+echo "Building Custom tokenbridge-contracts docker image"
 cd bridge/tokenbridge-contracts
 docker build -t streamr/tokenbridge-contracts .
-cd $WD
+cd ../..
+echo "Building smart-contracts-init docker image"
 docker build -t streamr/smart-contracts-init:dev .
-#streamr-docker-dev start
+streamr-docker-dev start
 streamr-docker-dev stop parity-sidechain-node0 parity-node0
 docker-compose up -d
 INITSTATUS=`docker wait streamr-dev-smart-contracts-init`
