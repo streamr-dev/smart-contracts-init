@@ -207,7 +207,7 @@ async function smartContractInitialization() {
     initialNodes.push('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2')
     initialMetadata.push('{"ws": "ws://10.200.10.1:30303", "http": "http://10.200.10.1:30303"}')
     //1st NodeRegistry deployed here. 2nd below
-    await deployNodeRegistry(initialNodes, initalMetadata)
+    await deployNodeRegistry(initialNodes, initialMetadata)
 
     const ethwei = parseEther("1")
     let rate = await datatokenExchange.getTokenToEthInputPrice(ethwei)
@@ -272,7 +272,7 @@ async function smartContractInitialization() {
    initialMetadata = []
    initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
    initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
-   await deployNodeRegistry(initialNodes, initalMetadata)
+   await deployNodeRegistry(initialNodes, initialMetadata)
 
    //all TXs should now be confirmed:
     const EEwaitms = 60000
