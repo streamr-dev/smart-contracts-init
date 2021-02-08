@@ -88,6 +88,14 @@ function getRootNodeFromTLD(tld) {
   }
 
 
+async function deployNodeRegistry(initialNodes, initialMetadata) {
+    const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
+    const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
+    const str = await strDeployTx.deployed()
+    log(`NodeRegistry deployed at ${str.address}`)
+    let nodes = await str.getNodes();
+    log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
+}
 
 async function smartContractInitialization() {
 
@@ -189,21 +197,17 @@ async function smartContractInitialization() {
 
     log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
 
-    log(`Deploying NodeRegistry contract from ${wallet.address}`)
+    log(`Deploying NodeRegistry contract 1 from ${wallet.address}`)
     var initialNodes = []
-    var initialUrls = []
+    var initialMetadata = []
     initialNodes.push('0xb9e7cEBF7b03AE26458E32a059488386b05798e8')
-    initialUrls.push('{"ws": "ws://10.200.10.1:30301", "http": "http://10.200.10.1:30301"}')
+    initialMetadata.push('{"ws": "ws://10.200.10.1:30301", "http": "http://10.200.10.1:30301"}')
     initialNodes.push('0x0540A3e144cdD81F402e7772C76a5808B71d2d30')
-    initialUrls.push('{"ws": "ws://10.200.10.1:30302", "http": "http://10.200.10.1:30302"}')
+    initialMetadata.push('{"ws": "ws://10.200.10.1:30302", "http": "http://10.200.10.1:30302"}')
     initialNodes.push('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2')
-    initialUrls.push('{"ws": "ws://10.200.10.1:30303", "http": "http://10.200.10.1:30303"}')
-    const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
-    const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialUrls, {gasLimit: 6000000} )
-    const str = await strDeployTx.deployed()
-    log(`NodeRegistry deployed at ${str.address}`)
-    let nodes = await str.getNodes();
-    log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
+    initialMetadata.push('{"ws": "ws://10.200.10.1:30303", "http": "http://10.200.10.1:30303"}')
+    //1st NodeRegistry deployed here. 2nd below
+    await deployNodeRegistry(initialNodes, initalMetadata)
 
     const ethwei = parseEther("1")
     let rate = await datatokenExchange.getTokenToEthInputPrice(ethwei)
@@ -262,9 +266,15 @@ async function smartContractInitialization() {
     }
     log("ENS init complete")
 
+   //deploy 2nd NodeRegistry:
+   log(`Deploying NodeRegistry contract 2 from ${wallet.address}`)
+   initialNodes = []
+   initialMetadata = []
+   initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
+   initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
+   await deployNodeRegistry(initialNodes, initalMetadata)
+
    //all TXs should now be confirmed:
-
-
     const EEwaitms = 60000
     log("Getting products from E&E")
     log(`waiting ${EEwaitms}ms for E&E to start`)
