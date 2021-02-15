@@ -267,7 +267,7 @@ async function smartContractInitialization() {
     log("ENS init complete")
 
    //deploy 2nd NodeRegistry:
-   log(`Deploying NodeRegistry contract 2 from ${wallet.address}`)
+   log(`Deploying NodeRegistry contract 2 (storage node registry) from ${wallet.address}`)
    initialNodes = []
    initialMetadata = []
    initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
