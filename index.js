@@ -197,7 +197,7 @@ async function smartContractInitialization() {
 
     log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
 
-    log(`Deploying NodeRegistry contract 1 from ${wallet.address}`)
+    log(`Deploying NodeRegistry contract 1 (tracker registry) from ${wallet.address}`)
     var initialNodes = []
     var initialMetadata = []
     initialNodes.push('0xb9e7cEBF7b03AE26458E32a059488386b05798e8')
