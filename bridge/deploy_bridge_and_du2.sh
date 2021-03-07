@@ -35,9 +35,10 @@ export HOME_ERC677=`jq -r .homeBridge.bridgeableErc677.address < $ERC677RESULTS`
 export FOREIGN_ERC677_MEDIATOR=`jq -r .foreignBridge.foreignBridgeMediator.address < $ERC677RESULTS`
 
 echo "2.2 Multi Token"
-TASK=multiToken
-ENV="-e HOME_AMB_BRIDGE=$HOME_AMB_BRIDGE -e FOREIGN_AMB_BRIDGE=$FOREIGN_AMB_BRIDGE -e HOME_ERC677_TOKEN_IMAGE=$HOME_ERC677"
-docker run --name $TASK $ENV --env-file multiTokenMediator.env $CONTRACTS deploy.sh
+CONTRACTS=poanetwork/omnibridge
+TASK=omnibridge
+ENV="-e HOME_AMB_BRIDGE=$HOME_AMB_BRIDGE -e FOREIGN_AMB_BRIDGE=$FOREIGN_AMB_BRIDGE"
+docker run --name $TASK $ENV --env-file omnibridgeMediator.env $CONTRACTS deploy.sh
 docker cp $TASK:/contracts/deploy/bridgeDeploymentResults.json $ERC677RESULTS
 docker rm $TASK
 
