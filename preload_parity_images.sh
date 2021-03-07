@@ -1,10 +1,18 @@
 #!/bin/bash -eux
 cd `dirname $0`
 LOG=smartContractInit.log
-echo "Building Custom tokenbridge-contracts docker image"
-cd bridge/tokenbridge-contracts
-docker build -t streamr/tokenbridge-contracts .
-cd ../..
+
+function checkImg {
+if [ ! `docker images -q $1` ]
+then
+  echo "Missing required docker image $1."
+  exit 1
+fi
+}
+
+checkImg poanetwork/omnibridge
+checkImg streamr/tokenbridge-contracts
+
 echo "Building smart-contracts-init docker image"
 docker build -t streamr/smart-contracts-init:dev .
 echo "Starting Streamr stack to fetch products from Engine and Editor"
