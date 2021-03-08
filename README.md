@@ -6,6 +6,11 @@ This repo is used to build the parity images streamr/open-ethereum-poa-mainchain
  
 smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images 
 
+Dependencies:
+Build and tag required docker images.
+ 1. git clone https://github.com/poanetwork/omnibridge.git; cd omnibridge; docker build . -t 'poanetwork/omnibridge'
+ 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr-dev/tokenbridge-contracts' 
+
 To build images:
 ./preload_parity_images.sh
 
