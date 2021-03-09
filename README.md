@@ -6,6 +6,11 @@ This repo is used to build the parity images streamr/open-ethereum-poa-mainchain
  
 smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images 
 
+Dependencies:
+Build and tag required docker images.
+ 1. git clone https://github.com/poanetwork/omnibridge.git; cd omnibridge; docker build . -t 'poanetwork/omnibridge'
+ 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr-dev/tokenbridge-contracts' 
+
 To build images:
 ./preload_parity_images.sh
 
@@ -43,11 +48,13 @@ Bridge Addresses:
 * home_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
 * foreign_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
 * home_erc677: 0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF
-* home_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
-* foreign_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
+* dedicated DATA home_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
+* dedicated DATA foreign_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
+* home omnibridge: 0x41B89Db86BE735c03A9296437E39F5FDAdC4c678
+* foreign omnibridge: 0x6346Ed242adE018Bd9320D5E3371c377BAB29c31
 * foreign_erc20: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
-* home_du_factory: 0x4081B7e107E59af8E82756F96C751174590989FE
-* foreign_du_factory: 0x5E959e5d5F3813bE5c6CeA996a286F734cc9593b
+* home_du_factory: 0x4A4c4759eb3b7ABee079f832850cD3D0dC48D927
+* foreign_du_factory: 0x4bbcBeFBEC587f6C4AF9AF9B48847caEa1Fe81dA
 
 ENS:
 * ENS: 0x92E8435EB56fD01BF4C79B66d47AC1A94338BB03
