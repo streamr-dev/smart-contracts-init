@@ -19,11 +19,18 @@ const ENSRegistry = require("./ENSRegistry.json")
 const FIFSRegistrar = require("./FIFSRegistrar.json")
 const PublicResolver = require("./PublicResolver.json")
 
+//Uniswap v2
+const UniswapV2Factory = require("./node_modules/@uniswap/v2-core/build/UniswapV2Factory.json")
+const UniswapV2Pair = require("./node_modules/@uniswap/v2-core/build/UniswapV2Pair.json")
+const UniswapV2Router02 = require("./node_modules/@uniswap/v2-periphery/build/UniswapV2Router02.json")
+const WETH9 = require("./node_modules/@uniswap/v2-periphery/build/WETH9.json")
 
+//Uniswap v1
 const uniswap_exchange_abi = JSON.parse(fs.readFileSync("./abi/uniswap_exchange.json", "utf-8"))
 const uniswap_factory_abi = JSON.parse(fs.readFileSync("./abi/uniswap_factory.json", "utf-8"))
 const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.txt", "utf-8")
 const uniswap_factory_bytecode = fs.readFileSync("./bytecode/uniswap_factory.txt", "utf-8")
+
 const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
 const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
 const log = process.env.QUIET ? (() => {
@@ -97,6 +104,24 @@ async function deployNodeRegistry(wallet, initialNodes, initialMetadata) {
     log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
 }
 
+async function deployUniswap2(wallet) {
+    let deployer = new ContractFactory(WETH9.abi, WETH9.bytecode, wallet)
+    let tx = await deployer.deploy()
+    const weth = await tx.deployed()
+    log(`WETH deployed to ${weth.address}`)
+    
+    deployer = new ContractFactory(UniswapV2Factory.abi, UniswapV2Factory.bytecode, wallet)
+    tx = await deployer.deploy(wallet.address)
+    const factory = await tx.deployed()
+    log(`Uniswap2 factory deployed to ${factory.address}`)
+
+    deployer = new ContractFactory(UniswapV2Router02.abi, UniswapV2Router02.bytecode, wallet)
+    tx = await deployer.deploy(factory.address, weth.address)
+    const router = await tx.deployed()
+    log(`Uniswap2 router deployed to ${router.address}`)
+    return router
+}
+
 async function smartContractInitialization() {
 
     // wait until ganache is up and ethers.js ready
@@ -152,6 +177,9 @@ async function smartContractInitialization() {
     const tokenDeployer2 = new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
     const tokenDeployTx2 = await tokenDeployer2.deploy("Test OTHERcoin", "\ud83e\udd84")
     const token2 = await tokenDeployTx2.deployed()
+    
+    //Note: TestToken contract automatically mints 100000 to owner
+
     //1000 DATA tokens
     const mintTokens = "1000000000000000000000"
     log(`Minting ${mintTokens} tokens to following addresses:`)
@@ -161,21 +189,21 @@ async function smartContractInitialization() {
         //await mintTx.wait()
     }
 
-    log("Init Uniswap factory")
+    log("Init Uniswap1 factory")
     let tx = await uniswapFactory.initializeFactory(uniswapExchangeTemplate.address)
     //await tx.wait()
-    log(`Init Uniswap exchange for DATAcoin token ${token.address}`)
+    log(`Init Uniswap1 exchange for DATAcoin token ${token.address}`)
     tx = await uniswapFactory.createExchange(token.address, {gasLimit: 6000000})
     //await tx.wait()
-    log(`Init Uniswap exchange for OTHERcoin token ${token2.address}`)
+    log(`Init Uniswap1 exchange for OTHERcoin token ${token2.address}`)
     tx = await uniswapFactory.createExchange(token2.address, {gasLimit: 6000000})
     // need wait here to call read methods below
     await tx.wait()
 
     let datatoken_exchange_address = await uniswapFactory.getExchange(token.address)
-    log(`DATAcoin traded at Uniswap exchange ${datatoken_exchange_address}`)
+    log(`DATAcoin traded at Uniswap1 exchange ${datatoken_exchange_address}`)
     let othertoken_exchange_address = await uniswapFactory.getExchange(token2.address)
-    log(`OTHERcoin traded at Uniswap exchange ${othertoken_exchange_address}`)
+    log(`OTHERcoin traded at Uniswap1 exchange ${othertoken_exchange_address}`)
     let datatokenExchange = new Contract(datatoken_exchange_address, uniswap_exchange_abi, wallet)
     let othertokenExchange = new Contract(othertoken_exchange_address, uniswap_exchange_abi, wallet)
 
@@ -195,7 +223,17 @@ async function smartContractInitialization() {
     tx = await othertokenExchange.addLiquidity(amt_token2, amt_token2, futureTime, {gasLimit: 6000000, value: amt_eth})
     //await tx.wait()
 
-    log(`Added liquidity to uniswap exchange: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
+    log(`deploy Uniswap2`)
+    const router = await deployUniswap2(wallet)
+    tx = await token.approve(router.address, amt_token)
+    //await tx.wait()
+    tx = await token2.approve(router.address, amt_token2)
+    await tx.wait()
+    log(`addLiquidity Uniswap2`)
+    tx = await router.addLiquidity(token.address, token2.address, amt_token, 
+        amt_token2, 0, 0, wallet.address, futureTime)
+
+    log(`Added liquidity to uniswap exchanges: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
 
     log(`Deploying NodeRegistry contract 1 (tracker registry) from ${wallet.address}`)
     var initialNodes = []
