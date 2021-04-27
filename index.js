@@ -6,7 +6,7 @@ const {
     ContractFactory,
     utils: {computeAddress, parseEther, formatEther, namehash},
     Wallet,
-    providers: {Web3Provider}
+    providers: {JsonRpcProvider}
 } = require("ethers")
 
 
@@ -32,6 +32,8 @@ const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.t
 const uniswap_factory_bytecode = fs.readFileSync("./bytecode/uniswap_factory.txt", "utf-8")
 
 const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
+const sidechainURL = process.env.SIDECHAIN_URL || "http://10.200.10.1:8546"
+
 const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
 const log = process.env.QUIET ? (() => {
 }) : console.log // eslint-disable-line no-console
@@ -122,19 +124,20 @@ async function deployUniswap2(wallet) {
     return router
 }
 
-async function smartContractInitialization() {
-
-    // wait until ganache is up and ethers.js ready
-    const web3 = new Web3(chainURL)
-    let provider = await new Web3Provider(web3.currentProvider);
+async function ethersWallet(url, privateKey) {
+    let provider = await new JsonRpcProvider(url);
     try {
         await provider.getNetwork()
     } catch (e) {
         console.error(e)
         process.exit(1)
     }
+    return new AutoNonceWallet(privateKey, provider)
+}
 
-    const wallet = new AutoNonceWallet(defaultPrivateKey, provider)
+async function smartContractInitialization() {
+    const wallet = await ethersWallet(chainURL, defaultPrivateKey)
+    const sidechainWallet = await ethersWallet(sidechainURL, defaultPrivateKey)
 
     log(`Deploying test DATAcoin from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
@@ -223,13 +226,16 @@ async function smartContractInitialization() {
     tx = await othertokenExchange.addLiquidity(amt_token2, amt_token2, futureTime, {gasLimit: 6000000, value: amt_eth})
     //await tx.wait()
 
-    log(`deploy Uniswap2`)
+    log(`deploy Uniswap2 mainnet`)
     const router = await deployUniswap2(wallet)
+    log(`deploy Uniswap2 sidechain`)
+    await deployUniswap2(sidechainWallet)
+    
     tx = await token.approve(router.address, amt_token)
     //await tx.wait()
     tx = await token2.approve(router.address, amt_token2)
     await tx.wait()
-    log(`addLiquidity Uniswap2`)
+    log(`addLiquidity Uniswap2 mainnet`)
     tx = await router.addLiquidity(token.address, token2.address, amt_token, 
         amt_token2, 0, 0, wallet.address, futureTime)
 
