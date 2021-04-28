@@ -226,19 +226,6 @@ async function smartContractInitialization() {
     tx = await othertokenExchange.addLiquidity(amt_token2, amt_token2, futureTime, {gasLimit: 6000000, value: amt_eth})
     //await tx.wait()
 
-    log(`deploy Uniswap2 mainnet`)
-    const router = await deployUniswap2(wallet)
-    log(`deploy Uniswap2 sidechain`)
-    await deployUniswap2(sidechainWallet)
-    
-    tx = await token.approve(router.address, amt_token)
-    //await tx.wait()
-    tx = await token2.approve(router.address, amt_token2)
-    await tx.wait()
-    log(`addLiquidity Uniswap2 mainnet`)
-    tx = await router.addLiquidity(token.address, token2.address, amt_token, 
-        amt_token2, 0, 0, wallet.address, futureTime)
-
     log(`Added liquidity to uniswap exchanges: ${formatEther(amt_token)} DATAcoin, ${formatEther(amt_token2)} OTHERcoin`)
 
     log(`Deploying NodeRegistry contract 1 (tracker registry) from ${wallet.address}`)
@@ -318,7 +305,21 @@ async function smartContractInitialization() {
    initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
    await deployNodeRegistry(wallet, initialNodes, initialMetadata)
 
-    //put additions here
+   log(`deploy Uniswap2 mainnet`)
+   const router = await deployUniswap2(wallet)
+   log(`deploy Uniswap2 sidechain`)
+   await deployUniswap2(sidechainWallet)
+   
+   tx = await token.approve(router.address, amt_token)
+   //await tx.wait()
+   tx = await token2.approve(router.address, amt_token2)
+   await tx.wait()
+   log(`addLiquidity Uniswap2 mainnet`)
+   tx = await router.addLiquidity(token.address, token2.address, amt_token, 
+    amt_token2, 0, 0, wallet.address, futureTime)
+
+
+   //put additions here
 
    //all TXs should now be confirmed:
     const EEwaitms = 60000
