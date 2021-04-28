@@ -9,7 +9,7 @@ smart-contracts-init container is no longer part of streamr-docker-dev. Instead 
 Dependencies:
 Build and tag required docker images.
  1. git clone https://github.com/poanetwork/omnibridge.git; cd omnibridge; docker build . -t 'poanetwork/omnibridge'
- 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr-dev/tokenbridge-contracts' 
+ 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr/tokenbridge-contracts' 
 
 To build images:
 ./preload_parity_images.sh

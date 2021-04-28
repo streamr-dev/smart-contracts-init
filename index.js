@@ -318,6 +318,8 @@ async function smartContractInitialization() {
    initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
    await deployNodeRegistry(wallet, initialNodes, initialMetadata)
 
+    //put additions here
+
    //all TXs should now be confirmed:
     const EEwaitms = 60000
     log("Getting products from E&E")
