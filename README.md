@@ -9,7 +9,7 @@ smart-contracts-init container is no longer part of streamr-docker-dev. Instead 
 Dependencies:
 Build and tag required docker images.
  1. git clone https://github.com/poanetwork/omnibridge.git; cd omnibridge; docker build . -t 'poanetwork/omnibridge'
- 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr-dev/tokenbridge-contracts' 
+ 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr/tokenbridge-contracts' 
 
 To build images:
 ./preload_parity_images.sh
@@ -36,27 +36,35 @@ Private Keys:
 
 
 Generates the following Ethereum addresses:
+
+Docker "mainnet" (localhost:8545):
 * DATAcoin address: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
 * Marketplace2 address: 0xF1371c0f40528406dc4f4cAf89924eA9Da49E866
 * OTHERcoin address: 0x642D2B84A32A9A92FEc78CeAA9488388b3704898
 * UniswapAdaptor address: 0xE4eA76e830a659282368cA2e7E4d18C4AE52D8B3
 * UniswapFactory address: 0xd2D23b73A67208a90CBfEE1381415329954f54E2
 * Tracker NodeRegistry: 0xBFCF120a8fD17670536f1B27D9737B775b2FD4CF
-* Storage NodeRegistry: 0x2B8c1877dE5531a345c2c8335c72A8d7556861AA
-
-Bridge Addresses:
-* home_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
-* foreign_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
-* home_erc677: 0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF
-* dedicated DATA home_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
-* dedicated DATA foreign_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
-* home omnibridge: 0x41B89Db86BE735c03A9296437E39F5FDAdC4c678
-* foreign omnibridge: 0x6346Ed242adE018Bd9320D5E3371c377BAB29c31
-* foreign_erc20: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
-* home_du_factory: 0x4A4c4759eb3b7ABee079f832850cD3D0dC48D927
-* foreign_du_factory: 0x4bbcBeFBEC587f6C4AF9AF9B48847caEa1Fe81dA
-
-ENS:
 * ENS: 0x92E8435EB56fD01BF4C79B66d47AC1A94338BB03
 * FIFSRegistrar for TLD (top level domain) 'eth': 0x57B81a9442805f88c4617B506206531e72d96290
 * PublicResolver (reusable): 0xBc0c81a318D57ae54dA28DE69184A9c3aE9a1e1c
+
+Docker "sidechain" (localhost:8546)
+* Storage NodeRegistry: 0xEAA002f7Dc60178B6103f8617Be45a9D3df659B6
+
+
+Bridge Addresses:
+
+Docker "mainnet" (localhost:8545):
+* foreign_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
+* dedicated DATA foreign_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
+* foreign omnibridge: 0x6346Ed242adE018Bd9320D5E3371c377BAB29c31
+* foreign_erc20: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
+* foreign_du_factory: 0x4bbcBeFBEC587f6C4AF9AF9B48847caEa1Fe81dA
+
+Docker "sidechain" (localhost:8546)
+* home_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
+* home_erc677: 0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF
+* dedicated DATA home_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
+* home omnibridge: 0x41B89Db86BE735c03A9296437E39F5FDAdC4c678
+* home_du_factory: 0x4A4c4759eb3b7ABee079f832850cD3D0dC48D927
+
