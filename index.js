@@ -298,12 +298,12 @@ async function smartContractInitialization() {
     log("ENS init complete")
 
    //deploy 2nd NodeRegistry:
-   log(`Deploying NodeRegistry contract 2 (storage node registry) from ${wallet.address}`)
+   log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWallet.address}`)
    initialNodes = []
    initialMetadata = []
    initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
    initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
-   await deployNodeRegistry(wallet, initialNodes, initialMetadata)
+   await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
 
    log(`deploy Uniswap2 mainnet`)
    const router = await deployUniswap2(wallet)
