@@ -14,7 +14,7 @@ Build and tag required docker images.
 To build images:
 ./preload_parity_images.sh
 
-This will tag the images locally and echo the command to push to dockerhub.
+This will tag the images locally and echo the command to push to dockerhub. Note that you must remove old chain data from `streamr-docker-dev/data` and restart `streamr-docker-dev` to see preload changes.
 
 Tokenbridge:
 The bridge dir contains code related to the setup of tokenbridge between the mainchain and sidechain images. bridge/tokenbridge-contracts contains some custom modifications Streamr has made to tokenbridge contracts. When tokenbridge implements transferAndCall for bridge tokens, this should be REPLACED with the tokenbridge image.
@@ -47,10 +47,11 @@ Docker "mainnet" (localhost:8545):
 * ENS: 0x92E8435EB56fD01BF4C79B66d47AC1A94338BB03
 * FIFSRegistrar for TLD (top level domain) 'eth': 0x57B81a9442805f88c4617B506206531e72d96290
 * PublicResolver (reusable): 0xBc0c81a318D57ae54dA28DE69184A9c3aE9a1e1c
+* Uniswap2 router: 0xeE1bC9a7BFF1fFD913f4c97B6177D47E804E1920
 
 Docker "sidechain" (localhost:8546)
 * Storage NodeRegistry: 0xEAA002f7Dc60178B6103f8617Be45a9D3df659B6
-
+* Uniswap2 router: 0xdc5F6368cd31330adC259386e78604a5E29E9415
 
 Bridge Addresses:
 
