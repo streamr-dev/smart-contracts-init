@@ -14,7 +14,8 @@ Build and tag required docker images.
 To build images:
 ./preload_parity_images.sh
 
-This will tag the images locally and echo the command to push to dockerhub. Note that you must remove old chain data from `streamr-docker-dev/data` and restart `streamr-docker-dev` to see preload changes.
+This will tag the images locally and echo the command to push to dockerhub. 
+Note that you MUST remove the parity docker volumes to delete old chain data from docker and then restart `streamr-docker-dev` to see preload changes.
 
 Tokenbridge:
 The bridge dir contains code related to the setup of tokenbridge between the mainchain and sidechain images. bridge/tokenbridge-contracts contains some custom modifications Streamr has made to tokenbridge contracts. When tokenbridge implements transferAndCall for bridge tokens, this should be REPLACED with the tokenbridge image.
