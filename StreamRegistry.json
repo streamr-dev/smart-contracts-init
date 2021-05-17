@@ -1,0 +1,676 @@
+{
+  "address": "0x951FF05D5be8608f907125c813feAF02467C8684",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "ensCacheAddr",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "edit",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "canDelete",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "publish",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "subscribed",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "share",
+          "type": "bool"
+        }
+      ],
+      "name": "PermissionUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "metadata",
+          "type": "string"
+        }
+      ],
+      "name": "StreamCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "id",
+          "type": "string"
+        }
+      ],
+      "name": "StreamDeleted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "metadata",
+          "type": "string"
+        }
+      ],
+      "name": "StreamUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "addressToString",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamIdPath",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "metadataJsonString",
+          "type": "string"
+        }
+      ],
+      "name": "createStream",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "ensName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "streamIdPath",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "metadataJsonString",
+          "type": "string"
+        }
+      ],
+      "name": "createStreamWithENS",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        }
+      ],
+      "name": "deleteStream",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "getAddressKey",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "getPermissionsForUser",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "edit",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canDelete",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "publish",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "subscribed",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "share",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct StreamRegistry.Permission",
+          "name": "permission",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        }
+      ],
+      "name": "getStreamMetadata",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "des",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "enum StreamRegistry.PermissionType",
+          "name": "permissionType",
+          "type": "uint8"
+        }
+      ],
+      "name": "grantPermission",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "enum StreamRegistry.PermissionType",
+          "name": "permissionType",
+          "type": "uint8"
+        }
+      ],
+      "name": "hasPermission",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "userHasPermission",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "revokeAllPermissionsForUser",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "enum StreamRegistry.PermissionType",
+          "name": "permissionType",
+          "type": "uint8"
+        }
+      ],
+      "name": "revokePermission",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "edit",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "deletePerm",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "publish",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "subscribe",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "share",
+          "type": "bool"
+        }
+      ],
+      "name": "setPermissionsForUser",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "name": "streamIdToMetadata",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "streamIdToPermissions",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "edit",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "canDelete",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "publish",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "subscribed",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "share",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "streamId",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "metadata",
+          "type": "string"
+        }
+      ],
+      "name": "updateStreamMetadata",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x42de7d393eb5a372c3922686de752c9b4248fe699b164679a80fce55e616dad3",
+  "receipt": {
+    "to": null,
+    "from": "0xD4DA04E31aD80E0EA03aAD30C885f3dC757D8fa3",
+    "contractAddress": "0x951FF05D5be8608f907125c813feAF02467C8684",
+    "transactionIndex": 0,
+    "gasUsed": "2870831",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xa0053f804bdfe78dd347d74f277a9ea46f2ebd5f6bd8370586244e3d2a1ec6b4",
+    "transactionHash": "0x42de7d393eb5a372c3922686de752c9b4248fe699b164679a80fce55e616dad3",
+    "logs": [],
+    "blockNumber": 15,
+    "cumulativeGasUsed": "2870831",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x2fb7Cd141026fcF23Abb07593A14D6E45dC33D54"
+  ],
+  "solcInputHash": "9218d279e89d6c3b5d8a8cda184e0c9b",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"ensCacheAddr\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"edit\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"canDelete\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"publish\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"subscribed\",\"type\":\"bool\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"share\",\"type\":\"bool\"}],\"name\":\"PermissionUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"id\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"name\":\"StreamCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"id\",\"type\":\"string\"}],\"name\":\"StreamDeleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"id\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"name\":\"StreamUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"addressToString\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamIdPath\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"metadataJsonString\",\"type\":\"string\"}],\"name\":\"createStream\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"ensName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"streamIdPath\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"metadataJsonString\",\"type\":\"string\"}],\"name\":\"createStreamWithENS\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"}],\"name\":\"deleteStream\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getAddressKey\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"getPermissionsForUser\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"edit\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canDelete\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"publish\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"subscribed\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"share\",\"type\":\"bool\"}],\"internalType\":\"struct StreamRegistry.Permission\",\"name\":\"permission\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"}],\"name\":\"getStreamMetadata\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"des\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"enum StreamRegistry.PermissionType\",\"name\":\"permissionType\",\"type\":\"uint8\"}],\"name\":\"grantPermission\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"enum StreamRegistry.PermissionType\",\"name\":\"permissionType\",\"type\":\"uint8\"}],\"name\":\"hasPermission\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"userHasPermission\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"revokeAllPermissionsForUser\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"enum StreamRegistry.PermissionType\",\"name\":\"permissionType\",\"type\":\"uint8\"}],\"name\":\"revokePermission\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"edit\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"deletePerm\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"publish\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"subscribe\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"share\",\"type\":\"bool\"}],\"name\":\"setPermissionsForUser\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"streamIdToMetadata\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"streamIdToPermissions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"edit\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canDelete\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"publish\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"subscribed\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"share\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"streamId\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"}],\"name\":\"updateStreamMetadata\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/StreamRegistry/StreamRegistry.sol\":\"StreamRegistry\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@chainlink/contracts/src/v0.6/Chainlink.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\nimport { CBORChainlink } from \\\"./vendor/CBORChainlink.sol\\\";\\nimport { BufferChainlink } from \\\"./vendor/BufferChainlink.sol\\\";\\n\\n/**\\n * @title Library for common Chainlink functions\\n * @dev Uses imported CBOR library for encoding to buffer\\n */\\nlibrary Chainlink {\\n  uint256 internal constant defaultBufferSize = 256; // solhint-disable-line const-name-snakecase\\n\\n  using CBORChainlink for BufferChainlink.buffer;\\n\\n  struct Request {\\n    bytes32 id;\\n    address callbackAddress;\\n    bytes4 callbackFunctionId;\\n    uint256 nonce;\\n    BufferChainlink.buffer buf;\\n  }\\n\\n  /**\\n   * @notice Initializes a Chainlink request\\n   * @dev Sets the ID, callback address, and callback function signature on the request\\n   * @param self The uninitialized request\\n   * @param _id The Job Specification ID\\n   * @param _callbackAddress The callback address\\n   * @param _callbackFunction The callback function signature\\n   * @return The initialized request\\n   */\\n  function initialize(\\n    Request memory self,\\n    bytes32 _id,\\n    address _callbackAddress,\\n    bytes4 _callbackFunction\\n  ) internal pure returns (Chainlink.Request memory) {\\n    BufferChainlink.init(self.buf, defaultBufferSize);\\n    self.id = _id;\\n    self.callbackAddress = _callbackAddress;\\n    self.callbackFunctionId = _callbackFunction;\\n    return self;\\n  }\\n\\n  /**\\n   * @notice Sets the data for the buffer without encoding CBOR on-chain\\n   * @dev CBOR can be closed with curly-brackets {} or they can be left off\\n   * @param self The initialized request\\n   * @param _data The CBOR data\\n   */\\n  function setBuffer(Request memory self, bytes memory _data)\\n    internal pure\\n  {\\n    BufferChainlink.init(self.buf, _data.length);\\n    BufferChainlink.append(self.buf, _data);\\n  }\\n\\n  /**\\n   * @notice Adds a string value to the request with a given key name\\n   * @param self The initialized request\\n   * @param _key The name of the key\\n   * @param _value The string value to add\\n   */\\n  function add(Request memory self, string memory _key, string memory _value)\\n    internal pure\\n  {\\n    self.buf.encodeString(_key);\\n    self.buf.encodeString(_value);\\n  }\\n\\n  /**\\n   * @notice Adds a bytes value to the request with a given key name\\n   * @param self The initialized request\\n   * @param _key The name of the key\\n   * @param _value The bytes value to add\\n   */\\n  function addBytes(Request memory self, string memory _key, bytes memory _value)\\n    internal pure\\n  {\\n    self.buf.encodeString(_key);\\n    self.buf.encodeBytes(_value);\\n  }\\n\\n  /**\\n   * @notice Adds a int256 value to the request with a given key name\\n   * @param self The initialized request\\n   * @param _key The name of the key\\n   * @param _value The int256 value to add\\n   */\\n  function addInt(Request memory self, string memory _key, int256 _value)\\n    internal pure\\n  {\\n    self.buf.encodeString(_key);\\n    self.buf.encodeInt(_value);\\n  }\\n\\n  /**\\n   * @notice Adds a uint256 value to the request with a given key name\\n   * @param self The initialized request\\n   * @param _key The name of the key\\n   * @param _value The uint256 value to add\\n   */\\n  function addUint(Request memory self, string memory _key, uint256 _value)\\n    internal pure\\n  {\\n    self.buf.encodeString(_key);\\n    self.buf.encodeUInt(_value);\\n  }\\n\\n  /**\\n   * @notice Adds an array of strings to the request with a given key name\\n   * @param self The initialized request\\n   * @param _key The name of the key\\n   * @param _values The array of string values to add\\n   */\\n  function addStringArray(Request memory self, string memory _key, string[] memory _values)\\n    internal pure\\n  {\\n    self.buf.encodeString(_key);\\n    self.buf.startArray();\\n    for (uint256 i = 0; i < _values.length; i++) {\\n      self.buf.encodeString(_values[i]);\\n    }\\n    self.buf.endSequence();\\n  }\\n}\\n\",\"keccak256\":\"0x7bef34fd97f611103c6113025e3d6af755f326069767e72266698f64258e62b6\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/ChainlinkClient.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\nimport \\\"./Chainlink.sol\\\";\\nimport \\\"./interfaces/ENSInterface.sol\\\";\\nimport \\\"./interfaces/LinkTokenInterface.sol\\\";\\nimport \\\"./interfaces/ChainlinkRequestInterface.sol\\\";\\nimport \\\"./interfaces/PointerInterface.sol\\\";\\nimport { ENSResolver as ENSResolver_Chainlink } from \\\"./vendor/ENSResolver.sol\\\";\\n\\n/**\\n * @title The ChainlinkClient contract\\n * @notice Contract writers can inherit this contract in order to create requests for the\\n * Chainlink network\\n */\\ncontract ChainlinkClient {\\n  using Chainlink for Chainlink.Request;\\n\\n  uint256 constant internal LINK = 10**18;\\n  uint256 constant private AMOUNT_OVERRIDE = 0;\\n  address constant private SENDER_OVERRIDE = address(0);\\n  uint256 constant private ARGS_VERSION = 1;\\n  bytes32 constant private ENS_TOKEN_SUBNAME = keccak256(\\\"link\\\");\\n  bytes32 constant private ENS_ORACLE_SUBNAME = keccak256(\\\"oracle\\\");\\n  address constant private LINK_TOKEN_POINTER = 0xC89bD4E1632D3A43CB03AAAd5262cbe4038Bc571;\\n\\n  ENSInterface private ens;\\n  bytes32 private ensNode;\\n  LinkTokenInterface private link;\\n  ChainlinkRequestInterface private oracle;\\n  uint256 private requestCount = 1;\\n  mapping(bytes32 => address) private pendingRequests;\\n\\n  event ChainlinkRequested(bytes32 indexed id);\\n  event ChainlinkFulfilled(bytes32 indexed id);\\n  event ChainlinkCancelled(bytes32 indexed id);\\n\\n  /**\\n   * @notice Creates a request that can hold additional parameters\\n   * @param _specId The Job Specification ID that the request will be created for\\n   * @param _callbackAddress The callback address that the response will be sent to\\n   * @param _callbackFunctionSignature The callback function signature to use for the callback address\\n   * @return A Chainlink Request struct in memory\\n   */\\n  function buildChainlinkRequest(\\n    bytes32 _specId,\\n    address _callbackAddress,\\n    bytes4 _callbackFunctionSignature\\n  ) internal pure returns (Chainlink.Request memory) {\\n    Chainlink.Request memory req;\\n    return req.initialize(_specId, _callbackAddress, _callbackFunctionSignature);\\n  }\\n\\n  /**\\n   * @notice Creates a Chainlink request to the stored oracle address\\n   * @dev Calls `chainlinkRequestTo` with the stored oracle address\\n   * @param _req The initialized Chainlink Request\\n   * @param _payment The amount of LINK to send for the request\\n   * @return requestId The request ID\\n   */\\n  function sendChainlinkRequest(Chainlink.Request memory _req, uint256 _payment)\\n    internal\\n    returns (bytes32)\\n  {\\n    return sendChainlinkRequestTo(address(oracle), _req, _payment);\\n  }\\n\\n  /**\\n   * @notice Creates a Chainlink request to the specified oracle address\\n   * @dev Generates and stores a request ID, increments the local nonce, and uses `transferAndCall` to\\n   * send LINK which creates a request on the target oracle contract.\\n   * Emits ChainlinkRequested event.\\n   * @param _oracle The address of the oracle for the request\\n   * @param _req The initialized Chainlink Request\\n   * @param _payment The amount of LINK to send for the request\\n   * @return requestId The request ID\\n   */\\n  function sendChainlinkRequestTo(address _oracle, Chainlink.Request memory _req, uint256 _payment)\\n    internal\\n    returns (bytes32 requestId)\\n  {\\n    requestId = keccak256(abi.encodePacked(this, requestCount));\\n    _req.nonce = requestCount;\\n    pendingRequests[requestId] = _oracle;\\n    emit ChainlinkRequested(requestId);\\n    require(link.transferAndCall(_oracle, _payment, encodeRequest(_req)), \\\"unable to transferAndCall to oracle\\\");\\n    requestCount += 1;\\n\\n    return requestId;\\n  }\\n\\n  /**\\n   * @notice Allows a request to be cancelled if it has not been fulfilled\\n   * @dev Requires keeping track of the expiration value emitted from the oracle contract.\\n   * Deletes the request from the `pendingRequests` mapping.\\n   * Emits ChainlinkCancelled event.\\n   * @param _requestId The request ID\\n   * @param _payment The amount of LINK sent for the request\\n   * @param _callbackFunc The callback function specified for the request\\n   * @param _expiration The time of the expiration for the request\\n   */\\n  function cancelChainlinkRequest(\\n    bytes32 _requestId,\\n    uint256 _payment,\\n    bytes4 _callbackFunc,\\n    uint256 _expiration\\n  )\\n    internal\\n  {\\n    ChainlinkRequestInterface requested = ChainlinkRequestInterface(pendingRequests[_requestId]);\\n    delete pendingRequests[_requestId];\\n    emit ChainlinkCancelled(_requestId);\\n    requested.cancelOracleRequest(_requestId, _payment, _callbackFunc, _expiration);\\n  }\\n\\n  /**\\n   * @notice Sets the stored oracle address\\n   * @param _oracle The address of the oracle contract\\n   */\\n  function setChainlinkOracle(address _oracle) internal {\\n    oracle = ChainlinkRequestInterface(_oracle);\\n  }\\n\\n  /**\\n   * @notice Sets the LINK token address\\n   * @param _link The address of the LINK token contract\\n   */\\n  function setChainlinkToken(address _link) internal {\\n    link = LinkTokenInterface(_link);\\n  }\\n\\n  /**\\n   * @notice Sets the Chainlink token address for the public\\n   * network as given by the Pointer contract\\n   */\\n  function setPublicChainlinkToken() internal {\\n    setChainlinkToken(PointerInterface(LINK_TOKEN_POINTER).getAddress());\\n  }\\n\\n  /**\\n   * @notice Retrieves the stored address of the LINK token\\n   * @return The address of the LINK token\\n   */\\n  function chainlinkTokenAddress()\\n    internal\\n    view\\n    returns (address)\\n  {\\n    return address(link);\\n  }\\n\\n  /**\\n   * @notice Retrieves the stored address of the oracle contract\\n   * @return The address of the oracle contract\\n   */\\n  function chainlinkOracleAddress()\\n    internal\\n    view\\n    returns (address)\\n  {\\n    return address(oracle);\\n  }\\n\\n  /**\\n   * @notice Allows for a request which was created on another contract to be fulfilled\\n   * on this contract\\n   * @param _oracle The address of the oracle contract that will fulfill the request\\n   * @param _requestId The request ID used for the response\\n   */\\n  function addChainlinkExternalRequest(address _oracle, bytes32 _requestId)\\n    internal\\n    notPendingRequest(_requestId)\\n  {\\n    pendingRequests[_requestId] = _oracle;\\n  }\\n\\n  /**\\n   * @notice Sets the stored oracle and LINK token contracts with the addresses resolved by ENS\\n   * @dev Accounts for subnodes having different resolvers\\n   * @param _ens The address of the ENS contract\\n   * @param _node The ENS node hash\\n   */\\n  function useChainlinkWithENS(address _ens, bytes32 _node)\\n    internal\\n  {\\n    ens = ENSInterface(_ens);\\n    ensNode = _node;\\n    bytes32 linkSubnode = keccak256(abi.encodePacked(ensNode, ENS_TOKEN_SUBNAME));\\n    ENSResolver_Chainlink resolver = ENSResolver_Chainlink(ens.resolver(linkSubnode));\\n    setChainlinkToken(resolver.addr(linkSubnode));\\n    updateChainlinkOracleWithENS();\\n  }\\n\\n  /**\\n   * @notice Sets the stored oracle contract with the address resolved by ENS\\n   * @dev This may be called on its own as long as `useChainlinkWithENS` has been called previously\\n   */\\n  function updateChainlinkOracleWithENS()\\n    internal\\n  {\\n    bytes32 oracleSubnode = keccak256(abi.encodePacked(ensNode, ENS_ORACLE_SUBNAME));\\n    ENSResolver_Chainlink resolver = ENSResolver_Chainlink(ens.resolver(oracleSubnode));\\n    setChainlinkOracle(resolver.addr(oracleSubnode));\\n  }\\n\\n  /**\\n   * @notice Encodes the request to be sent to the oracle contract\\n   * @dev The Chainlink node expects values to be in order for the request to be picked up. Order of types\\n   * will be validated in the oracle contract.\\n   * @param _req The initialized Chainlink Request\\n   * @return The bytes payload for the `transferAndCall` method\\n   */\\n  function encodeRequest(Chainlink.Request memory _req)\\n    private\\n    view\\n    returns (bytes memory)\\n  {\\n    return abi.encodeWithSelector(\\n      oracle.oracleRequest.selector,\\n      SENDER_OVERRIDE, // Sender value - overridden by onTokenTransfer by the requesting contract's address\\n      AMOUNT_OVERRIDE, // Amount value - overridden by onTokenTransfer by the actual amount of LINK sent\\n      _req.id,\\n      _req.callbackAddress,\\n      _req.callbackFunctionId,\\n      _req.nonce,\\n      ARGS_VERSION,\\n      _req.buf.buf);\\n  }\\n\\n  /**\\n   * @notice Ensures that the fulfillment is valid for this contract\\n   * @dev Use if the contract developer prefers methods instead of modifiers for validation\\n   * @param _requestId The request ID for fulfillment\\n   */\\n  function validateChainlinkCallback(bytes32 _requestId)\\n    internal\\n    recordChainlinkFulfillment(_requestId)\\n    // solhint-disable-next-line no-empty-blocks\\n  {}\\n\\n  /**\\n   * @dev Reverts if the sender is not the oracle of the request.\\n   * Emits ChainlinkFulfilled event.\\n   * @param _requestId The request ID for fulfillment\\n   */\\n  modifier recordChainlinkFulfillment(bytes32 _requestId) {\\n    require(msg.sender == pendingRequests[_requestId],\\n            \\\"Source must be the oracle of the request\\\");\\n    delete pendingRequests[_requestId];\\n    emit ChainlinkFulfilled(_requestId);\\n    _;\\n  }\\n\\n  /**\\n   * @dev Reverts if the request is already pending\\n   * @param _requestId The request ID for fulfillment\\n   */\\n  modifier notPendingRequest(bytes32 _requestId) {\\n    require(pendingRequests[_requestId] == address(0), \\\"Request is already pending\\\");\\n    _;\\n  }\\n}\\n\",\"keccak256\":\"0x9f8883b8b5b76bba151e5f30d4c353b8a3f15ee3d97117deee4cccd91fe8640f\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/interfaces/ChainlinkRequestInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\ninterface ChainlinkRequestInterface {\\n  function oracleRequest(\\n    address sender,\\n    uint256 requestPrice,\\n    bytes32 serviceAgreementID,\\n    address callbackAddress,\\n    bytes4 callbackFunctionId,\\n    uint256 nonce,\\n    uint256 dataVersion,\\n    bytes calldata data\\n  ) external;\\n\\n  function cancelOracleRequest(\\n    bytes32 requestId,\\n    uint256 payment,\\n    bytes4 callbackFunctionId,\\n    uint256 expiration\\n  ) external;\\n}\\n\",\"keccak256\":\"0xe513c0f60edf13da7d82625489cf2008c7b66170f3b1ed1606b84c73f95b17ad\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/interfaces/ENSInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\ninterface ENSInterface {\\n\\n  // Logged when the owner of a node assigns a new owner to a subnode.\\n  event NewOwner(bytes32 indexed node, bytes32 indexed label, address owner);\\n\\n  // Logged when the owner of a node transfers ownership to a new account.\\n  event Transfer(bytes32 indexed node, address owner);\\n\\n  // Logged when the resolver for a node changes.\\n  event NewResolver(bytes32 indexed node, address resolver);\\n\\n  // Logged when the TTL of a node changes\\n  event NewTTL(bytes32 indexed node, uint64 ttl);\\n\\n\\n  function setSubnodeOwner(bytes32 node, bytes32 label, address _owner) external;\\n  function setResolver(bytes32 node, address _resolver) external;\\n  function setOwner(bytes32 node, address _owner) external;\\n  function setTTL(bytes32 node, uint64 _ttl) external;\\n  function owner(bytes32 node) external view returns (address);\\n  function resolver(bytes32 node) external view returns (address);\\n  function ttl(bytes32 node) external view returns (uint64);\\n\\n}\\n\",\"keccak256\":\"0xdef864af6e516477773ea246b73531b1836de5bea4ac1cfd8be6e7f4b3f3c3fd\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/interfaces/LinkTokenInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\ninterface LinkTokenInterface {\\n  function allowance(address owner, address spender) external view returns (uint256 remaining);\\n  function approve(address spender, uint256 value) external returns (bool success);\\n  function balanceOf(address owner) external view returns (uint256 balance);\\n  function decimals() external view returns (uint8 decimalPlaces);\\n  function decreaseApproval(address spender, uint256 addedValue) external returns (bool success);\\n  function increaseApproval(address spender, uint256 subtractedValue) external;\\n  function name() external view returns (string memory tokenName);\\n  function symbol() external view returns (string memory tokenSymbol);\\n  function totalSupply() external view returns (uint256 totalTokensIssued);\\n  function transfer(address to, uint256 value) external returns (bool success);\\n  function transferAndCall(address to, uint256 value, bytes calldata data) external returns (bool success);\\n  function transferFrom(address from, address to, uint256 value) external returns (bool success);\\n}\\n\",\"keccak256\":\"0xe245a7be950c94d87bb775ae9ee9fbd693fbe2987778e6ce0b04605ea44b7b68\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/interfaces/PointerInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\ninterface PointerInterface {\\n  function getAddress() external view returns (address);\\n}\\n\",\"keccak256\":\"0x08aed19c3bef1ae2d90fc0d9d28a497fd7f312991ed08fedfe545de6b9a476e4\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/vendor/BufferChainlink.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\n/**\\n* @dev A library for working with mutable byte buffers in Solidity.\\n*\\n* Byte buffers are mutable and expandable, and provide a variety of primitives\\n* for writing to them. At any time you can fetch a bytes object containing the\\n* current contents of the buffer. The bytes object should not be stored between\\n* operations, as it may change due to resizing of the buffer.\\n*/\\nlibrary BufferChainlink {\\n  /**\\n  * @dev Represents a mutable buffer. Buffers have a current value (buf) and\\n  *      a capacity. The capacity may be longer than the current value, in\\n  *      which case it can be extended without the need to allocate more memory.\\n  */\\n  struct buffer {\\n    bytes buf;\\n    uint capacity;\\n  }\\n\\n  /**\\n  * @dev Initializes a buffer with an initial capacity.\\n  * @param buf The buffer to initialize.\\n  * @param capacity The number of bytes of space to allocate the buffer.\\n  * @return The buffer, for chaining.\\n  */\\n  function init(buffer memory buf, uint capacity) internal pure returns(buffer memory) {\\n    if (capacity % 32 != 0) {\\n      capacity += 32 - (capacity % 32);\\n    }\\n    // Allocate space for the buffer data\\n    buf.capacity = capacity;\\n    assembly {\\n      let ptr := mload(0x40)\\n      mstore(buf, ptr)\\n      mstore(ptr, 0)\\n      mstore(0x40, add(32, add(ptr, capacity)))\\n    }\\n    return buf;\\n  }\\n\\n  /**\\n  * @dev Initializes a new buffer from an existing bytes object.\\n  *      Changes to the buffer may mutate the original value.\\n  * @param b The bytes object to initialize the buffer with.\\n  * @return A new buffer.\\n  */\\n  function fromBytes(bytes memory b) internal pure returns(buffer memory) {\\n    buffer memory buf;\\n    buf.buf = b;\\n    buf.capacity = b.length;\\n    return buf;\\n  }\\n\\n  function resize(buffer memory buf, uint capacity) private pure {\\n    bytes memory oldbuf = buf.buf;\\n    init(buf, capacity);\\n    append(buf, oldbuf);\\n  }\\n\\n  function max(uint a, uint b) private pure returns(uint) {\\n    if (a > b) {\\n      return a;\\n    }\\n    return b;\\n  }\\n\\n  /**\\n  * @dev Sets buffer length to 0.\\n  * @param buf The buffer to truncate.\\n  * @return The original buffer, for chaining..\\n  */\\n  function truncate(buffer memory buf) internal pure returns (buffer memory) {\\n    assembly {\\n      let bufptr := mload(buf)\\n      mstore(bufptr, 0)\\n    }\\n    return buf;\\n  }\\n\\n  /**\\n  * @dev Writes a byte string to a buffer. Resizes if doing so would exceed\\n  *      the capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param off The start offset to write to.\\n  * @param data The data to append.\\n  * @param len The number of bytes to copy.\\n  * @return The original buffer, for chaining.\\n  */\\n  function write(buffer memory buf, uint off, bytes memory data, uint len) internal pure returns(buffer memory) {\\n    require(len <= data.length);\\n\\n    if (off + len > buf.capacity) {\\n      resize(buf, max(buf.capacity, len + off) * 2);\\n    }\\n\\n    uint dest;\\n    uint src;\\n    assembly {\\n      // Memory address of the buffer data\\n      let bufptr := mload(buf)\\n      // Length of existing buffer data\\n      let buflen := mload(bufptr)\\n      // Start address = buffer address + offset + sizeof(buffer length)\\n      dest := add(add(bufptr, 32), off)\\n      // Update buffer length if we're extending it\\n      if gt(add(len, off), buflen) {\\n        mstore(bufptr, add(len, off))\\n      }\\n      src := add(data, 32)\\n    }\\n\\n    // Copy word-length chunks while possible\\n    for (; len >= 32; len -= 32) {\\n      assembly {\\n        mstore(dest, mload(src))\\n      }\\n      dest += 32;\\n      src += 32;\\n    }\\n\\n    // Copy remaining bytes\\n    uint mask = 256 ** (32 - len) - 1;\\n    assembly {\\n      let srcpart := and(mload(src), not(mask))\\n      let destpart := and(mload(dest), mask)\\n      mstore(dest, or(destpart, srcpart))\\n    }\\n\\n    return buf;\\n  }\\n\\n  /**\\n  * @dev Appends a byte string to a buffer. Resizes if doing so would exceed\\n  *      the capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param data The data to append.\\n  * @param len The number of bytes to copy.\\n  * @return The original buffer, for chaining.\\n  */\\n  function append(buffer memory buf, bytes memory data, uint len) internal pure returns (buffer memory) {\\n    return write(buf, buf.buf.length, data, len);\\n  }\\n\\n  /**\\n  * @dev Appends a byte string to a buffer. Resizes if doing so would exceed\\n  *      the capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param data The data to append.\\n  * @return The original buffer, for chaining.\\n  */\\n  function append(buffer memory buf, bytes memory data) internal pure returns (buffer memory) {\\n    return write(buf, buf.buf.length, data, data.length);\\n  }\\n\\n  /**\\n  * @dev Writes a byte to the buffer. Resizes if doing so would exceed the\\n  *      capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param off The offset to write the byte at.\\n  * @param data The data to append.\\n  * @return The original buffer, for chaining.\\n  */\\n  function writeUint8(buffer memory buf, uint off, uint8 data) internal pure returns(buffer memory) {\\n    if (off >= buf.capacity) {\\n      resize(buf, buf.capacity * 2);\\n    }\\n\\n    assembly {\\n      // Memory address of the buffer data\\n      let bufptr := mload(buf)\\n      // Length of existing buffer data\\n      let buflen := mload(bufptr)\\n      // Address = buffer address + sizeof(buffer length) + off\\n      let dest := add(add(bufptr, off), 32)\\n      mstore8(dest, data)\\n      // Update buffer length if we extended it\\n      if eq(off, buflen) {\\n        mstore(bufptr, add(buflen, 1))\\n      }\\n    }\\n    return buf;\\n  }\\n\\n  /**\\n  * @dev Appends a byte to the buffer. Resizes if doing so would exceed the\\n  *      capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param data The data to append.\\n  * @return The original buffer, for chaining.\\n  */\\n  function appendUint8(buffer memory buf, uint8 data) internal pure returns(buffer memory) {\\n    return writeUint8(buf, buf.buf.length, data);\\n  }\\n\\n  /**\\n  * @dev Writes up to 32 bytes to the buffer. Resizes if doing so would\\n  *      exceed the capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param off The offset to write at.\\n  * @param data The data to append.\\n  * @param len The number of bytes to write (left-aligned).\\n  * @return The original buffer, for chaining.\\n  */\\n  function write(buffer memory buf, uint off, bytes32 data, uint len) private pure returns(buffer memory) {\\n    if (len + off > buf.capacity) {\\n      resize(buf, (len + off) * 2);\\n    }\\n\\n    uint mask = 256 ** len - 1;\\n    // Right-align data\\n    data = data >> (8 * (32 - len));\\n    assembly {\\n      // Memory address of the buffer data\\n      let bufptr := mload(buf)\\n      // Address = buffer address + sizeof(buffer length) + off + len\\n      let dest := add(add(bufptr, off), len)\\n      mstore(dest, or(and(mload(dest), not(mask)), data))\\n      // Update buffer length if we extended it\\n      if gt(add(off, len), mload(bufptr)) {\\n        mstore(bufptr, add(off, len))\\n      }\\n    }\\n    return buf;\\n  }\\n\\n  /**\\n  * @dev Writes a bytes20 to the buffer. Resizes if doing so would exceed the\\n  *      capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param off The offset to write at.\\n  * @param data The data to append.\\n  * @return The original buffer, for chaining.\\n  */\\n  function writeBytes20(buffer memory buf, uint off, bytes20 data) internal pure returns (buffer memory) {\\n    return write(buf, off, bytes32(data), 20);\\n  }\\n\\n  /**\\n  * @dev Appends a bytes20 to the buffer. Resizes if doing so would exceed\\n  *      the capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param data The data to append.\\n  * @return The original buffer, for chhaining.\\n  */\\n  function appendBytes20(buffer memory buf, bytes20 data) internal pure returns (buffer memory) {\\n    return write(buf, buf.buf.length, bytes32(data), 20);\\n  }\\n\\n  /**\\n  * @dev Appends a bytes32 to the buffer. Resizes if doing so would exceed\\n  *      the capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param data The data to append.\\n  * @return The original buffer, for chaining.\\n  */\\n  function appendBytes32(buffer memory buf, bytes32 data) internal pure returns (buffer memory) {\\n    return write(buf, buf.buf.length, data, 32);\\n  }\\n\\n  /**\\n  * @dev Writes an integer to the buffer. Resizes if doing so would exceed\\n  *      the capacity of the buffer.\\n  * @param buf The buffer to append to.\\n  * @param off The offset to write at.\\n  * @param data The data to append.\\n  * @param len The number of bytes to write (right-aligned).\\n  * @return The original buffer, for chaining.\\n  */\\n  function writeInt(buffer memory buf, uint off, uint data, uint len) private pure returns(buffer memory) {\\n    if (len + off > buf.capacity) {\\n      resize(buf, (len + off) * 2);\\n    }\\n\\n    uint mask = 256 ** len - 1;\\n    assembly {\\n      // Memory address of the buffer data\\n      let bufptr := mload(buf)\\n      // Address = buffer address + off + sizeof(buffer length) + len\\n      let dest := add(add(bufptr, off), len)\\n      mstore(dest, or(and(mload(dest), not(mask)), data))\\n      // Update buffer length if we extended it\\n      if gt(add(off, len), mload(bufptr)) {\\n        mstore(bufptr, add(off, len))\\n      }\\n    }\\n    return buf;\\n  }\\n\\n  /**\\n    * @dev Appends a byte to the end of the buffer. Resizes if doing so would\\n    * exceed the capacity of the buffer.\\n    * @param buf The buffer to append to.\\n    * @param data The data to append.\\n    * @return The original buffer.\\n    */\\n  function appendInt(buffer memory buf, uint data, uint len) internal pure returns(buffer memory) {\\n    return writeInt(buf, buf.buf.length, data, len);\\n  }\\n}\\n\",\"keccak256\":\"0x14f13139229a2fef8f705f29f91de0bc81bcd5070ec75b4bd3fd82c1536ca685\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/vendor/CBORChainlink.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity >= 0.4.19;\\n\\nimport { BufferChainlink } from \\\"./BufferChainlink.sol\\\";\\n\\nlibrary CBORChainlink {\\n  using BufferChainlink for BufferChainlink.buffer;\\n\\n  uint8 private constant MAJOR_TYPE_INT = 0;\\n  uint8 private constant MAJOR_TYPE_NEGATIVE_INT = 1;\\n  uint8 private constant MAJOR_TYPE_BYTES = 2;\\n  uint8 private constant MAJOR_TYPE_STRING = 3;\\n  uint8 private constant MAJOR_TYPE_ARRAY = 4;\\n  uint8 private constant MAJOR_TYPE_MAP = 5;\\n  uint8 private constant MAJOR_TYPE_TAG = 6;\\n  uint8 private constant MAJOR_TYPE_CONTENT_FREE = 7;\\n\\n  uint8 private constant TAG_TYPE_BIGNUM = 2;\\n  uint8 private constant TAG_TYPE_NEGATIVE_BIGNUM = 3;\\n\\n  function encodeType(\\n    BufferChainlink.buffer memory buf,\\n    uint8 major,\\n    uint value\\n  )\\n    private\\n    pure\\n  {\\n    if(value <= 23) {\\n      buf.appendUint8(uint8((major << 5) | value));\\n    } else if(value <= 0xFF) {\\n      buf.appendUint8(uint8((major << 5) | 24));\\n      buf.appendInt(value, 1);\\n    } else if(value <= 0xFFFF) {\\n      buf.appendUint8(uint8((major << 5) | 25));\\n      buf.appendInt(value, 2);\\n    } else if(value <= 0xFFFFFFFF) {\\n      buf.appendUint8(uint8((major << 5) | 26));\\n      buf.appendInt(value, 4);\\n    } else if(value <= 0xFFFFFFFFFFFFFFFF) {\\n      buf.appendUint8(uint8((major << 5) | 27));\\n      buf.appendInt(value, 8);\\n    }\\n  }\\n\\n  function encodeIndefiniteLengthType(\\n    BufferChainlink.buffer memory buf,\\n    uint8 major\\n  )\\n    private\\n    pure\\n  {\\n    buf.appendUint8(uint8((major << 5) | 31));\\n  }\\n\\n  function encodeUInt(\\n    BufferChainlink.buffer memory buf,\\n    uint value\\n  )\\n    internal\\n    pure\\n  {\\n    encodeType(buf, MAJOR_TYPE_INT, value);\\n  }\\n\\n  function encodeInt(\\n    BufferChainlink.buffer memory buf,\\n    int value\\n  )\\n    internal\\n    pure\\n  {\\n    if(value < -0x10000000000000000) {\\n      encodeSignedBigNum(buf, value);\\n    } else if(value > 0xFFFFFFFFFFFFFFFF) {\\n      encodeBigNum(buf, value);\\n    } else if(value >= 0) {\\n      encodeType(buf, MAJOR_TYPE_INT, uint(value));\\n    } else {\\n      encodeType(buf, MAJOR_TYPE_NEGATIVE_INT, uint(-1 - value));\\n    }\\n  }\\n\\n  function encodeBytes(\\n    BufferChainlink.buffer memory buf,\\n    bytes memory value\\n  )\\n    internal\\n    pure\\n  {\\n    encodeType(buf, MAJOR_TYPE_BYTES, value.length);\\n    buf.append(value);\\n  }\\n\\n  function encodeBigNum(\\n    BufferChainlink.buffer memory buf,\\n    int value\\n  )\\n    internal\\n    pure\\n  {\\n    buf.appendUint8(uint8((MAJOR_TYPE_TAG << 5) | TAG_TYPE_BIGNUM));\\n    encodeBytes(buf, abi.encode(uint(value)));\\n  }\\n\\n  function encodeSignedBigNum(\\n    BufferChainlink.buffer memory buf,\\n    int input\\n  )\\n    internal\\n    pure\\n  {\\n    buf.appendUint8(uint8((MAJOR_TYPE_TAG << 5) | TAG_TYPE_NEGATIVE_BIGNUM));\\n    encodeBytes(buf, abi.encode(uint(-1 - input)));\\n  }\\n\\n  function encodeString(\\n    BufferChainlink.buffer memory buf,\\n    string memory value\\n  )\\n    internal\\n    pure\\n  {\\n    encodeType(buf, MAJOR_TYPE_STRING, bytes(value).length);\\n    buf.append(bytes(value));\\n  }\\n\\n  function startArray(\\n    BufferChainlink.buffer memory buf\\n  )\\n    internal\\n    pure\\n  {\\n    encodeIndefiniteLengthType(buf, MAJOR_TYPE_ARRAY);\\n  }\\n\\n  function startMap(\\n    BufferChainlink.buffer memory buf\\n  )\\n    internal\\n    pure\\n  {\\n    encodeIndefiniteLengthType(buf, MAJOR_TYPE_MAP);\\n  }\\n\\n  function endSequence(\\n    BufferChainlink.buffer memory buf\\n  )\\n    internal\\n    pure\\n  {\\n    encodeIndefiniteLengthType(buf, MAJOR_TYPE_CONTENT_FREE);\\n  }\\n}\\n\",\"keccak256\":\"0xe7c6e4290ac2a41a138e6bd89d89a2779f66847a5ee6fb5a6f2a3386e5ce589d\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.6/vendor/ENSResolver.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.6.0;\\n\\nabstract contract ENSResolver {\\n  function addr(bytes32 node) public view virtual returns (address);\\n}\\n\",\"keccak256\":\"0xfd992937d215ad669f69e91fefbe62cad8973ae329b4e810ca9b26a1ae0b6bb7\",\"license\":\"MIT\"},\"contracts/StreamRegistry/StreamRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity >=0.6.0;\\npragma experimental ABIEncoderV2;\\n\\nimport \\\"../chainlinkClient/ENSCache.sol\\\";\\ncontract StreamRegistry {\\n    event StreamCreated(string id, string metadata);\\n    event StreamDeleted(string id);\\n    event StreamUpdated(string id, string metadata);\\n    event PermissionUpdated(string streamId, address user, bool edit, bool canDelete, bool publish, bool subscribed, bool share);\\n    // event TransferedViewRights(uint streamid, address from, address to, uint8 amount);\\n    // event TransferedPublishRights(uint streamid, address from, address to, uint8 amount);\\n\\n    enum PermissionType { Edit, Delete, Publish, Subscribe, Share }\\n\\n    mapping (string => uint32) private streamIdToVersion;\\n    mapping (string => string) public streamIdToMetadata;\\n    // streamid ->  keccak256(version, useraddress); -> permissions struct \\n    mapping (string => mapping(bytes32 => Permission)) public streamIdToPermissions;\\n    ENSCache private ensCache;\\n\\n    struct Permission {\\n        bool edit;\\n        bool canDelete;\\n        bool publish; \\n        bool subscribed;\\n        bool share;\\n    }\\n\\n    modifier canShare(string calldata streamId) {\\n        require(streamIdToPermissions[streamId][getAddressKey(streamId, msg.sender)].share, \\\"no share permission\\\"); //||\\n        _;\\n    }\\n    modifier canDelete(string calldata streamId) {\\n        require(streamIdToPermissions[streamId][getAddressKey(streamId, msg.sender)].canDelete, \\\"no delete permission\\\"); //||\\n        _;\\n    }\\n    modifier canEdit(string calldata streamId) {\\n        require(streamIdToPermissions[streamId][getAddressKey(streamId, msg.sender)].edit, \\\"no edit permission\\\"); //||\\n        _;\\n    }\\n    modifier streamExists(string calldata streamId) {\\n        // TODO can stream exist without metadata?\\n        require(bytes(streamIdToMetadata[streamId]).length != 0, \\\"stream does not exist\\\");\\n        _;\\n    }\\n\\n    constructor(address ensCacheAddr) public {\\n        ensCache = ENSCache(ensCacheAddr);\\n    }\\n\\n    function createStream(string calldata streamIdPath, string calldata metadataJsonString) public {\\n        string memory ownerstring = addressToString(msg.sender);\\n        _createStreamAndPermission(ownerstring, streamIdPath, metadataJsonString);\\n    }\\n\\n    function createStreamWithENS(string calldata ensName, string calldata streamIdPath, string calldata metadataJsonString) public {\\n        require(ensCache.owners(ensName) == msg.sender, \\\"you must be owner of the ensname\\\");\\n        _createStreamAndPermission(ensName, streamIdPath, metadataJsonString);\\n    }\\n\\n    function _createStreamAndPermission(string memory ownerstring, string calldata streamIdPath, string calldata metadataJsonString) internal {\\n        bytes memory pathBytes = bytes(streamIdPath);\\n        require(pathBytes[0] == \\\"/\\\", \\\"path must start with /\\\");\\n        string memory streamId = string(abi.encodePacked(ownerstring, streamIdPath));\\n        require(bytes(streamIdToMetadata[streamId]).length == 0, \\\"stream id alreay exists\\\");\\n        streamIdToVersion[streamId] = streamIdToVersion[streamId] + 1;\\n        streamIdToMetadata[streamId] = metadataJsonString;\\n        streamIdToPermissions[streamId][getAddressKey(streamId, msg.sender)] = \\n        Permission({\\n            edit: true,\\n            canDelete: true,\\n            publish: true,\\n            subscribed: true,\\n            share: true\\n        });\\n        emit StreamCreated(streamId, metadataJsonString);\\n        emit PermissionUpdated(streamId, msg.sender, true, true, true, true, true);\\n    }\\n\\n    function getAddressKey(string memory streamId, address user) public view returns (bytes32) {\\n        return keccak256(abi.encode(streamIdToVersion[streamId], user));\\n    }\\n\\n    function updateStreamMetadata(string calldata streamId, string calldata metadata) public streamExists(streamId) canEdit(streamId) {\\n        streamIdToMetadata[streamId] = metadata;\\n        emit StreamUpdated(streamId, metadata);\\n    }\\n\\n    function getStreamMetadata(string calldata streamId) public view streamExists(streamId) returns (string memory des) {\\n        return streamIdToMetadata[streamId];\\n    }\\n\\n    function deleteStream(string calldata streamId) public streamExists(streamId) canDelete(streamId) {\\n        delete streamIdToMetadata[streamId];\\n        emit StreamDeleted(streamId);\\n    }\\n\\n    function getPermissionsForUser(string calldata streamId, address user) public view streamExists(streamId) returns (Permission memory permission) {\\n        return streamIdToPermissions[streamId][getAddressKey(streamId, user)];\\n    }\\n\\n    function setPermissionsForUser(string calldata streamId, address user, bool edit, \\n        bool deletePerm, bool publish, bool subscribe, bool share) public canShare(streamId) {\\n            streamIdToPermissions[streamId][getAddressKey(streamId, user)] = Permission({\\n                edit: edit,\\n                canDelete: deletePerm,\\n                publish: publish,\\n                subscribed: subscribe,\\n                share: share\\n           });\\n           emit PermissionUpdated(streamId, user, edit, deletePerm, publish, subscribe, share);\\n    }\\n\\n    function revokeAllPermissionsForUser(string calldata streamId, address user) public canShare(streamId){\\n        delete streamIdToPermissions[streamId][getAddressKey(streamId, user)];\\n        emit PermissionUpdated(streamId, user, false, false, false, false, false);\\n    }\\n\\n    function hasPermission(string calldata streamId, address user, PermissionType permissionType) public view returns (bool userHasPermission) {\\n        if (permissionType == PermissionType.Edit) {\\n            return streamIdToPermissions[streamId][getAddressKey(streamId, user)].edit;\\n        }\\n        else if (permissionType == PermissionType.Delete) {\\n            return streamIdToPermissions[streamId][getAddressKey(streamId, user)].canDelete;\\n        }\\n        else if (permissionType == PermissionType.Subscribe) {\\n            return streamIdToPermissions[streamId][getAddressKey(streamId, user)].subscribed;\\n        }\\n        else if (permissionType == PermissionType.Publish) {\\n            return streamIdToPermissions[streamId][getAddressKey(streamId, user)].publish;\\n        }\\n        else if (permissionType == PermissionType.Share) {\\n            return streamIdToPermissions[streamId][getAddressKey(streamId, user)].share;\\n        }\\n    }\\n\\n    function grantPermission(string calldata streamId, address user, PermissionType permissionType) public canShare(streamId) {\\n        setPermission(streamId, user, permissionType, true);\\n        Permission memory perm = streamIdToPermissions[streamId][getAddressKey(streamId, user)];\\n        emit PermissionUpdated(streamId, user, perm.edit, perm.canDelete, perm.publish, perm.subscribed, perm.share);\\n    }\\n\\n    function revokePermission(string calldata streamId, address user, PermissionType permissionType) public canShare(streamId) {\\n        setPermission(streamId, user, permissionType, false);\\n        Permission memory perm = streamIdToPermissions[streamId][getAddressKey(streamId, user)];\\n        emit PermissionUpdated(streamId, user, perm.edit, perm.canDelete, perm.publish, perm.subscribed, perm.share);\\n    }\\n\\n    function setPermission(string calldata streamId, address user, PermissionType permissionType, bool grant) internal {\\n        if (permissionType == PermissionType.Edit) {\\n            streamIdToPermissions[streamId][getAddressKey(streamId, user)].edit = grant;\\n        }\\n        else if (permissionType == PermissionType.Delete) {\\n            streamIdToPermissions[streamId][getAddressKey(streamId, user)].canDelete = grant;\\n        }\\n        else if (permissionType == PermissionType.Subscribe) {\\n            streamIdToPermissions[streamId][getAddressKey(streamId, user)].subscribed = grant;\\n        }\\n        else if (permissionType == PermissionType.Publish) {\\n            streamIdToPermissions[streamId][getAddressKey(streamId, user)].publish = grant;\\n        }\\n        else if (permissionType == PermissionType.Share) {\\n            streamIdToPermissions[streamId][getAddressKey(streamId, user)].share = grant;\\n        }\\n    }\\n\\n    function addressToString(address _address) public pure returns(string memory) {\\n       bytes32 _bytes = bytes32(uint256(uint160(_address)));\\n       bytes memory _hex = \\\"0123456789abcdef\\\";\\n       bytes memory _string = new bytes(42);\\n       _string[0] = \\\"0\\\";\\n       _string[1] = \\\"x\\\";\\n       for(uint i = 0; i < 20; i++) {\\n           _string[2+i*2] = _hex[uint8(_bytes[i + 12] >> 4)];\\n           _string[3+i*2] = _hex[uint8(_bytes[i + 12] & 0x0f)];\\n       }\\n       return string(_string);\\n    }\\n}\\n\",\"keccak256\":\"0xc56aeb5e5318226ccfdd098a5b0883a044f8f5ac87ac4d5ef7ea7523a2b96070\",\"license\":\"Apache-2.0\"},\"contracts/chainlinkClient/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity >=0.6.0;\\n\\n/*\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691\\n        return msg.data;\\n    }\\n}\\n\",\"keccak256\":\"0xc4da667d8a0bdb8213fb4eeed03fa152c95d67cb5057a792c35ea07787f2d7cf\",\"license\":\"MIT\"},\"contracts/chainlinkClient/ENSCache.sol\":{\"content\":\"// SPDX-License-Identifier: Apache-2.0\\npragma solidity >=0.6.0;\\n\\nimport \\\"@chainlink/contracts/src/v0.6/ChainlinkClient.sol\\\";\\nimport \\\"@chainlink/contracts/src/v0.6/Chainlink.sol\\\";\\nimport \\\"./Ownable.sol\\\";\\n\\ncontract ENSCache is ChainlinkClient, Ownable {\\n  using Chainlink for Chainlink.Request;\\n\\n  uint256 constant private ORACLE_PAYMENT = 1 * LINK;\\n\\n  // address public resolvedEnsAddress;\\n  mapping(string => address) public owners;\\n  mapping(bytes32 => string) public sentRequests;\\n  address public oracle;\\n  string public jobId;\\n\\n  constructor(address oracleaddress, string memory chainlinkJobId) public {\\n    setPublicChainlinkToken();\\n    oracle = oracleaddress;\\n    jobId = chainlinkJobId;\\n  }\\n\\n  function setOracleAdress(address oracleAddress) public onlyOwner {\\n    oracle = oracleAddress;\\n  }\\n\\n  function setChainlinkJobId(string calldata chainlinkJobId) public onlyOwner {\\n    jobId = chainlinkJobId;\\n  }\\n\\n  function requestENSOwner(string calldata ensName) public onlyOwner {\\n    Chainlink.Request memory req = buildChainlinkRequest(stringToBytes32(jobId), address(this), this.fulfillENSOwner.selector);\\n    req.add(\\\"ensname\\\", ensName);\\n    bytes32 requestid = sendChainlinkRequestTo(oracle, req, ORACLE_PAYMENT);\\n    sentRequests[requestid] = ensName;\\n  }\\n\\n  function fulfillENSOwner(bytes32 requestId, bytes32 owneraddress) public recordChainlinkFulfillment(requestId) {\\n    //emit RequestEthereumLastMarket(_requestId, _market);\\n    owners[sentRequests[requestId]] = address(uint160(uint256(owneraddress)));\\n  }\\n  \\n  function getChainlinkToken() public view returns (address) {\\n    return chainlinkTokenAddress();\\n  }\\n\\n  function withdrawLink() public onlyOwner {\\n    LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());\\n    require(link.transfer(msg.sender, link.balanceOf(address(this))), \\\"Unable to transfer\\\");\\n  }\\n\\n  function cancelRequest(bytes32 _requestId, uint256 _payment, bytes4 _callbackFunctionId,\\n    uint256 _expiration) public onlyOwner {\\n    cancelChainlinkRequest(_requestId, _payment, _callbackFunctionId, _expiration);\\n  }\\n  \\n  function stringToBytes32(string memory source) private pure returns (bytes32 result) {\\n    bytes memory tempEmptyStringTest = bytes(source);\\n    if (tempEmptyStringTest.length == 0) {\\n      return 0x0;\\n    }\\n\\n    assembly { // solhint-disable-line no-inline-assembly\\n      result := mload(add(source, 32))\\n    }\\n  }\\n}\",\"keccak256\":\"0x35d23d7c3011c26d1b29de16844b5305131bd5458921e45877cebefdaec9328c\",\"license\":\"Apache-2.0\"},\"contracts/chainlinkClient/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity >=0.6.0;\\n\\nimport \\\"./Context.sol\\\";\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * By default, the owner account will be the one that deploys the contract. This\\n * can later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the deployer as the initial owner.\\n     */\\n    constructor () public {\\n        address msgSender = _msgSender();\\n        _owner = msgSender;\\n        emit OwnershipTransferred(address(0), msgSender);\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        require(owner() == _msgSender(), \\\"Ownable: caller is not owner\\\");\\n        _;\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions anymore. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby removing any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        emit OwnershipTransferred(_owner, address(0));\\n        _owner = address(0);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        require(newOwner != address(0), \\\"Ownable: new owner is 0 address\\\");\\n        emit OwnershipTransferred(_owner, newOwner);\\n        _owner = newOwner;\\n    }\\n}\\n\",\"keccak256\":\"0x7344d65af282482d5797a9de4dccfb72cdc95785f554d1cf283dd6179d4f4ca0\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60806040523480156200001157600080fd5b50604051620033c8380380620033c8833981810160405281019062000037919062000096565b80600360006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505062000110565b6000815190506200009081620000f6565b92915050565b600060208284031215620000a957600080fd5b6000620000b9848285016200007f565b91505092915050565b6000620000cf82620000d6565b9050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6200010181620000c2565b81146200010d57600080fd5b50565b6132a880620001206000396000f3fe608060405234801561001057600080fd5b50600436106100f55760003560e01c80636453cbd711610097578063997e8aaa11610066578063997e8aaa14610292578063d4892dbc146102ae578063e8f3828e146102ca578063f36d4849146102fa576100f5565b80636453cbd7146101fa57806378800c761461021657806386902fe91461023257806388b2103814610262576100f5565b806342617fe7116100d357806342617fe71461016257806350b5422b1461017e5780635e57966d1461019a5780636394fbd2146101ca576100f5565b80630843564a146100fa5780630ef8cdc71461012a5780633e397aea14610146575b600080fd5b610114600480360381019061010f919061292b565b61032e565b6040516101219190612dd5565b60405180910390f35b610144600480360381019061013f91906127d1565b61038e565b005b610160600480360381019061015b9190612765565b6103af565b005b61017c600480360381019061017791906127d1565b610609565b005b61019860048036038101906101939190612653565b6107ca565b005b6101b460048036038101906101af91906125bc565b6109ce565b6040516101c19190612ec7565b60405180910390f35b6101e460048036038101906101df919061260e565b610c63565b6040516101f19190612ec7565b60405180910390f35b610214600480360381019061020f919061260e565b610da2565b005b610230600480360381019061022b9190612846565b610f59565b005b61024c600480360381019061024791906128ea565b6110cc565b6040516102599190612ec7565b60405180910390f35b61027c60048036038101906102779190612765565b611192565b6040516102899190612d67565b60405180910390f35b6102ac60048036038101906102a79190612765565b611524565b005b6102c860048036038101906102c391906126ab565b61177e565b005b6102e460048036038101906102df9190612653565b6119f1565b6040516102f19190613078565b60405180910390f35b610314600480360381019061030f919061297f565b611b8e565b604051610325959493929190612d82565b60405180910390f35b6000808360405161033f9190612d2a565b908152602001604051809103902060009054906101000a900463ffffffff1682604051602001610370929190613093565b60405160208183030381529060405280519060200120905092915050565b6060610399336109ce565b90506103a88186868686611c28565b5050505050565b8383600282826040516103c3929190612d11565b9081526020016040518091039020600061042184848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff1661047f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161047690613058565b60405180910390fd5b61048d868686866000611fe0565b610495612397565b600287876040516104a7929190612d11565b9081526020016040518091039020600061050589898080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508861032e565b81526020019081526020016000206040518060a00160405290816000820160009054906101000a900460ff161515151581526020016000820160019054906101000a900460ff161515151581526020016000820160029054906101000a900460ff161515151581526020016000820160039054906101000a900460ff161515151581526020016000820160049054906101000a900460ff16151515158152505090507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f38878787846000015185602001518660400151876060015188608001516040516105f8989796959493929190612e14565b60405180910390a150505050505050565b838360006001838360405161061f929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415610683576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161067a90612fb8565b60405180910390fd5b858560028282604051610697929190612d11565b908152602001604051809103902060006106f584848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160009054906101000a900460ff16610753576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161074a90613018565b60405180910390fd5b858560018a8a604051610767929190612d11565b908152602001604051809103902091906107829291906123d0565b507fa60b7935888a7ab31214282090f1ab7207ab6d7abbf3c11080b75ce91d9a36d0888888886040516107b89493929190612e8c565b60405180910390a15050505050505050565b8282600282826040516107de929190612d11565b9081526020016040518091039020600061083c84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff1661089a576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161089190613058565b60405180910390fd5b600285856040516108ac929190612d11565b9081526020016040518091039020600061090a87878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b8152602001908152602001600020600080820160006101000a81549060ff02191690556000820160016101000a81549060ff02191690556000820160026101000a81549060ff02191690556000820160036101000a81549060ff02191690556000820160046101000a81549060ff021916905550507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f3885858560008060008060006040516109bf989796959493929190612e14565b60405180910390a15050505050565b606060008273ffffffffffffffffffffffffffffffffffffffff1660001b905060606040518060400160405280601081526020017f303132333435363738396162636465660000000000000000000000000000000081525090506060602a67ffffffffffffffff81118015610a4257600080fd5b506040519080825280601f01601f191660200182016040528015610a755781602001600182028036833780820191505090505b5090507f300000000000000000000000000000000000000000000000000000000000000081600081518110610aa657fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a9053507f780000000000000000000000000000000000000000000000000000000000000081600181518110610b0357fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a90535060005b6014811015610c575782600485600c840160208110610b5057fe5b1a60f81b7effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916901c60f81c60ff1681518110610b8857fe5b602001015160f81c60f81b826002830260020181518110610ba557fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a90535082600f60f81b85600c840160208110610be957fe5b1a60f81b1660f81c60ff1681518110610bfe57fe5b602001015160f81c60f81b826002830260030181518110610c1b57fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a9053508080600101915050610b35565b50809350505050919050565b60608282600060018383604051610c7b929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415610cdf576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610cd690612fb8565b60405180910390fd5b60018585604051610cf1929190612d11565b90815260200160405180910390208054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610d935780601f10610d6857610100808354040283529160200191610d93565b820191906000526020600020905b815481529060010190602001808311610d7657829003601f168201915b50505050509250505092915050565b8181600060018383604051610db8929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415610e1c576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610e1390612fb8565b60405180910390fd5b838360028282604051610e30929190612d11565b90815260200160405180910390206000610e8e84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160019054906101000a900460ff16610eec576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610ee390612fd8565b60405180910390fd5b60018686604051610efe929190612d11565b90815260200160405180910390206000610f189190612450565b7f74b7395f46349d84fba706c4d226c68bbf9206c2567ae3ec2a001b5a98128eae8686604051610f49929190612df0565b60405180910390a1505050505050565b3373ffffffffffffffffffffffffffffffffffffffff16600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16632b1fd99588886040518363ffffffff1660e01b8152600401610fcd929190612df0565b60206040518083038186803b158015610fe557600080fd5b505afa158015610ff9573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061101d91906125e5565b73ffffffffffffffffffffffffffffffffffffffff1614611073576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161106a90613038565b60405180910390fd5b6110c486868080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505085858585611c28565b505050505050565b6001818051602081018201805184825260208301602085012081835280955050505050506000915090508054600181600116156101000203166002900480601f01602080910402602001604051908101604052809291908181526020018280546001816001161561010002031660029004801561118a5780601f1061115f5761010080835404028352916020019161118a565b820191906000526020600020905b81548152906001019060200180831161116d57829003601f168201915b505050505081565b60008060048111156111a057fe5b8260048111156111ac57fe5b141561124857600285856040516111c4929190612d11565b9081526020016040518091039020600061122287878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160009054906101000a900460ff16905061151c565b6001600481111561125557fe5b82600481111561126157fe5b14156112fd5760028585604051611279929190612d11565b908152602001604051809103902060006112d787878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160019054906101000a900460ff16905061151c565b6003600481111561130a57fe5b82600481111561131657fe5b14156113b2576002858560405161132e929190612d11565b9081526020016040518091039020600061138c87878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160039054906101000a900460ff16905061151c565b600260048111156113bf57fe5b8260048111156113cb57fe5b141561146757600285856040516113e3929190612d11565b9081526020016040518091039020600061144187878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160029054906101000a900460ff16905061151c565b60048081111561147357fe5b82600481111561147f57fe5b141561151b5760028585604051611497929190612d11565b908152602001604051809103902060006114f587878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160049054906101000a900460ff16905061151c565b5b949350505050565b838360028282604051611538929190612d11565b9081526020016040518091039020600061159684848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff166115f4576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016115eb90613058565b60405180910390fd5b611602868686866001611fe0565b61160a612397565b6002878760405161161c929190612d11565b9081526020016040518091039020600061167a89898080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508861032e565b81526020019081526020016000206040518060a00160405290816000820160009054906101000a900460ff161515151581526020016000820160019054906101000a900460ff161515151581526020016000820160029054906101000a900460ff161515151581526020016000820160039054906101000a900460ff161515151581526020016000820160049054906101000a900460ff16151515158152505090507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f388787878460000151856020015186604001518760600151886080015160405161176d989796959493929190612e14565b60405180910390a150505050505050565b878760028282604051611792929190612d11565b908152602001604051809103902060006117f084848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff1661184e576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161184590613058565b60405180910390fd5b6040518060a00160405280881515815260200187151581526020018615158152602001851515815260200184151581525060028b8b604051611891929190612d11565b908152602001604051809103902060006118ef8d8d8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508c61032e565b815260200190815260200160002060008201518160000160006101000a81548160ff02191690831515021790555060208201518160000160016101000a81548160ff02191690831515021790555060408201518160000160026101000a81548160ff02191690831515021790555060608201518160000160036101000a81548160ff02191690831515021790555060808201518160000160046101000a81548160ff0219169083151502179055509050507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f388a8a8a8a8a8a8a8a6040516119dd989796959493929190612e14565b60405180910390a150505050505050505050565b6119f9612397565b8383600060018383604051611a0f929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415611a73576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611a6a90612fb8565b60405180910390fd5b60028686604051611a85929190612d11565b90815260200160405180910390206000611ae388888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b81526020019081526020016000206040518060a00160405290816000820160009054906101000a900460ff161515151581526020016000820160019054906101000a900460ff161515151581526020016000820160029054906101000a900460ff161515151581526020016000820160039054906101000a900460ff161515151581526020016000820160049054906101000a900460ff161515151581525050925050509392505050565b600282805160208101820180518482526020830160208501208183528095505050505050602052806000526040600020600091509150508060000160009054906101000a900460ff16908060000160019054906101000a900460ff16908060000160029054906101000a900460ff16908060000160039054906101000a900460ff16908060000160049054906101000a900460ff16905085565b606084848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505090507f2f0000000000000000000000000000000000000000000000000000000000000081600081518110611c9f57fe5b602001015160f81c60f81b7effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614611d0c576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611d0390612f98565b60405180910390fd5b6060868686604051602001611d2393929190612d41565b60405160208183030381529060405290506000600182604051611d469190612d2a565b908152602001604051809103902080546001816001161561010002031660029004905014611da9576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611da090612ff8565b60405180910390fd5b6001600082604051611dbb9190612d2a565b908152602001604051809103902060009054906101000a900463ffffffff1601600082604051611deb9190612d2a565b908152602001604051809103902060006101000a81548163ffffffff021916908363ffffffff1602179055508383600183604051611e299190612d2a565b90815260200160405180910390209190611e449291906123d0565b506040518060a0016040528060011515815260200160011515815260200160011515815260200160011515815260200160011515815250600282604051611e8b9190612d2a565b90815260200160405180910390206000611ea5843361032e565b815260200190815260200160002060008201518160000160006101000a81548160ff02191690831515021790555060208201518160000160016101000a81548160ff02191690831515021790555060408201518160000160026101000a81548160ff02191690831515021790555060608201518160000160036101000a81548160ff02191690831515021790555060808201518160000160046101000a81548160ff0219169083151502179055509050507f0db027888a30ca08149af1347f6ce2f48daffedd9d6d21ab6249c4d802ce592f818585604051611f8993929190612f5f565b60405180910390a17f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f3881336001806001806001604051611fcf9796959493929190612ee9565b60405180910390a150505050505050565b60006004811115611fed57fe5b826004811115611ff957fe5b141561209d578060028686604051612012929190612d11565b9081526020016040518091039020600061207088888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160006101000a81548160ff021916908315150217905550612390565b600160048111156120aa57fe5b8260048111156120b657fe5b141561215a5780600286866040516120cf929190612d11565b9081526020016040518091039020600061212d88888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160016101000a81548160ff02191690831515021790555061238f565b6003600481111561216757fe5b82600481111561217357fe5b141561221757806002868660405161218c929190612d11565b908152602001604051809103902060006121ea88888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160036101000a81548160ff02191690831515021790555061238e565b6002600481111561222457fe5b82600481111561223057fe5b14156122d4578060028686604051612249929190612d11565b908152602001604051809103902060006122a788888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160026101000a81548160ff02191690831515021790555061238d565b6004808111156122e057fe5b8260048111156122ec57fe5b141561238c578060028686604051612305929190612d11565b9081526020016040518091039020600061236388888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160046101000a81548160ff0219169083151502179055505b5b5b5b5b5050505050565b6040518060a001604052806000151581526020016000151581526020016000151581526020016000151581526020016000151581525090565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061241157803560ff191683800117855561243f565b8280016001018555821561243f579182015b8281111561243e578235825591602001919060010190612423565b5b50905061244c9190612498565b5090565b50805460018160011615610100020316600290046000825580601f106124765750612495565b601f0160209004906000526020600020908101906124949190612498565b5b50565b5b808211156124b1576000816000905550600101612499565b5090565b6000813590506124c48161321d565b92915050565b6000815190506124d98161321d565b92915050565b6000813590506124ee81613234565b92915050565b6000813590506125038161324b565b92915050565b60008135905061251881613262565b92915050565b60008083601f84011261253057600080fd5b8235905067ffffffffffffffff81111561254957600080fd5b60208301915083600182028301111561256157600080fd5b9250929050565b600082601f83011261257957600080fd5b813561258c612587826130e9565b6130bc565b915080825260208301602083018583830111156125a857600080fd5b6125b38382846131ca565b50505092915050565b6000602082840312156125ce57600080fd5b60006125dc848285016124b5565b91505092915050565b6000602082840312156125f757600080fd5b6000612605848285016124ca565b91505092915050565b6000806020838503121561262157600080fd5b600083013567ffffffffffffffff81111561263b57600080fd5b6126478582860161251e565b92509250509250929050565b60008060006040848603121561266857600080fd5b600084013567ffffffffffffffff81111561268257600080fd5b61268e8682870161251e565b935093505060206126a1868287016124b5565b9150509250925092565b60008060008060008060008060e0898b0312156126c757600080fd5b600089013567ffffffffffffffff8111156126e157600080fd5b6126ed8b828c0161251e565b985098505060206127008b828c016124b5565b96505060406127118b828c016124df565b95505060606127228b828c016124df565b94505060806127338b828c016124df565b93505060a06127448b828c016124df565b92505060c06127558b828c016124df565b9150509295985092959890939650565b6000806000806060858703121561277b57600080fd5b600085013567ffffffffffffffff81111561279557600080fd5b6127a18782880161251e565b945094505060206127b4878288016124b5565b92505060406127c587828801612509565b91505092959194509250565b600080600080604085870312156127e757600080fd5b600085013567ffffffffffffffff81111561280157600080fd5b61280d8782880161251e565b9450945050602085013567ffffffffffffffff81111561282c57600080fd5b6128388782880161251e565b925092505092959194509250565b6000806000806000806060878903121561285f57600080fd5b600087013567ffffffffffffffff81111561287957600080fd5b61288589828a0161251e565b9650965050602087013567ffffffffffffffff8111156128a457600080fd5b6128b089828a0161251e565b9450945050604087013567ffffffffffffffff8111156128cf57600080fd5b6128db89828a0161251e565b92509250509295509295509295565b6000602082840312156128fc57600080fd5b600082013567ffffffffffffffff81111561291657600080fd5b61292284828501612568565b91505092915050565b6000806040838503121561293e57600080fd5b600083013567ffffffffffffffff81111561295857600080fd5b61296485828601612568565b9250506020612975858286016124b5565b9150509250929050565b6000806040838503121561299257600080fd5b600083013567ffffffffffffffff8111156129ac57600080fd5b6129b885828601612568565b92505060206129c9858286016124f4565b9150509250929050565b6129dc81613194565b82525050565b6129eb8161313c565b82525050565b6129fa8161314e565b82525050565b612a098161314e565b82525050565b612a188161315a565b82525050565b6000612a2a8385613120565b9350612a378385846131ca565b612a408361320c565b840190509392505050565b6000612a578385613131565b9350612a648385846131ca565b82840190509392505050565b6000612a7b82613115565b612a858185613120565b9350612a958185602086016131d9565b612a9e8161320c565b840191505092915050565b6000612ab482613115565b612abe8185613131565b9350612ace8185602086016131d9565b80840191505092915050565b6000612ae7601683613120565b91507f70617468206d7573742073746172742077697468202f000000000000000000006000830152602082019050919050565b6000612b27601583613120565b91507f73747265616d20646f6573206e6f7420657869737400000000000000000000006000830152602082019050919050565b6000612b67601483613120565b91507f6e6f2064656c657465207065726d697373696f6e0000000000000000000000006000830152602082019050919050565b6000612ba7601783613120565b91507f73747265616d20696420616c72656179206578697374730000000000000000006000830152602082019050919050565b6000612be7601283613120565b91507f6e6f2065646974207065726d697373696f6e00000000000000000000000000006000830152602082019050919050565b6000612c27602083613120565b91507f796f75206d757374206265206f776e6572206f662074686520656e736e616d656000830152602082019050919050565b6000612c67601383613120565b91507f6e6f207368617265207065726d697373696f6e000000000000000000000000006000830152602082019050919050565b60a082016000820151612cb060008501826129f1565b506020820151612cc360208501826129f1565b506040820151612cd660408501826129f1565b506060820151612ce960608501826129f1565b506080820151612cfc60808501826129f1565b50505050565b612d0b81613184565b82525050565b6000612d1e828486612a4b565b91508190509392505050565b6000612d368284612aa9565b915081905092915050565b6000612d4d8286612aa9565b9150612d5a828486612a4b565b9150819050949350505050565b6000602082019050612d7c6000830184612a00565b92915050565b600060a082019050612d976000830188612a00565b612da46020830187612a00565b612db16040830186612a00565b612dbe6060830185612a00565b612dcb6080830184612a00565b9695505050505050565b6000602082019050612dea6000830184612a0f565b92915050565b60006020820190508181036000830152612e0b818486612a1e565b90509392505050565b600060e0820190508181036000830152612e2f818a8c612a1e565b9050612e3e60208301896129e2565b612e4b6040830188612a00565b612e586060830187612a00565b612e656080830186612a00565b612e7260a0830185612a00565b612e7f60c0830184612a00565b9998505050505050505050565b60006040820190508181036000830152612ea7818688612a1e565b90508181036020830152612ebc818486612a1e565b905095945050505050565b60006020820190508181036000830152612ee18184612a70565b905092915050565b600060e0820190508181036000830152612f03818a612a70565b9050612f1260208301896129d3565b612f1f6040830188612a00565b612f2c6060830187612a00565b612f396080830186612a00565b612f4660a0830185612a00565b612f5360c0830184612a00565b98975050505050505050565b60006040820190508181036000830152612f798186612a70565b90508181036020830152612f8e818486612a1e565b9050949350505050565b60006020820190508181036000830152612fb181612ada565b9050919050565b60006020820190508181036000830152612fd181612b1a565b9050919050565b60006020820190508181036000830152612ff181612b5a565b9050919050565b6000602082019050818103600083015261301181612b9a565b9050919050565b6000602082019050818103600083015261303181612bda565b9050919050565b6000602082019050818103600083015261305181612c1a565b9050919050565b6000602082019050818103600083015261307181612c5a565b9050919050565b600060a08201905061308d6000830184612c9a565b92915050565b60006040820190506130a86000830185612d02565b6130b560208301846129e2565b9392505050565b6000604051905081810181811067ffffffffffffffff821117156130df57600080fd5b8060405250919050565b600067ffffffffffffffff82111561310057600080fd5b601f19601f8301169050602081019050919050565b600081519050919050565b600082825260208201905092915050565b600081905092915050565b600061314782613164565b9050919050565b60008115159050919050565b6000819050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600063ffffffff82169050919050565b600061319f826131a6565b9050919050565b60006131b1826131b8565b9050919050565b60006131c382613164565b9050919050565b82818337600083830152505050565b60005b838110156131f75780820151818401526020810190506131dc565b83811115613206576000848401525b50505050565b6000601f19601f8301169050919050565b6132268161313c565b811461323157600080fd5b50565b61323d8161314e565b811461324857600080fd5b50565b6132548161315a565b811461325f57600080fd5b50565b6005811061326f57600080fd5b5056fea2646970667358221220b836626307b4f31d9d2a0ae51a90a7939286bbdf91b0a32ab2b8e2ca5cc7cd1664736f6c634300060c0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100f55760003560e01c80636453cbd711610097578063997e8aaa11610066578063997e8aaa14610292578063d4892dbc146102ae578063e8f3828e146102ca578063f36d4849146102fa576100f5565b80636453cbd7146101fa57806378800c761461021657806386902fe91461023257806388b2103814610262576100f5565b806342617fe7116100d357806342617fe71461016257806350b5422b1461017e5780635e57966d1461019a5780636394fbd2146101ca576100f5565b80630843564a146100fa5780630ef8cdc71461012a5780633e397aea14610146575b600080fd5b610114600480360381019061010f919061292b565b61032e565b6040516101219190612dd5565b60405180910390f35b610144600480360381019061013f91906127d1565b61038e565b005b610160600480360381019061015b9190612765565b6103af565b005b61017c600480360381019061017791906127d1565b610609565b005b61019860048036038101906101939190612653565b6107ca565b005b6101b460048036038101906101af91906125bc565b6109ce565b6040516101c19190612ec7565b60405180910390f35b6101e460048036038101906101df919061260e565b610c63565b6040516101f19190612ec7565b60405180910390f35b610214600480360381019061020f919061260e565b610da2565b005b610230600480360381019061022b9190612846565b610f59565b005b61024c600480360381019061024791906128ea565b6110cc565b6040516102599190612ec7565b60405180910390f35b61027c60048036038101906102779190612765565b611192565b6040516102899190612d67565b60405180910390f35b6102ac60048036038101906102a79190612765565b611524565b005b6102c860048036038101906102c391906126ab565b61177e565b005b6102e460048036038101906102df9190612653565b6119f1565b6040516102f19190613078565b60405180910390f35b610314600480360381019061030f919061297f565b611b8e565b604051610325959493929190612d82565b60405180910390f35b6000808360405161033f9190612d2a565b908152602001604051809103902060009054906101000a900463ffffffff1682604051602001610370929190613093565b60405160208183030381529060405280519060200120905092915050565b6060610399336109ce565b90506103a88186868686611c28565b5050505050565b8383600282826040516103c3929190612d11565b9081526020016040518091039020600061042184848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff1661047f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161047690613058565b60405180910390fd5b61048d868686866000611fe0565b610495612397565b600287876040516104a7929190612d11565b9081526020016040518091039020600061050589898080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508861032e565b81526020019081526020016000206040518060a00160405290816000820160009054906101000a900460ff161515151581526020016000820160019054906101000a900460ff161515151581526020016000820160029054906101000a900460ff161515151581526020016000820160039054906101000a900460ff161515151581526020016000820160049054906101000a900460ff16151515158152505090507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f38878787846000015185602001518660400151876060015188608001516040516105f8989796959493929190612e14565b60405180910390a150505050505050565b838360006001838360405161061f929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415610683576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161067a90612fb8565b60405180910390fd5b858560028282604051610697929190612d11565b908152602001604051809103902060006106f584848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160009054906101000a900460ff16610753576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161074a90613018565b60405180910390fd5b858560018a8a604051610767929190612d11565b908152602001604051809103902091906107829291906123d0565b507fa60b7935888a7ab31214282090f1ab7207ab6d7abbf3c11080b75ce91d9a36d0888888886040516107b89493929190612e8c565b60405180910390a15050505050505050565b8282600282826040516107de929190612d11565b9081526020016040518091039020600061083c84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff1661089a576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161089190613058565b60405180910390fd5b600285856040516108ac929190612d11565b9081526020016040518091039020600061090a87878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b8152602001908152602001600020600080820160006101000a81549060ff02191690556000820160016101000a81549060ff02191690556000820160026101000a81549060ff02191690556000820160036101000a81549060ff02191690556000820160046101000a81549060ff021916905550507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f3885858560008060008060006040516109bf989796959493929190612e14565b60405180910390a15050505050565b606060008273ffffffffffffffffffffffffffffffffffffffff1660001b905060606040518060400160405280601081526020017f303132333435363738396162636465660000000000000000000000000000000081525090506060602a67ffffffffffffffff81118015610a4257600080fd5b506040519080825280601f01601f191660200182016040528015610a755781602001600182028036833780820191505090505b5090507f300000000000000000000000000000000000000000000000000000000000000081600081518110610aa657fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a9053507f780000000000000000000000000000000000000000000000000000000000000081600181518110610b0357fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a90535060005b6014811015610c575782600485600c840160208110610b5057fe5b1a60f81b7effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916901c60f81c60ff1681518110610b8857fe5b602001015160f81c60f81b826002830260020181518110610ba557fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a90535082600f60f81b85600c840160208110610be957fe5b1a60f81b1660f81c60ff1681518110610bfe57fe5b602001015160f81c60f81b826002830260030181518110610c1b57fe5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a9053508080600101915050610b35565b50809350505050919050565b60608282600060018383604051610c7b929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415610cdf576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610cd690612fb8565b60405180910390fd5b60018585604051610cf1929190612d11565b90815260200160405180910390208054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610d935780601f10610d6857610100808354040283529160200191610d93565b820191906000526020600020905b815481529060010190602001808311610d7657829003601f168201915b50505050509250505092915050565b8181600060018383604051610db8929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415610e1c576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610e1390612fb8565b60405180910390fd5b838360028282604051610e30929190612d11565b90815260200160405180910390206000610e8e84848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160019054906101000a900460ff16610eec576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610ee390612fd8565b60405180910390fd5b60018686604051610efe929190612d11565b90815260200160405180910390206000610f189190612450565b7f74b7395f46349d84fba706c4d226c68bbf9206c2567ae3ec2a001b5a98128eae8686604051610f49929190612df0565b60405180910390a1505050505050565b3373ffffffffffffffffffffffffffffffffffffffff16600360009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16632b1fd99588886040518363ffffffff1660e01b8152600401610fcd929190612df0565b60206040518083038186803b158015610fe557600080fd5b505afa158015610ff9573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061101d91906125e5565b73ffffffffffffffffffffffffffffffffffffffff1614611073576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161106a90613038565b60405180910390fd5b6110c486868080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505085858585611c28565b505050505050565b6001818051602081018201805184825260208301602085012081835280955050505050506000915090508054600181600116156101000203166002900480601f01602080910402602001604051908101604052809291908181526020018280546001816001161561010002031660029004801561118a5780601f1061115f5761010080835404028352916020019161118a565b820191906000526020600020905b81548152906001019060200180831161116d57829003601f168201915b505050505081565b60008060048111156111a057fe5b8260048111156111ac57fe5b141561124857600285856040516111c4929190612d11565b9081526020016040518091039020600061122287878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160009054906101000a900460ff16905061151c565b6001600481111561125557fe5b82600481111561126157fe5b14156112fd5760028585604051611279929190612d11565b908152602001604051809103902060006112d787878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160019054906101000a900460ff16905061151c565b6003600481111561130a57fe5b82600481111561131657fe5b14156113b2576002858560405161132e929190612d11565b9081526020016040518091039020600061138c87878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160039054906101000a900460ff16905061151c565b600260048111156113bf57fe5b8260048111156113cb57fe5b141561146757600285856040516113e3929190612d11565b9081526020016040518091039020600061144187878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160029054906101000a900460ff16905061151c565b60048081111561147357fe5b82600481111561147f57fe5b141561151b5760028585604051611497929190612d11565b908152602001604051809103902060006114f587878080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508661032e565b815260200190815260200160002060000160049054906101000a900460ff16905061151c565b5b949350505050565b838360028282604051611538929190612d11565b9081526020016040518091039020600061159684848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff166115f4576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016115eb90613058565b60405180910390fd5b611602868686866001611fe0565b61160a612397565b6002878760405161161c929190612d11565b9081526020016040518091039020600061167a89898080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508861032e565b81526020019081526020016000206040518060a00160405290816000820160009054906101000a900460ff161515151581526020016000820160019054906101000a900460ff161515151581526020016000820160029054906101000a900460ff161515151581526020016000820160039054906101000a900460ff161515151581526020016000820160049054906101000a900460ff16151515158152505090507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f388787878460000151856020015186604001518760600151886080015160405161176d989796959493929190612e14565b60405180910390a150505050505050565b878760028282604051611792929190612d11565b908152602001604051809103902060006117f084848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050503361032e565b815260200190815260200160002060000160049054906101000a900460ff1661184e576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161184590613058565b60405180910390fd5b6040518060a00160405280881515815260200187151581526020018615158152602001851515815260200184151581525060028b8b604051611891929190612d11565b908152602001604051809103902060006118ef8d8d8080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508c61032e565b815260200190815260200160002060008201518160000160006101000a81548160ff02191690831515021790555060208201518160000160016101000a81548160ff02191690831515021790555060408201518160000160026101000a81548160ff02191690831515021790555060608201518160000160036101000a81548160ff02191690831515021790555060808201518160000160046101000a81548160ff0219169083151502179055509050507f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f388a8a8a8a8a8a8a8a6040516119dd989796959493929190612e14565b60405180910390a150505050505050505050565b6119f9612397565b8383600060018383604051611a0f929190612d11565b90815260200160405180910390208054600181600116156101000203166002900490501415611a73576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611a6a90612fb8565b60405180910390fd5b60028686604051611a85929190612d11565b90815260200160405180910390206000611ae388888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b81526020019081526020016000206040518060a00160405290816000820160009054906101000a900460ff161515151581526020016000820160019054906101000a900460ff161515151581526020016000820160029054906101000a900460ff161515151581526020016000820160039054906101000a900460ff161515151581526020016000820160049054906101000a900460ff161515151581525050925050509392505050565b600282805160208101820180518482526020830160208501208183528095505050505050602052806000526040600020600091509150508060000160009054906101000a900460ff16908060000160019054906101000a900460ff16908060000160029054906101000a900460ff16908060000160039054906101000a900460ff16908060000160049054906101000a900460ff16905085565b606084848080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505090507f2f0000000000000000000000000000000000000000000000000000000000000081600081518110611c9f57fe5b602001015160f81c60f81b7effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191614611d0c576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611d0390612f98565b60405180910390fd5b6060868686604051602001611d2393929190612d41565b60405160208183030381529060405290506000600182604051611d469190612d2a565b908152602001604051809103902080546001816001161561010002031660029004905014611da9576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401611da090612ff8565b60405180910390fd5b6001600082604051611dbb9190612d2a565b908152602001604051809103902060009054906101000a900463ffffffff1601600082604051611deb9190612d2a565b908152602001604051809103902060006101000a81548163ffffffff021916908363ffffffff1602179055508383600183604051611e299190612d2a565b90815260200160405180910390209190611e449291906123d0565b506040518060a0016040528060011515815260200160011515815260200160011515815260200160011515815260200160011515815250600282604051611e8b9190612d2a565b90815260200160405180910390206000611ea5843361032e565b815260200190815260200160002060008201518160000160006101000a81548160ff02191690831515021790555060208201518160000160016101000a81548160ff02191690831515021790555060408201518160000160026101000a81548160ff02191690831515021790555060608201518160000160036101000a81548160ff02191690831515021790555060808201518160000160046101000a81548160ff0219169083151502179055509050507f0db027888a30ca08149af1347f6ce2f48daffedd9d6d21ab6249c4d802ce592f818585604051611f8993929190612f5f565b60405180910390a17f22e28c30c57984f353ee8f992671b9dbc19ac7481ed115987fd1050a5b229f3881336001806001806001604051611fcf9796959493929190612ee9565b60405180910390a150505050505050565b60006004811115611fed57fe5b826004811115611ff957fe5b141561209d578060028686604051612012929190612d11565b9081526020016040518091039020600061207088888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160006101000a81548160ff021916908315150217905550612390565b600160048111156120aa57fe5b8260048111156120b657fe5b141561215a5780600286866040516120cf929190612d11565b9081526020016040518091039020600061212d88888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160016101000a81548160ff02191690831515021790555061238f565b6003600481111561216757fe5b82600481111561217357fe5b141561221757806002868660405161218c929190612d11565b908152602001604051809103902060006121ea88888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160036101000a81548160ff02191690831515021790555061238e565b6002600481111561222457fe5b82600481111561223057fe5b14156122d4578060028686604051612249929190612d11565b908152602001604051809103902060006122a788888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160026101000a81548160ff02191690831515021790555061238d565b6004808111156122e057fe5b8260048111156122ec57fe5b141561238c578060028686604051612305929190612d11565b9081526020016040518091039020600061236388888080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050508761032e565b815260200190815260200160002060000160046101000a81548160ff0219169083151502179055505b5b5b5b5b5050505050565b6040518060a001604052806000151581526020016000151581526020016000151581526020016000151581526020016000151581525090565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061241157803560ff191683800117855561243f565b8280016001018555821561243f579182015b8281111561243e578235825591602001919060010190612423565b5b50905061244c9190612498565b5090565b50805460018160011615610100020316600290046000825580601f106124765750612495565b601f0160209004906000526020600020908101906124949190612498565b5b50565b5b808211156124b1576000816000905550600101612499565b5090565b6000813590506124c48161321d565b92915050565b6000815190506124d98161321d565b92915050565b6000813590506124ee81613234565b92915050565b6000813590506125038161324b565b92915050565b60008135905061251881613262565b92915050565b60008083601f84011261253057600080fd5b8235905067ffffffffffffffff81111561254957600080fd5b60208301915083600182028301111561256157600080fd5b9250929050565b600082601f83011261257957600080fd5b813561258c612587826130e9565b6130bc565b915080825260208301602083018583830111156125a857600080fd5b6125b38382846131ca565b50505092915050565b6000602082840312156125ce57600080fd5b60006125dc848285016124b5565b91505092915050565b6000602082840312156125f757600080fd5b6000612605848285016124ca565b91505092915050565b6000806020838503121561262157600080fd5b600083013567ffffffffffffffff81111561263b57600080fd5b6126478582860161251e565b92509250509250929050565b60008060006040848603121561266857600080fd5b600084013567ffffffffffffffff81111561268257600080fd5b61268e8682870161251e565b935093505060206126a1868287016124b5565b9150509250925092565b60008060008060008060008060e0898b0312156126c757600080fd5b600089013567ffffffffffffffff8111156126e157600080fd5b6126ed8b828c0161251e565b985098505060206127008b828c016124b5565b96505060406127118b828c016124df565b95505060606127228b828c016124df565b94505060806127338b828c016124df565b93505060a06127448b828c016124df565b92505060c06127558b828c016124df565b9150509295985092959890939650565b6000806000806060858703121561277b57600080fd5b600085013567ffffffffffffffff81111561279557600080fd5b6127a18782880161251e565b945094505060206127b4878288016124b5565b92505060406127c587828801612509565b91505092959194509250565b600080600080604085870312156127e757600080fd5b600085013567ffffffffffffffff81111561280157600080fd5b61280d8782880161251e565b9450945050602085013567ffffffffffffffff81111561282c57600080fd5b6128388782880161251e565b925092505092959194509250565b6000806000806000806060878903121561285f57600080fd5b600087013567ffffffffffffffff81111561287957600080fd5b61288589828a0161251e565b9650965050602087013567ffffffffffffffff8111156128a457600080fd5b6128b089828a0161251e565b9450945050604087013567ffffffffffffffff8111156128cf57600080fd5b6128db89828a0161251e565b92509250509295509295509295565b6000602082840312156128fc57600080fd5b600082013567ffffffffffffffff81111561291657600080fd5b61292284828501612568565b91505092915050565b6000806040838503121561293e57600080fd5b600083013567ffffffffffffffff81111561295857600080fd5b61296485828601612568565b9250506020612975858286016124b5565b9150509250929050565b6000806040838503121561299257600080fd5b600083013567ffffffffffffffff8111156129ac57600080fd5b6129b885828601612568565b92505060206129c9858286016124f4565b9150509250929050565b6129dc81613194565b82525050565b6129eb8161313c565b82525050565b6129fa8161314e565b82525050565b612a098161314e565b82525050565b612a188161315a565b82525050565b6000612a2a8385613120565b9350612a378385846131ca565b612a408361320c565b840190509392505050565b6000612a578385613131565b9350612a648385846131ca565b82840190509392505050565b6000612a7b82613115565b612a858185613120565b9350612a958185602086016131d9565b612a9e8161320c565b840191505092915050565b6000612ab482613115565b612abe8185613131565b9350612ace8185602086016131d9565b80840191505092915050565b6000612ae7601683613120565b91507f70617468206d7573742073746172742077697468202f000000000000000000006000830152602082019050919050565b6000612b27601583613120565b91507f73747265616d20646f6573206e6f7420657869737400000000000000000000006000830152602082019050919050565b6000612b67601483613120565b91507f6e6f2064656c657465207065726d697373696f6e0000000000000000000000006000830152602082019050919050565b6000612ba7601783613120565b91507f73747265616d20696420616c72656179206578697374730000000000000000006000830152602082019050919050565b6000612be7601283613120565b91507f6e6f2065646974207065726d697373696f6e00000000000000000000000000006000830152602082019050919050565b6000612c27602083613120565b91507f796f75206d757374206265206f776e6572206f662074686520656e736e616d656000830152602082019050919050565b6000612c67601383613120565b91507f6e6f207368617265207065726d697373696f6e000000000000000000000000006000830152602082019050919050565b60a082016000820151612cb060008501826129f1565b506020820151612cc360208501826129f1565b506040820151612cd660408501826129f1565b506060820151612ce960608501826129f1565b506080820151612cfc60808501826129f1565b50505050565b612d0b81613184565b82525050565b6000612d1e828486612a4b565b91508190509392505050565b6000612d368284612aa9565b915081905092915050565b6000612d4d8286612aa9565b9150612d5a828486612a4b565b9150819050949350505050565b6000602082019050612d7c6000830184612a00565b92915050565b600060a082019050612d976000830188612a00565b612da46020830187612a00565b612db16040830186612a00565b612dbe6060830185612a00565b612dcb6080830184612a00565b9695505050505050565b6000602082019050612dea6000830184612a0f565b92915050565b60006020820190508181036000830152612e0b818486612a1e565b90509392505050565b600060e0820190508181036000830152612e2f818a8c612a1e565b9050612e3e60208301896129e2565b612e4b6040830188612a00565b612e586060830187612a00565b612e656080830186612a00565b612e7260a0830185612a00565b612e7f60c0830184612a00565b9998505050505050505050565b60006040820190508181036000830152612ea7818688612a1e565b90508181036020830152612ebc818486612a1e565b905095945050505050565b60006020820190508181036000830152612ee18184612a70565b905092915050565b600060e0820190508181036000830152612f03818a612a70565b9050612f1260208301896129d3565b612f1f6040830188612a00565b612f2c6060830187612a00565b612f396080830186612a00565b612f4660a0830185612a00565b612f5360c0830184612a00565b98975050505050505050565b60006040820190508181036000830152612f798186612a70565b90508181036020830152612f8e818486612a1e565b9050949350505050565b60006020820190508181036000830152612fb181612ada565b9050919050565b60006020820190508181036000830152612fd181612b1a565b9050919050565b60006020820190508181036000830152612ff181612b5a565b9050919050565b6000602082019050818103600083015261301181612b9a565b9050919050565b6000602082019050818103600083015261303181612bda565b9050919050565b6000602082019050818103600083015261305181612c1a565b9050919050565b6000602082019050818103600083015261307181612c5a565b9050919050565b600060a08201905061308d6000830184612c9a565b92915050565b60006040820190506130a86000830185612d02565b6130b560208301846129e2565b9392505050565b6000604051905081810181811067ffffffffffffffff821117156130df57600080fd5b8060405250919050565b600067ffffffffffffffff82111561310057600080fd5b601f19601f8301169050602081019050919050565b600081519050919050565b600082825260208201905092915050565b600081905092915050565b600061314782613164565b9050919050565b60008115159050919050565b6000819050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600063ffffffff82169050919050565b600061319f826131a6565b9050919050565b60006131b1826131b8565b9050919050565b60006131c382613164565b9050919050565b82818337600083830152505050565b60005b838110156131f75780820151818401526020810190506131dc565b83811115613206576000848401525b50505050565b6000601f19601f8301169050919050565b6132268161313c565b811461323157600080fd5b50565b61323d8161314e565b811461324857600080fd5b50565b6132548161315a565b811461325f57600080fd5b50565b6005811061326f57600080fd5b5056fea2646970667358221220b836626307b4f31d9d2a0ae51a90a7939286bbdf91b0a32ab2b8e2ca5cc7cd1664736f6c634300060c0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 1888,
+        "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+        "label": "streamIdToVersion",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_string_memory_ptr,t_uint32)"
+      },
+      {
+        "astId": 1892,
+        "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+        "label": "streamIdToMetadata",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_string_memory_ptr,t_string_storage)"
+      },
+      {
+        "astId": 1898,
+        "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+        "label": "streamIdToPermissions",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_string_memory_ptr,t_mapping(t_bytes32,t_struct(Permission)1911_storage))"
+      },
+      {
+        "astId": 1900,
+        "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+        "label": "ensCache",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_contract(ENSCache)2975"
+      }
+    ],
+    "types": {
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_contract(ENSCache)2975": {
+        "encoding": "inplace",
+        "label": "contract ENSCache",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_bytes32,t_struct(Permission)1911_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct StreamRegistry.Permission)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Permission)1911_storage"
+      },
+      "t_mapping(t_string_memory_ptr,t_mapping(t_bytes32,t_struct(Permission)1911_storage))": {
+        "encoding": "mapping",
+        "key": "t_string_memory_ptr",
+        "label": "mapping(string => mapping(bytes32 => struct StreamRegistry.Permission))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_bytes32,t_struct(Permission)1911_storage)"
+      },
+      "t_mapping(t_string_memory_ptr,t_string_storage)": {
+        "encoding": "mapping",
+        "key": "t_string_memory_ptr",
+        "label": "mapping(string => string)",
+        "numberOfBytes": "32",
+        "value": "t_string_storage"
+      },
+      "t_mapping(t_string_memory_ptr,t_uint32)": {
+        "encoding": "mapping",
+        "key": "t_string_memory_ptr",
+        "label": "mapping(string => uint32)",
+        "numberOfBytes": "32",
+        "value": "t_uint32"
+      },
+      "t_string_memory_ptr": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_struct(Permission)1911_storage": {
+        "encoding": "inplace",
+        "label": "struct StreamRegistry.Permission",
+        "members": [
+          {
+            "astId": 1902,
+            "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+            "label": "edit",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_bool"
+          },
+          {
+            "astId": 1904,
+            "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+            "label": "canDelete",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool"
+          },
+          {
+            "astId": 1906,
+            "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+            "label": "publish",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_bool"
+          },
+          {
+            "astId": 1908,
+            "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+            "label": "subscribed",
+            "offset": 3,
+            "slot": "0",
+            "type": "t_bool"
+          },
+          {
+            "astId": 1910,
+            "contract": "contracts/StreamRegistry/StreamRegistry.sol:StreamRegistry",
+            "label": "share",
+            "offset": 4,
+            "slot": "0",
+            "type": "t_bool"
+          }
+        ],
+        "numberOfBytes": "32"
+      },
+      "t_uint32": {
+        "encoding": "inplace",
+        "label": "uint32",
+        "numberOfBytes": "4"
+      }
+    }
+  }
+}
