@@ -4,7 +4,7 @@ const Web3 = require("web3")
 const {
     Contract,
     ContractFactory,
-    utils: {computeAddress, parseEther, formatEther, namehash},
+    utils: {computeAddress, parseEther, formatEther, namehash, bigNumberify},
     Wallet,
     providers: {JsonRpcProvider}
 } = require("ethers")
@@ -168,12 +168,15 @@ async function deployStreamRegistry(sidechainWallet) {
         ChainlinkOracle.compilerOutput.evm.bytecode.object, sidechainWallet)
     const oracleFactoryTx = await oracleFactory.deploy(linkToken.address)
     const oracle = await oracleFactoryTx.deployed()
-    const tokenaddrFromOracle = await oracle.getChainlinkToken()
     log(`Chainlink Oracle deployed at ${oracle.address}`)
+    const tokenaddrFromOracle = await oracle.getChainlinkToken()
     log(`Chainlink Oracle token pointing to ${tokenaddrFromOracle}`)
+    await oracle.setFulfillmentPermission(chainlinkNodeAddress, true)
+    const permission = await oracle.getAuthorizationStatus(chainlinkNodeAddress)
+    log(`Chainlink Oracle permission for ${chainlinkNodeAddress} is ${permission}`)
 
     const ensCacheFactory = new ContractFactory(ENSCache.abi, ENSCache.bytecode, sidechainWallet)
-    const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, 'JOBID')
+    const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, chainlinkJobId)
     const ensCache = await ensCacheFactoryTx.deployed()
     log(`ENSCache deployed at ${ensCache.address}`)
     log(`ENSCache setting Link token address ${linkToken.address}`)
@@ -381,6 +384,8 @@ async function smartContractInitialization() {
    dtx = await cf.deploy(sidechainDataCoin, uniswapRouterSidechain.address, sidechainSingleTokenMediator, sidechainDataCoin, sidechainDataCoin)
    const binanceAdapter = await dtx.deployed()
    log(`sidechain binanceAdapter ${binanceAdapter.address}`)
+
+   await deployStreamRegistry(sidechainWallet)
 
    //put additions here
  
