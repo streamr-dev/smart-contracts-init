@@ -20,7 +20,6 @@ const ENSRegistry = require("./ENSRegistry.json")
 const FIFSRegistrar = require("./FIFSRegistrar.json")
 const PublicResolver = require("./PublicResolver.json")
 const BinanceAdapter = require("./BinanceAdapter.json")
-const MockTokenMediator = require("./MockTokenMediator.json")
 
 
 //Uniswap v2
