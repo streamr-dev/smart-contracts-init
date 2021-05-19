@@ -328,15 +328,15 @@ async function smartContractInitialization() {
    amt_token2, 0, 0, wallet.address, futureTime)
    
    let cf = new ContractFactory(Uniswap2Adapter.abi, Uniswap2Adapter.bytecode, wallet)
-   let dtx = await cf.deploy(market)
-   const uniswap2Adapter = await dtx.deployed(market.address, router.address, token.address)
-   log(`Uniswap2Adapter ${uniswap2Adapter}`)    
+   let dtx = await cf.deploy(market.address, router.address, token.address)
+   const uniswap2Adapter = await dtx.deployed()
+   log(`Uniswap2Adapter ${uniswap2Adapter.address}`)    
 
    cf = new ContractFactory(BinanceAdapter.abi, BinanceAdapter.bytecode, sidechainWallet)
    //constructor(address dataCoin_, address honeyswapRouter_, address bscBridge_, address convertToCoin_, address liquidityToken_) public {
-   dtx = await cf.deploy(sidechainDataCoin, uniswapRouterSidechain.address, sidechainMockTokenMediator.address, sidechainDataCoin, sidechainDataCoin)
+   dtx = await cf.deploy(sidechainDataCoin, uniswapRouterSidechain.address, sidechainSingleTokenMediator, sidechainDataCoin, sidechainDataCoin)
    const binanceAdapter = await dtx.deployed()
-   log(`sidechain binanceAdapter ${binanceAdapter}`)
+   log(`sidechain binanceAdapter ${binanceAdapter.address}`)
 
    //put additions here
  
