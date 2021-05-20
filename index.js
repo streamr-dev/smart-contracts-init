@@ -51,7 +51,7 @@ const futureTime = 4449513600
 
 // Default Private Key
 defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
-privKeyStreamRegistry = "0x2a93ce25e5ac2bcceae4d159165e0c397ff9ffd36db54e386717953edd3b4612"
+privKeyStreamRegistry = "0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb"
 
 const privateKeys = [
     "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0",
@@ -189,7 +189,7 @@ async function deployStreamRegistry() {
     await linkToken.transfer(ensCache.address, bigNumberify('1000000000000000000000')) // 1000 link
 
     const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
-    const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address)
+    const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, sidechainWalletStreamReg.address)
     const streamRegistry = await streamRegistryFactoryTx.deployed()
     log(`Streamregistry deployed at ${streamRegistry.address}`)
 }
