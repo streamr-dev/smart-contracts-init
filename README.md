@@ -20,6 +20,12 @@ Note that you MUST remove the parity docker volumes to delete old chain data fro
 Tokenbridge:
 The bridge dir contains code related to the setup of tokenbridge between the mainchain and sidechain images. bridge/tokenbridge-contracts contains some custom modifications Streamr has made to tokenbridge contracts. When tokenbridge implements transferAndCall for bridge tokens, this should be REPLACED with the tokenbridge image.
 
+Chainlink node:
+Steps needed to recreate the chainlink ecosystem from scratch. This should only be needed if it breaks, for example if the addresses for the linktoken and oracle contract change in the sidechain.
+1. first run the smart contracts init to get the new addresses from the smartContractInit.log (don't forget to delete the named unused docker volumes after!)
+2. add the new link contract address to the .env_streamr_sidechain file in chainlink_config in your local streamr-docker-dev repo
+3. start the chainlink node with all its dependant 
+
 Parity Default Private Key 
 * 0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7
 

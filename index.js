@@ -51,6 +51,7 @@ const futureTime = 4449513600
 
 // Default Private Key
 defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
+privKeyStreamRegistry = "0x2a93ce25e5ac2bcceae4d159165e0c397ff9ffd36db54e386717953edd3b4612"
 
 const privateKeys = [
     "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0",
@@ -151,21 +152,23 @@ async function ethersWallet(url, privateKey) {
     return new AutoNonceWallet(privateKey, provider)
 }
 
-async function deployStreamRegistry(sidechainWallet) {
+async function deployStreamRegistry() {
+    const sidechainWalletStreamReg = await ethersWallet(sidechainURL, privKeyStreamRegistry)
+
     log('Sending some Ether to chainlink node address')
-    await sidechainWallet.sendTransaction({
+    await sidechainWalletStreamReg.sendTransaction({
         to: chainlinkNodeAddress,
         value: parseEther('100')
     })
     
     log('Deploying Streamregistry and chainlink contracts to sidechain:')
-    const linkTokenFactory = new ContractFactory(LinkToken.abi, LinkToken.bytecode, sidechainWallet)
+    const linkTokenFactory = new ContractFactory(LinkToken.abi, LinkToken.bytecode, sidechainWalletStreamReg)
     const linkTokenFactoryTx = await linkTokenFactory.deploy()
     const linkToken = await linkTokenFactoryTx.deployed()
     log(`Link Token deployed at ${linkToken.address}`)
 
     const oracleFactory = new ContractFactory(ChainlinkOracle.compilerOutput.abi,
-        ChainlinkOracle.compilerOutput.evm.bytecode.object, sidechainWallet)
+        ChainlinkOracle.compilerOutput.evm.bytecode.object, sidechainWalletStreamReg)
     const oracleFactoryTx = await oracleFactory.deploy(linkToken.address)
     const oracle = await oracleFactoryTx.deployed()
     log(`Chainlink Oracle deployed at ${oracle.address}`)
@@ -175,7 +178,7 @@ async function deployStreamRegistry(sidechainWallet) {
     const permission = await oracle.getAuthorizationStatus(chainlinkNodeAddress)
     log(`Chainlink Oracle permission for ${chainlinkNodeAddress} is ${permission}`)
 
-    const ensCacheFactory = new ContractFactory(ENSCache.abi, ENSCache.bytecode, sidechainWallet)
+    const ensCacheFactory = new ContractFactory(ENSCache.abi, ENSCache.bytecode, sidechainWalletStreamReg)
     const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, chainlinkJobId)
     const ensCache = await ensCacheFactoryTx.deployed()
     log(`ENSCache deployed at ${ensCache.address}`)
@@ -185,7 +188,7 @@ async function deployStreamRegistry(sidechainWallet) {
     log('Sending some Link to ENSCache')
     await linkToken.transfer(ensCache.address, bigNumberify('1000000000000000000000')) // 1000 link
 
-    const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWallet)
+    const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
     const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address)
     const streamRegistry = await streamRegistryFactoryTx.deployed()
     log(`Streamregistry deployed at ${streamRegistry.address}`)
@@ -385,7 +388,7 @@ async function smartContractInitialization() {
    const binanceAdapter = await dtx.deployed()
    log(`sidechain binanceAdapter ${binanceAdapter.address}`)
 
-   await deployStreamRegistry(sidechainWallet)
+   await deployStreamRegistry()
 
    //put additions here
  
