@@ -69,8 +69,8 @@ const privateKeys = [
 // these come from the next step, but we can predict the addresses
 const sidechainDataCoin = '0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF'
 const sidechainSingleTokenMediator = '0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F'
-const chainlinkNodeAddress = '0x64298Cddfdc3b34febC7e039E7A4D95A7Ed0764C'
-const chainlinkJobId = '36e174b67066499396d9a2b20a487b04'
+const chainlinkNodeAddress = '0xDf0107F91ECCD830Ca0f0697AD42259aE3459097'
+const chainlinkJobId = 'c0d1fe92d7f24c5db7888198f5afaa88'
 
 async function getProducts() {
     return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
