@@ -49,24 +49,29 @@ Docker "mainnet" (localhost:8545):
 * FIFSRegistrar for TLD (top level domain) 'eth': 0x57B81a9442805f88c4617B506206531e72d96290
 * PublicResolver (reusable): 0xBc0c81a318D57ae54dA28DE69184A9c3aE9a1e1c
 * Uniswap2 router: 0xeE1bC9a7BFF1fFD913f4c97B6177D47E804E1920
+* Uniswap2Adapter: 0x0bADa0acE1d16ABf1ce1aAED9Bc7Ce231ECc35b5
 
-Docker "sidechain" (localhost:8546)
-* Storage NodeRegistry: 0xEAA002f7Dc60178B6103f8617Be45a9D3df659B6
-* Uniswap2 router: 0xdc5F6368cd31330adC259386e78604a5E29E9415
-
-Bridge Addresses:
-
-Docker "mainnet" (localhost:8545):
+Bridge related:
 * foreign_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
 * dedicated DATA foreign_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
 * foreign omnibridge: 0x6346Ed242adE018Bd9320D5E3371c377BAB29c31
 * foreign_erc20: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
+
+DataUnion related:
 * foreign_du_factory: 0x4bbcBeFBEC587f6C4AF9AF9B48847caEa1Fe81dA
 
+
 Docker "sidechain" (localhost:8546)
+* Storage NodeRegistry: 0xbAA81A0179015bE47Ad439566374F2Bae098686F
+* Uniswap2 router: 0xd2D23b73A67208a90CBfEE1381415329954f54E2
+* BinanceAdapter: 0xdc5F6368cd31330adC259386e78604a5E29E9415
+
+Bridge related:
 * home_amb: 0xaFA0dc5Ad21796C9106a36D68f69aAD69994BB64
 * home_erc677: 0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF
 * dedicated DATA home_erc_mediator: 0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F
 * home omnibridge: 0x41B89Db86BE735c03A9296437E39F5FDAdC4c678
+
+DataUnion related:
 * home_du_factory: 0x4A4c4759eb3b7ABee079f832850cD3D0dC48D927
 
