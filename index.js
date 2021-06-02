@@ -14,15 +14,19 @@ const TokenJson = require("./TestToken.json")
 const MarketplaceJson = require("./Marketplace.json")
 const Marketplace2Json = require("./Marketplace2.json")
 const UniswapAdaptor = require("./UniswapAdaptor.json")
+const Uniswap2Adapter = require("./Uniswap2Adapter.json")
 const NodeRegistry = require("./NodeRegistry.json")
 const ENSRegistry = require("./ENSRegistry.json")
 const FIFSRegistrar = require("./FIFSRegistrar.json")
 const PublicResolver = require("./PublicResolver.json")
+const BinanceAdapter = require("./BinanceAdapter.json")
+
 
 //Uniswap v2
 const UniswapV2Factory = require("./node_modules/@uniswap/v2-core/build/UniswapV2Factory.json")
-const UniswapV2Pair = require("./node_modules/@uniswap/v2-core/build/UniswapV2Pair.json")
 const UniswapV2Router02 = require("./node_modules/@uniswap/v2-periphery/build/UniswapV2Router02.json")
+const ExampleSlidingWindowOracle = require("./node_modules/@uniswap/v2-periphery/build/ExampleSlidingWindowOracle.json");
+
 const WETH9 = require("./node_modules/@uniswap/v2-periphery/build/WETH9.json")
 
 //Uniswap v1
@@ -54,6 +58,10 @@ const privateKeys = [
     "0x2cd9855d17e01ce041953829398af7e48b24ece04ff9d0e183414de54dc52285",
     "0x2c326a4c139eced39709b235fffa1fde7c252f3f7b505103f7b251586c35d543",
 ]
+
+// these come from the next step, but we can predict the addresses
+const sidechainDataCoin = '0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF'
+const sidechainSingleTokenMediator = '0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F'
 
 async function getProducts() {
     return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
@@ -308,7 +316,7 @@ async function smartContractInitialization() {
    log(`deploy Uniswap2 mainnet`)
    const router = await deployUniswap2(wallet)
    log(`deploy Uniswap2 sidechain`)
-   await deployUniswap2(sidechainWallet)
+   const uniswapRouterSidechain = await deployUniswap2(sidechainWallet)
    
    tx = await token.approve(router.address, amt_token)
    //await tx.wait()
@@ -316,10 +324,21 @@ async function smartContractInitialization() {
    await tx.wait()
    log(`addLiquidity Uniswap2 mainnet`)
    tx = await router.addLiquidity(token.address, token2.address, amt_token, 
-    amt_token2, 0, 0, wallet.address, futureTime)
+   amt_token2, 0, 0, wallet.address, futureTime)
+   
+   let cf = new ContractFactory(Uniswap2Adapter.abi, Uniswap2Adapter.bytecode, wallet)
+   let dtx = await cf.deploy(market.address, router.address, token.address)
+   const uniswap2Adapter = await dtx.deployed()
+   log(`Uniswap2Adapter ${uniswap2Adapter.address}`)    
 
+   cf = new ContractFactory(BinanceAdapter.abi, BinanceAdapter.bytecode, sidechainWallet)
+   //constructor(address dataCoin_, address honeyswapRouter_, address bscBridge_, address convertToCoin_, address liquidityToken_) public {
+   dtx = await cf.deploy(sidechainDataCoin, uniswapRouterSidechain.address, sidechainSingleTokenMediator, sidechainDataCoin, sidechainDataCoin)
+   const binanceAdapter = await dtx.deployed()
+   log(`sidechain binanceAdapter ${binanceAdapter.address}`)
 
    //put additions here
+ 
 
    //all TXs should now be confirmed:
     const EEwaitms = 60000
