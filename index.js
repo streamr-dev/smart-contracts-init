@@ -4,13 +4,14 @@ const Web3 = require("web3")
 const {
     Contract,
     ContractFactory,
-    utils: {computeAddress, parseEther, formatEther, namehash},
+    utils: {computeAddress, parseEther, formatEther, namehash, id},
     Wallet,
     providers: {JsonRpcProvider}
 } = require("ethers")
 
 
 const TokenJson = require("./TestToken.json")
+const OldTokenJson = require("./CrowdsaleToken.json")
 const MarketplaceJson = require("./Marketplace.json")
 const Marketplace2Json = require("./Marketplace2.json")
 const UniswapAdaptor = require("./UniswapAdaptor.json")
@@ -18,6 +19,8 @@ const NodeRegistry = require("./NodeRegistry.json")
 const ENSRegistry = require("./ENSRegistry.json")
 const FIFSRegistrar = require("./FIFSRegistrar.json")
 const PublicResolver = require("./PublicResolver.json")
+const DATAv2 = require("./DATAv2.json")
+const DataTokenMigrator = require("./DataTokenMigrator.json")
 
 //Uniswap v2
 const UniswapV2Factory = require("./node_modules/@uniswap/v2-core/build/UniswapV2Factory.json")
@@ -35,13 +38,20 @@ const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
 const sidechainURL = process.env.SIDECHAIN_URL || "http://10.200.10.1:8546"
 
 const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
-const log = process.env.QUIET ? (() => {
-}) : console.log // eslint-disable-line no-console
+const log = require("debug")("eth-init")
 const futureTime = 4449513600
 
-// Default Private Key
+// DATAv1 token supply before the upgrade (real mainnet number)
+// See totalSupply at https://etherscan.io/address/0x0cf0ee63788a0849fe5297f3407f701e122cc023#readContract
+const oldSupply = parseEther("987154514")
+
+// how much to mint to each of the privateKeys
+const mintTokenAmount = formatEther("1000000")
+
+// this wallet will deploy all contracts and "own" them if applicable
 defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
 
+// "testrpc" mnemonic wallets, will have DATAv1 and DATAv2 tokens in them
 const privateKeys = [
     "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0",
     "0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb",
@@ -54,6 +64,17 @@ const privateKeys = [
     "0x2cd9855d17e01ce041953829398af7e48b24ece04ff9d0e183414de54dc52285",
     "0x2c326a4c139eced39709b235fffa1fde7c252f3f7b505103f7b251586c35d543",
 ]
+
+// single-use wallets for tests, listed projects' wallets indexed between 0...9 have DATAv2 tokens on them
+const projects = [
+    "marketplace-contracts",
+    "network-contracts",
+    "...add your own here",
+]
+function getTestWallet(name, index) {
+    const hash = id(name + (index || ""))
+    return new Wallet(hash)
+}
 
 async function getProducts() {
     return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
@@ -139,11 +160,23 @@ async function smartContractInitialization() {
     const wallet = await ethersWallet(chainURL, defaultPrivateKey)
     const sidechainWallet = await ethersWallet(sidechainURL, defaultPrivateKey)
 
-    log(`Deploying test DATAcoin from ${wallet.address}`)
-    const tokenDeployer = await new ContractFactory(TokenJson.abi, TokenJson.bytecode, wallet)
-    const tokenDeployTx = await tokenDeployer.deploy("Test DATAcoin", "\ud83e\udd84")
+    log(`Deploying test DATAv1 from ${wallet.address}`)
+    const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
+    const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
+    const oldToken = await oldTokenDeployTx.deployed()
+    log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
+
+    log(`Deploying test DATAv2 from ${wallet.address}`)
+    const tokenDeployer = await new ContractFactory(DATAv2.abi, DATAv2.bytecode, wallet)
+    const tokenDeployTx = await tokenDeployer.deploy()
     const token = await tokenDeployTx.deployed()
-    log(`DATACOIN ERC20 deployed at ${token.address}`)
+    log(`New DATAv2 ERC20 deployed at ${token.address}`)
+
+    log(`Deploying DataTokenMigrator from ${wallet.address}`)
+    const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
+    const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
+    const migrator = await migratorDeployTx.deployed()
+    log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
 
     log(`Deploying Marketplace1 contract from ${wallet.address}`)
     const marketDeployer1 = new ContractFactory(MarketplaceJson.abi, MarketplaceJson.bytecode, wallet)
@@ -183,13 +216,60 @@ async function smartContractInitialization() {
     
     //Note: TestToken contract automatically mints 100000 to owner
 
-    //1000 DATA tokens
-    const mintTokens = "1000000000000000000000"
-    log(`Minting ${mintTokens} tokens to following addresses:`)
+    log('Add minter: %s', wallet.address)
+    const addMinterTx = await token.grantRole(id("MINTER_ROLE"), wallet.address)
+    await addMinterTx.wait()
+
+    // AutoNonceWallet allows for omitting .wait()ing for the transactions as long as no reads are done
+    log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
+    await oldToken.setReleaseAgent(signer.address)
+    await oldToken.setMintAgent(wallet.address, true)
     for (const address of privateKeys.map(computeAddress)) {
         log("    " + address)
-        const mintTx = await token.mint(address, mintTokens)
-        //await mintTx.wait()
+        tx = await oldToken.mint(address, mintTokenAmount)
+    }
+    await oldToken.mint(wallet.address, oldSupply.sub(mintTokenAmount.mul(privateKeys.length)))
+    const oldTokenReleaseTx = await oldToken.releaseTokenTransfer()
+    await oldTokenReleaseTx.wait()
+    log('Old token getUpgradeState: %d, expected: 2', await oldToken.getUpgradeState())
+
+    log('Set migrator as UpgradeAgent => start test-DATAv1 upgrade')
+    const upgradeTx1 = await token.mint(migrator.address, await oldToken.totalSupply())
+    await upgradeTx1.wait()
+    const upgradeTx2 = await oldToken.setUpgradeAgent(migrator.address)
+    await upgradeTx2.wait()
+    log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
+
+    // TODO: commented-out code where each step is awaited
+    // const setupTx1 = await oldToken.setReleaseAgent(signer.address)
+    // await setupTx1.wait()
+    // const setupTx2 = await oldToken.setMintAgent(wallet.address, true)
+    // await setupTx2.wait()
+    // const setupTx3 = await oldToken.mint(wallet.address, oldSupply)
+    // await setupTx3.wait()
+    // log('Old token getUpgradeState: %d, expected: 1', await oldToken.getUpgradeState())
+    // const setupTx4 = await oldToken.releaseTokenTransfer()
+    // await setupTx4.wait()
+    // log('Old token getUpgradeState: %d, expected: 2', await oldToken.getUpgradeState())
+
+    // log('Set migrator as UpgradeAgent => start test-DATAv1 upgrade')
+    // const upgradeTx1 = await token.mint(migrator.address, await oldToken.totalSupply())
+    // await upgradeTx1.wait()
+    // const upgradeTx2 = await oldToken.setUpgradeAgent(migrator.address)
+    // await upgradeTx2.wait()
+    // log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
+
+    log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
+    for (const address of privateKeys.map(computeAddress)) {
+        log("    %s", address)
+        await token.mint(address, mintTokenAmount)
+    }
+    for (const projectName of projects) {
+        for (let i = 0; i < 10; i++) {
+            const wallet = getTestWallet(projectName, i)
+            log("    %s (%s #%d)", wallet.address, projectName, i)
+            await token.mint(wallet.address, mintTokenAmount)
+        }
     }
 
     log("Init Uniswap1 factory")
