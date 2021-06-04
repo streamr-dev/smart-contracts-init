@@ -161,23 +161,12 @@ async function smartContractInitialization() {
     const wallet = await ethersWallet(chainURL, defaultPrivateKey)
     const sidechainWallet = await ethersWallet(sidechainURL, defaultPrivateKey)
 
-    log(`Deploying test DATAv1 from ${wallet.address}`)
-    const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
-    const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
-    const oldToken = await oldTokenDeployTx.deployed()
-    log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
 
     log(`Deploying test DATAv2 from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(DATAv2.abi, DATAv2.bytecode, wallet)
     const tokenDeployTx = await tokenDeployer.deploy()
     const token = await tokenDeployTx.deployed()
     log(`New DATAv2 ERC20 deployed at ${token.address}`)
-
-    log(`Deploying DataTokenMigrator from ${wallet.address}`)
-    const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
-    const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
-    const migrator = await migratorDeployTx.deployed()
-    log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
 
     log(`Deploying Marketplace1 contract from ${wallet.address}`)
     const marketDeployer1 = new ContractFactory(MarketplaceJson.abi, MarketplaceJson.bytecode, wallet)
@@ -214,6 +203,18 @@ async function smartContractInitialization() {
     const tokenDeployer2 = new ContractFactory(TestTokenJson.abi, TestTokenJson.bytecode, wallet)
     const tokenDeployTx2 = await tokenDeployer.deploy("Test OTHERcoin", "COIN")
     const token2 = await tokenDeployTx.deployed()
+
+    log(`Deploying test DATAv1 from ${wallet.address}`)
+    const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
+    const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
+    const oldToken = await oldTokenDeployTx.deployed()
+    log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
+
+    log(`Deploying DataTokenMigrator from ${wallet.address}`)
+    const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
+    const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
+    const migrator = await migratorDeployTx.deployed()
+    log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
 
     //Note: TestToken contract automatically mints 100000 to owner
 
