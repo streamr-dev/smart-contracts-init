@@ -86,7 +86,8 @@ function sleep(ms) {
     })
 }
 
-//from https://github.com/ethers-io/ethers.js/issues/319
+// AutoNonceWallet allows for omitting .wait()ing for the transactions as long as no reads are done
+// from https://github.com/ethers-io/ethers.js/issues/319
 class AutoNonceWallet extends Wallet {
     _noncePromise = null;
     sendTransaction(transaction) {
@@ -161,6 +162,11 @@ async function smartContractInitialization() {
     const wallet = await ethersWallet(chainURL, defaultPrivateKey)
     const sidechainWallet = await ethersWallet(sidechainURL, defaultPrivateKey)
 
+    // log(`Deploying test DATAv2 from ${wallet.address}`)
+    // const tokenDeployer = await new ContractFactory(TestTokenJson.abi, TestTokenJson.bytecode, wallet)
+    // const tokenDeployTx = await tokenDeployer.deploy("Test DATAv2", "\ud83e\udd84") // unicorn
+    // const token = await tokenDeployTx.deployed()
+    // log(`New DATAv2 ERC20 deployed at ${token.address}`)
 
     log(`Deploying test DATAv2 from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(DATAv2.abi, DATAv2.bytecode, wallet)
@@ -204,55 +210,16 @@ async function smartContractInitialization() {
     const tokenDeployTx2 = await tokenDeployer.deploy("Test OTHERcoin", "COIN")
     const token2 = await tokenDeployTx.deployed()
 
-    log(`Deploying test DATAv1 from ${wallet.address}`)
-    const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
-    const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
-    const oldToken = await oldTokenDeployTx.deployed()
-    log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
-
-    log(`Deploying DataTokenMigrator from ${wallet.address}`)
-    const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
-    const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
-    const migrator = await migratorDeployTx.deployed()
-    log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
-
     //Note: TestToken contract automatically mints 100000 to owner
 
     log('Add minter: %s', wallet.address)
     const addMinterTx = await token.grantRole(id("MINTER_ROLE"), wallet.address)
     await addMinterTx.wait()
 
-    // AutoNonceWallet allows for omitting .wait()ing for the transactions as long as no reads are done
-    log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
-    await oldToken.setReleaseAgent(signer.address)
-    await oldToken.setMintAgent(wallet.address, true)
-    for (const address of privateKeys.map(computeAddress)) {
-        log("    " + address)
-        tx = await oldToken.mint(address, mintTokenAmount)
-    }
-    await oldToken.mint(wallet.address, oldSupply.sub(mintTokenAmount.mul(privateKeys.length)))
-    const oldTokenReleaseTx = await oldToken.releaseTokenTransfer()
-    await oldTokenReleaseTx.wait()
-    log('Old token getUpgradeState: %d, expected: 2', await oldToken.getUpgradeState())
-
-    log('Set migrator as UpgradeAgent => start test-DATAv1 upgrade')
-    const upgradeTx1 = await token.mint(migrator.address, await oldToken.totalSupply())
-    await upgradeTx1.wait()
-    const upgradeTx2 = await oldToken.setUpgradeAgent(migrator.address)
-    await upgradeTx2.wait()
-    log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
-
     log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
-    for (const address of privateKeys.map(computeAddress)) {
+    for (const address of privateKeys.slice(1).map(computeAddress)) {
         log("    %s", address)
         await token.mint(address, mintTokenAmount)
-    }
-    for (const projectName of projects) {
-        for (let i = 0; i < 10; i++) {
-            const wallet = getTestWallet(projectName, i)
-            log("    %s (%s #%d)", wallet.address, projectName, i)
-            await token.mint(wallet.address, mintTokenAmount)
-        }
     }
 
     log("Init Uniswap1 factory")
@@ -371,6 +338,50 @@ async function smartContractInitialization() {
    await tx.wait()
    log(`addLiquidity Uniswap2 mainnet`)
    tx = await router.addLiquidity(token.address, token2.address, amt_token, amt_token2, 0, 0, wallet.address, futureTime)
+
+   // TODO: move these deployments to the top once address change pains are solved
+   log(`Deploying test DATAv1 from ${wallet.address}`)
+   const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
+   const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
+   const oldToken = await oldTokenDeployTx.deployed()
+   log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
+
+   log(`Deploying DataTokenMigrator from ${wallet.address}`)
+   const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
+   const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
+   const migrator = await migratorDeployTx.deployed()
+   log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
+
+   log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
+   await oldToken.setReleaseAgent(signer.address)
+   await oldToken.setMintAgent(wallet.address, true)
+   for (const address of privateKeys.map(computeAddress)) {
+       log("    " + address)
+       tx = await oldToken.mint(address, mintTokenAmount)
+   }
+   await oldToken.mint(wallet.address, oldSupply.sub(mintTokenAmount.mul(privateKeys.length)))
+   const oldTokenReleaseTx = await oldToken.releaseTokenTransfer()
+   await oldTokenReleaseTx.wait()
+   log('Old token getUpgradeState: %d, expected: 2', await oldToken.getUpgradeState())
+
+   log('Set migrator as UpgradeAgent => start test-DATAv1 upgrade')
+   const upgradeTx1 = await token.mint(migrator.address, await oldToken.totalSupply())
+   await upgradeTx1.wait()
+   const upgradeTx2 = await oldToken.setUpgradeAgent(migrator.address)
+   await upgradeTx2.wait()
+   log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
+
+   log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
+   log("    %s (%s)", wallet.address, 'testrpc1, deployer/owner of everything')
+   await token.mint(wallet.address, mintTokenAmount)
+    for (const projectName of projects) {
+       for (let i = 0; i < 10; i++) {
+           const testWallet = getTestWallet(projectName, i)
+           log("    %s (%s #%d)", testWallet.address, projectName, i)
+           await token.mint(testWallet.address, mintTokenAmount)
+       }
+   }
+
 
    //put additions here
 
