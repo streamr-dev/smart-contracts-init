@@ -270,7 +270,7 @@ async function smartContractInitialization() {
     log(`Deploying test OTHERcoin from ${wallet.address}`)
     const tokenDeployer2 = new ContractFactory(TestTokenJson.abi, TestTokenJson.bytecode, wallet)
     const tokenDeployTx2 = await tokenDeployer2.deploy("Test OTHERcoin", "COIN")
-    const token2 = await tokenDeployTx.deployed()
+    const token2 = await tokenDeployTx2.deployed()
 
     //Note: TestToken contract automatically mints 100000 to owner
 
