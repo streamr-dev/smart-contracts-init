@@ -230,47 +230,48 @@ async function smartContractInitialization() {
     // const token = await tokenDeployTx.deployed()
     // log(`New DATAv2 ERC20 deployed at ${token.address}`)
 
-    log(`Deploying test DATAv2 from ${wallet.address}`)
+    // log(`Deploying test DATAv2 from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(DATAv2.abi, DATAv2.bytecode, wallet)
     const tokenDeployTx = await tokenDeployer.deploy()
     const token = await tokenDeployTx.deployed()
     log(`New DATAv2 ERC20 deployed at ${token.address}`)
 
-    log(`Deploying Marketplace1 contract from ${wallet.address}`)
+    // log(`Deploying Marketplace1 contract from ${wallet.address}`)
     const marketDeployer1 = new ContractFactory(MarketplaceJson.abi, MarketplaceJson.bytecode, wallet)
     const marketDeployTx1 = await marketDeployer1.deploy(token.address, wallet.address)
     const market1 = await marketDeployTx1.deployed()
     log(`Marketplace1 deployed at ${market1.address}`)
 
-    log(`Deploying Marketplace2 contract from ${wallet.address}`)
+    // log(`Deploying Marketplace2 contract from ${wallet.address}`)
     const marketDeployer2 = new ContractFactory(Marketplace2Json.abi, Marketplace2Json.bytecode, wallet)
     const marketDeployTx2 = await marketDeployer2.deploy(token.address, wallet.address, market1.address)
     const market = await marketDeployTx2.deployed()
     log(`Marketplace2 deployed at ${market.address}`)
 
-    log(`Deploying Uniswap Factory contract from ${wallet.address}`)
+    // log(`Deploying Uniswap Factory contract from ${wallet.address}`)
     const uniswapFactoryDeployer = new ContractFactory(uniswap_factory_abi, uniswap_factory_bytecode, wallet)
     const uniswapFactoryDeployTx = await uniswapFactoryDeployer.deploy()
     const uniswapFactory = await uniswapFactoryDeployTx.deployed()
     log(`Uniswap factory deployed at ${uniswapFactory.address}`)
 
-    log(`Deploying Uniswap Exchange template contract from ${wallet.address}`)
+    // log(`Deploying Uniswap Exchange template contract from ${wallet.address}`)
     const uniswapExchangeDeployer = new ContractFactory(uniswap_exchange_abi, uniswap_exchange_bytecode, wallet)
     const uniswapExchangeDeployTx = await uniswapExchangeDeployer.deploy()
     const uniswapExchangeTemplate = await uniswapExchangeDeployTx.deployed()
     log(`Uniswap exchange template deployed at ${uniswapExchangeTemplate.address}`)
 
-    log(`Deploying UniswapAdaptor contract from ${wallet.address}`)
+    // log(`Deploying UniswapAdaptor contract from ${wallet.address}`)
     const uniswapAdaptorDeployer = new ContractFactory(UniswapAdaptor.abi, UniswapAdaptor.bytecode, wallet)
     const uniswapAdaptorDeployTx = await uniswapAdaptorDeployer.deploy(market.address, uniswapFactory.address, token.address)
     const uniswapAdaptor = await uniswapAdaptorDeployTx.deployed()
     log(`UniswapAdaptor deployed at ${uniswapAdaptor.address}`)
 
     //another ERC20 that's not datacoin for testing buy with Uniswap
-    log(`Deploying test OTHERcoin from ${wallet.address}`)
+    // log(`Deploying test OTHERcoin from ${wallet.address}`)
     const tokenDeployer2 = new ContractFactory(TestTokenJson.abi, TestTokenJson.bytecode, wallet)
     const tokenDeployTx2 = await tokenDeployer2.deploy("Test OTHERcoin", "COIN")
     const token2 = await tokenDeployTx2.deployed()
+    log(`Test OTHERcoin deployed at ${token2.address}`)
 
     //Note: TestToken contract automatically mints 100000 to owner
 
