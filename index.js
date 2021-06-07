@@ -398,11 +398,7 @@ async function smartContractInitialization() {
  
 
    //all TXs should now be confirmed:
-    const EEwaitms = 60000
-    log("Getting products from E&E")
-    log(`waiting ${EEwaitms}ms for E&E to start`)
-    await sleep(EEwaitms)
-    // this get the products and also checks if EE is up
+    log("Loading test products from core")
     let products
     try {
         products = await getProducts()
