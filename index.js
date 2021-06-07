@@ -4,7 +4,7 @@ const Web3 = require("web3")
 const {
     Contract,
     ContractFactory,
-    utils: {computeAddress, parseEther, formatEther, namehash, id},
+    utils: {computeAddress, parseEther, formatEther, namehash, id, bigNumberify},
     Wallet,
     providers: {JsonRpcProvider}
 } = require("ethers")
@@ -15,17 +15,21 @@ const OldTokenJson = require("./CrowdsaleToken.json")
 const MarketplaceJson = require("./Marketplace.json")
 const Marketplace2Json = require("./Marketplace2.json")
 const UniswapAdaptor = require("./UniswapAdaptor.json")
+const Uniswap2Adapter = require("./Uniswap2Adapter.json")
 const NodeRegistry = require("./NodeRegistry.json")
 const ENSRegistry = require("./ENSRegistry.json")
 const FIFSRegistrar = require("./FIFSRegistrar.json")
 const PublicResolver = require("./PublicResolver.json")
 const DATAv2 = require("./DATAv2.json")
 const DataTokenMigrator = require("./DataTokenMigrator.json")
+const BinanceAdapter = require("./BinanceAdapter.json")
+
 
 //Uniswap v2
 const UniswapV2Factory = require("./node_modules/@uniswap/v2-core/build/UniswapV2Factory.json")
-const UniswapV2Pair = require("./node_modules/@uniswap/v2-core/build/UniswapV2Pair.json")
 const UniswapV2Router02 = require("./node_modules/@uniswap/v2-periphery/build/UniswapV2Router02.json")
+const ExampleSlidingWindowOracle = require("./node_modules/@uniswap/v2-periphery/build/ExampleSlidingWindowOracle.json");
+
 const WETH9 = require("./node_modules/@uniswap/v2-periphery/build/WETH9.json")
 
 //Uniswap v1
@@ -33,6 +37,12 @@ const uniswap_exchange_abi = JSON.parse(fs.readFileSync("./abi/uniswap_exchange.
 const uniswap_factory_abi = JSON.parse(fs.readFileSync("./abi/uniswap_factory.json", "utf-8"))
 const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.txt", "utf-8")
 const uniswap_factory_bytecode = fs.readFileSync("./bytecode/uniswap_factory.txt", "utf-8")
+
+// Streamregistry
+const LinkToken = require('./LinkToken.json')
+const ChainlinkOracle = require('./Oracle.json')
+const ENSCache = require('./ENSCache.json')
+const StreamRegistry = require('./StreamRegistry.json')
 
 const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
 const sidechainURL = process.env.SIDECHAIN_URL || "http://10.200.10.1:8546"
@@ -50,13 +60,14 @@ const mintTokenAmount = formatEther("1000000")
 
 // this wallet will deploy all contracts and "own" them if applicable
 defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
+privKeyStreamRegistry = "0x4059de411f15511a85ce332e7a428f36492ab4e87c7830099dadbf130f1896ae"
 
 // "testrpc" mnemonic wallets, will have DATAv1 and DATAv2 tokens in them
 const privateKeys = [
-    "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0",
-    "0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb",
-    "0x4059de411f15511a85ce332e7a428f36492ab4e87c7830099dadbf130f1896ae",
-    "0x633a182fb8975f22aaad41e9008cb49a432e9fdfef37f151e9e7c54e96258ef9",
+    "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0", // used!!
+    "0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb", // used!!
+    "0x4059de411f15511a85ce332e7a428f36492ab4e87c7830099dadbf130f1896ae", // used!!
+    "0x633a182fb8975f22aaad41e9008cb49a432e9fdfef37f151e9e7c54e96258ef9", // use this for new deployments
     "0x957a8212980a9a39bf7c03dcbeea3c722d66f2b359c669feceb0e3ba8209a297",
     "0xfe1d528b7e204a5bdfb7668a1ed3adfee45b4b96960a175c9ef0ad16dd58d728",
     "0xd7609ae3a29375768fac8bc0f8c2f6ac81c5f2ffca2b981e6cf15460f01efe14",
@@ -75,6 +86,12 @@ function getTestWallet(name, index) {
     const hash = id(name + (index || ""))
     return new Wallet(hash)
 }
+
+// these come from the next step, but we can predict the addresses
+const sidechainDataCoin = '0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF'
+const sidechainSingleTokenMediator = '0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F'
+const chainlinkNodeAddress = '0x7b5F1610920d5BAf00D684929272213BaF962eFe'
+const chainlinkJobId = 'c99333d032ed4cb8967b956c7f0329b5'
 
 async function getProducts() {
     return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
@@ -156,6 +173,48 @@ async function ethersWallet(url, privateKey) {
         process.exit(1)
     }
     return new AutoNonceWallet(privateKey, provider)
+}
+
+async function deployStreamRegistry() {
+    const sidechainWalletStreamReg = await ethersWallet(sidechainURL, privKeyStreamRegistry)
+
+    log('Sending some Ether to chainlink node address')
+    await sidechainWalletStreamReg.sendTransaction({
+        to: chainlinkNodeAddress,
+        value: parseEther('100')
+    })
+
+    log('Deploying Streamregistry and chainlink contracts to sidechain:')
+    const linkTokenFactory = new ContractFactory(LinkToken.abi, LinkToken.bytecode, sidechainWalletStreamReg)
+    const linkTokenFactoryTx = await linkTokenFactory.deploy()
+    const linkToken = await linkTokenFactoryTx.deployed()
+    log(`Link Token deployed at ${linkToken.address}`)
+
+    const oracleFactory = new ContractFactory(ChainlinkOracle.compilerOutput.abi,
+        ChainlinkOracle.compilerOutput.evm.bytecode.object, sidechainWalletStreamReg)
+    const oracleFactoryTx = await oracleFactory.deploy(linkToken.address)
+    const oracle = await oracleFactoryTx.deployed()
+    log(`Chainlink Oracle deployed at ${oracle.address}`)
+    const tokenaddrFromOracle = await oracle.getChainlinkToken()
+    log(`Chainlink Oracle token pointing to ${tokenaddrFromOracle}`)
+    await oracle.setFulfillmentPermission(chainlinkNodeAddress, true)
+    const permission = await oracle.getAuthorizationStatus(chainlinkNodeAddress)
+    log(`Chainlink Oracle permission for ${chainlinkNodeAddress} is ${permission}`)
+
+    const ensCacheFactory = new ContractFactory(ENSCache.abi, ENSCache.bytecode, sidechainWalletStreamReg)
+    const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, chainlinkJobId)
+    const ensCache = await ensCacheFactoryTx.deployed()
+    log(`ENSCache deployed at ${ensCache.address}`)
+    log(`ENSCache setting Link token address ${linkToken.address}`)
+    await ensCache.setChainlinkTokenAddress(linkToken.address)
+
+    log('Sending some Link to ENSCache')
+    await linkToken.transfer(ensCache.address, bigNumberify('1000000000000000000000')) // 1000 link
+
+    const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
+    const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, sidechainWalletStreamReg.address)
+    const streamRegistry = await streamRegistryFactoryTx.deployed()
+    log(`Streamregistry deployed at ${streamRegistry.address}`)
 }
 
 async function smartContractInitialization() {
@@ -330,7 +389,7 @@ async function smartContractInitialization() {
    log(`deploy Uniswap2 mainnet`)
    const router = await deployUniswap2(wallet)
    log(`deploy Uniswap2 sidechain`)
-   await deployUniswap2(sidechainWallet)
+   const uniswapRouterSidechain = await deployUniswap2(sidechainWallet)
 
    tx = await token.approve(router.address, amt_token)
    //await tx.wait()
@@ -339,51 +398,64 @@ async function smartContractInitialization() {
    log(`addLiquidity Uniswap2 mainnet`)
    tx = await router.addLiquidity(token.address, token2.address, amt_token, amt_token2, 0, 0, wallet.address, futureTime)
 
-   // TODO: move these deployments to the top once address change pains are solved
-   log(`Deploying test DATAv1 from ${wallet.address}`)
-   const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
-   const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
-   const oldToken = await oldTokenDeployTx.deployed()
-   log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
+    let cf = new ContractFactory(Uniswap2Adapter.abi, Uniswap2Adapter.bytecode, wallet)
+    let dtx = await cf.deploy(market.address, router.address, token.address)
+    const uniswap2Adapter = await dtx.deployed()
+    log(`Uniswap2Adapter ${uniswap2Adapter.address}`)
 
-   log(`Deploying DataTokenMigrator from ${wallet.address}`)
-   const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
-   const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
-   const migrator = await migratorDeployTx.deployed()
-   log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
+    cf = new ContractFactory(BinanceAdapter.abi, BinanceAdapter.bytecode, sidechainWallet)
+    //constructor(address dataCoin_, address honeyswapRouter_, address bscBridge_, address convertToCoin_, address liquidityToken_) public {
+    dtx = await cf.deploy(sidechainDataCoin, uniswapRouterSidechain.address, sidechainSingleTokenMediator, sidechainDataCoin, sidechainDataCoin)
+    const binanceAdapter = await dtx.deployed()
+    log(`sidechain binanceAdapter ${binanceAdapter.address}`)
 
-   log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
-   await oldToken.setReleaseAgent(signer.address)
-   await oldToken.setMintAgent(wallet.address, true)
-   for (const address of privateKeys.map(computeAddress)) {
-       log("    " + address)
-       tx = await oldToken.mint(address, mintTokenAmount)
-   }
-   await oldToken.mint(wallet.address, oldSupply.sub(mintTokenAmount.mul(privateKeys.length)))
-   const oldTokenReleaseTx = await oldToken.releaseTokenTransfer()
-   await oldTokenReleaseTx.wait()
-   log('Old token getUpgradeState: %d, expected: 2', await oldToken.getUpgradeState())
+    await deployStreamRegistry()
 
-   log('Set migrator as UpgradeAgent => start test-DATAv1 upgrade')
-   const upgradeTx1 = await token.mint(migrator.address, await oldToken.totalSupply())
-   await upgradeTx1.wait()
-   const upgradeTx2 = await oldToken.setUpgradeAgent(migrator.address)
-   await upgradeTx2.wait()
-   log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
+    // TODO: move these deployments to the top once address change pains are solved
+    log(`Deploying test DATAv1 from ${wallet.address}`)
+    const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
+    const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
+    const oldToken = await oldTokenDeployTx.deployed()
+    log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
 
-   log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
-   log("    %s (%s)", wallet.address, 'testrpc1, deployer/owner of everything')
-   await token.mint(wallet.address, mintTokenAmount)
+    log(`Deploying DataTokenMigrator from ${wallet.address}`)
+    const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
+    const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
+    const migrator = await migratorDeployTx.deployed()
+    log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
+
+    log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
+    await oldToken.setReleaseAgent(signer.address)
+    await oldToken.setMintAgent(wallet.address, true)
+    for (const address of privateKeys.map(computeAddress)) {
+        log("    " + address)
+        tx = await oldToken.mint(address, mintTokenAmount)
+    }
+    await oldToken.mint(wallet.address, oldSupply.sub(mintTokenAmount.mul(privateKeys.length)))
+    const oldTokenReleaseTx = await oldToken.releaseTokenTransfer()
+    await oldTokenReleaseTx.wait()
+    log('Old token getUpgradeState: %d, expected: 2', await oldToken.getUpgradeState())
+
+    log('Set migrator as UpgradeAgent => start test-DATAv1 upgrade')
+    const upgradeTx1 = await token.mint(migrator.address, await oldToken.totalSupply())
+    await upgradeTx1.wait()
+    const upgradeTx2 = await oldToken.setUpgradeAgent(migrator.address)
+    await upgradeTx2.wait()
+    log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
+
+    log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
+    log("    %s (%s)", wallet.address, 'testrpc1, deployer/owner of everything')
+    await token.mint(wallet.address, mintTokenAmount)
     for (const projectName of projects) {
-       for (let i = 0; i < 10; i++) {
-           const testWallet = getTestWallet(projectName, i)
-           log("    %s (%s #%d)", testWallet.address, projectName, i)
-           await token.mint(testWallet.address, mintTokenAmount)
-       }
-   }
-
+        for (let i = 0; i < 10; i++) {
+            const testWallet = getTestWallet(projectName, i)
+            log("    %s (%s #%d)", testWallet.address, projectName, i)
+            await token.mint(testWallet.address, mintTokenAmount)
+        }
+    }
 
    //put additions here
+
 
    //all TXs should now be confirmed:
     const EEwaitms = 60000
