@@ -15,10 +15,10 @@ checkImg streamr/tokenbridge-contracts
 
 echo "Building smart-contracts-init docker image"
 docker build -t streamr/smart-contracts-init:dev .
-echo "Starting Streamr stack to fetch products from Engine and Editor"
-streamr-docker-dev start
-echo "Stopping OpenEthereum containers from Streamr stack"
-streamr-docker-dev stop parity-sidechain-node0 parity-node0
+#echo "Starting Streamr stack to fetch products from Engine and Editor"
+# streamr-docker-dev start
+#echo "Stopping OpenEthereum containers from Streamr stack"
+# streamr-docker-dev stop parity-sidechain-node0 parity-node0
 echo "Starting init stack with OpenEthereum"
 docker-compose up -d
 INITSTATUS=`docker wait streamr-dev-smart-contracts-init`
@@ -27,8 +27,8 @@ echo "streamr-dev-smart-contracts-init finished with status $INITSTATUS. Logs in
 test $INITSTATUS -ne 0 && echo "streamr-dev-smart-contracts-init failed" && exit 1
 docker exec streamr-dev-parity-sidechain-node0 /bin/bash -c 'mv /home/parity/parity_data /home/parity/parity_data.default'
 docker exec streamr-dev-parity-node0 /bin/bash -c 'mv /home/parity/parity_data /home/parity/parity_data.default'
-echo "Stopping Streamr stack"
-streamr-docker-dev stop
+#echo "Stopping Streamr stack"
+#streamr-docker-dev stop
 echo "Committing OpenEthereum images locally"
 docker commit streamr-dev-parity-sidechain-node0 streamr/open-ethereum-poa-sidechain-preload1:dev
 docker commit streamr-dev-parity-node0 streamr/open-ethereum-poa-mainchain-preload1:dev

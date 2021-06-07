@@ -41,6 +41,8 @@ const ChainlinkOracle = require('./Oracle.json')
 const ENSCache = require('./ENSCache.json')
 const StreamRegistry = require('./StreamRegistry.json')
 
+const products = require('./products.json')
+
 const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
 const sidechainURL = process.env.SIDECHAIN_URL || "http://10.200.10.1:8546"
 
@@ -73,8 +75,10 @@ const chainlinkNodeAddress = '0x7b5F1610920d5BAf00D684929272213BaF962eFe'
 const chainlinkJobId = 'c99333d032ed4cb8967b956c7f0329b5'
 
 async function getProducts() {
-    return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
+    // return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
+    return products
 }
+
 function sleep(ms) {
     return new Promise(resolve => {
         setTimeout(resolve, ms)
