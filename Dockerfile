@@ -32,5 +32,6 @@ RUN usermod -a -G docker node
 # USER node
 WORKDIR /home/node
 COPY --from=builder --chown=node:node /home/node/ ./
+ENV DEBUG=*
 CMD node index.js && ./bridge/deploy_bridge_and_du2.sh
 
