@@ -56,7 +56,7 @@ const futureTime = 4449513600
 const oldSupply = parseEther("987154514")
 
 // how much to mint to each of the privateKeys
-const mintTokenAmount = formatEther("1000000")
+const mintTokenAmount = parseEther("1000000")
 
 // this wallet will deploy all contracts and "own" them if applicable
 defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
