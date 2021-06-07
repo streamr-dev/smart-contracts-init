@@ -1,0 +1,43 @@
+
+# https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+      time: '08:00'
+      timezone: Europe/Helsinki
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - actions
+      - dependencies
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+      time: '08:00'
+      timezone: Europe/Helsinki
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    labels:
+      - npm
+      - dependencies
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+      time: '08:00'
+      timezone: Europe/Helsinki
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    labels:
+      - docker
+      - dependencies
