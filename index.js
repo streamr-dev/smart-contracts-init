@@ -430,10 +430,11 @@ async function smartContractInitialization() {
 
     log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
     await oldToken.setReleaseAgent(wallet.address)
-    await oldToken.setMintAgent(wallet.address, true)
+    const mintAgentTx = await oldToken.setMintAgent(wallet.address, true)
+    await mintAgentTx.wait()
     for (const address of privateKeys.map(computeAddress)) {
         log("    " + address)
-        tx = await oldToken.mint(address, mintTokenAmount)
+        await oldToken.mint(address, mintTokenAmount)
     }
     await oldToken.mint(wallet.address, oldSupply.sub(mintTokenAmount.mul(privateKeys.length)))
     const oldTokenReleaseTx = await oldToken.releaseTokenTransfer()
