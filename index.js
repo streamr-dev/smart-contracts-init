@@ -429,7 +429,7 @@ async function smartContractInitialization() {
     log(`New DataTokenMigrator at ${migrator.address}`)
 
     log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
-    await oldToken.setReleaseAgent(signer.address)
+    await oldToken.setReleaseAgent(wallet.address)
     await oldToken.setMintAgent(wallet.address, true)
     for (const address of privateKeys.map(computeAddress)) {
         log("    " + address)
