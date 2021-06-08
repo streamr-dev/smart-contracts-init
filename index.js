@@ -280,7 +280,7 @@ async function smartContractInitialization() {
     await addMinterTx.wait()
 
     log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
-    for (const address of privateKeys.slice(1).map(computeAddress)) {
+    for (const address of privateKeys.slice(0, 9).map(computeAddress)) {
         log("    %s", address)
         await token.mint(address, mintTokenAmount)
     }
