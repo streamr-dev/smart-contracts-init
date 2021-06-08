@@ -168,7 +168,7 @@ async function deployUniswap2(wallet) {
 }
 
 async function ethersWallet(url, privateKey) {
-    let provider = await new JsonRpcProvider(url);
+    let provider = new JsonRpcProvider(url);
     try {
         await provider.getNetwork()
     } catch (e) {
@@ -417,16 +417,16 @@ async function smartContractInitialization() {
 
     // TODO: move these deployments to the top once address change pains are solved
     log(`Deploying test DATAv1 from ${wallet.address}`)
-    const oldTokenDeployer = await new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
+    const oldTokenDeployer = new ContractFactory(OldTokenJson.abi, OldTokenJson.bytecode, wallet)
     const oldTokenDeployTx = await oldTokenDeployer.deploy("Test DATAv1", "\uD83D\uDC34", 0, 18, true) // horse face
     const oldToken = await oldTokenDeployTx.deployed()
     log(`Old DATAv1 ERC20 deployed at ${oldToken.address}`)
 
     log(`Deploying DataTokenMigrator from ${wallet.address}`)
-    const migratorDeployer = await new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
+    const migratorDeployer = new ContractFactory(DataTokenMigrator.abi, DataTokenMigrator.bytecode, wallet)
     const migratorDeployTx = await migratorDeployer.deploy(oldToken.address, token.address)
     const migrator = await migratorDeployTx.deployed()
-    log(`New DATAv2 ERC20 deployed at ${migrator.address}`)
+    log(`New DataTokenMigrator at ${migrator.address}`)
 
     log('Set up the old token and mint %s test-DATAv1 (in total) to following:', oldSupply)
     await oldToken.setReleaseAgent(signer.address)
