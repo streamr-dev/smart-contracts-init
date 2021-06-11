@@ -75,14 +75,16 @@ const privateKeys = [
     "0xd7609ae3a29375768fac8bc0f8c2f6ac81c5f2ffca2b981e6cf15460f01efe14",
     "0xb1abdb742d3924a45b0a54f780f0f21b9d9283b231a0a0b35ce5e455fa5375e7",
     "0x2cd9855d17e01ce041953829398af7e48b24ece04ff9d0e183414de54dc52285",
-    "0x2c326a4c139eced39709b235fffa1fde7c252f3f7b505103f7b251586c35d543",
 ]
 
-// single-use wallets for tests, listed projects' wallets indexed between 0...9 have DATAv2 tokens on them
+// single-use wallets for tests, listed projects' wallets have DATAv2 tokens on them
+// [ "project-name", testWalletCount ]
 const projects = [
-    "marketplace-contracts",
-    "network-contracts",
-    "...add your own here",
+    ["streamr-client-javascript", 10],
+    ["streamr-client-java", 2],
+    ["marketplace-contracts", 5],
+    ["network-contracts", 10],
+    ["...add your own here", 1],
 ]
 function getTestWallet(name, index) {
     const hash = id(name + (index || ""))
@@ -280,7 +282,7 @@ async function smartContractInitialization() {
     await addMinterTx.wait()
 
     log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
-    for (const address of privateKeys.slice(0, 9).map(computeAddress)) {
+    for (const address of privateKeys.map(computeAddress)) {
         log("    %s", address)
         await token.mint(address, mintTokenAmount)
     }
@@ -449,10 +451,8 @@ async function smartContractInitialization() {
     log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
 
     log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
-    log("    %s (%s)", wallet.address, 'testrpc1, deployer/owner of everything')
-    await token.mint(wallet.address, mintTokenAmount)
-    for (const projectName of projects) {
-        for (let i = 0; i < 10; i++) {
+    for (const [projectName, testWalletCount] of projects) {
+        for (let i = 0; i < testWalletCount; i++) {
             const testWallet = getTestWallet(projectName, i)
             log("    %s (%s #%d)", testWallet.address, projectName, i)
             await token.mint(testWallet.address, mintTokenAmount)
