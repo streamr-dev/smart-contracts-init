@@ -1,20 +1,22 @@
 # Smart Contract init
 This repo is used to build the parity images streamr/open-ethereum-poa-mainchain-preload1 and streamr/open-ethereum-poa-sidechain-preload1, which are preloaded mainchain and sidechain images for use with streamr-docker.dev. The following are setup:
- 1. Streamr's smart contracts: Marketplace Uniswap Adaptor, loads products,
- 2. The token bridge (AMB) and mediator
- 3. the DU2 factories and templates. 
- 
-smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images 
+ * Marketplace
+   * Also test products are loaded (see products.json)
+ * Marketplace Uniswap Adapter
+ * The token bridge (AMB) and mediator
+ * the DU2 factories and templates.
+
+smart-contracts-init container is no longer part of streamr-docker-dev. Instead we use the docker-compose.yml file here to build the preloaded parity images
 
 Dependencies:
 Build and tag required docker images.
  1. git clone https://github.com/poanetwork/omnibridge.git; cd omnibridge; docker build . -t 'poanetwork/omnibridge'
- 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr/tokenbridge-contracts' 
+ 2. git clone https://github.com/streamr-dev/tokenbridge-contracts.git; cd tokenbridge-contracts; docker build . -t 'streamr/tokenbridge-contracts'
 
 To build images:
 ./preload_parity_images.sh
 
-This will tag the images locally and echo the command to push to dockerhub. 
+This will tag the images locally and echo the command to push to dockerhub.
 Note that you MUST remove the parity docker volumes to delete old chain data from docker and then restart `streamr-docker-dev` to see preload changes.
 
 Tokenbridge:
@@ -57,7 +59,7 @@ Steps needed to recreate the chainlink ecosystem from scratch. This should only 
 11. upload the newly preloaded parity images
 
 
-Parity Default Private Key 
+Parity Default Private Key
 * 0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7
 
 Private Keys:
@@ -70,7 +72,6 @@ Private Keys:
 * 0xd7609ae3a29375768fac8bc0f8c2f6ac81c5f2ffca2b981e6cf15460f01efe14,
 * 0xb1abdb742d3924a45b0a54f780f0f21b9d9283b231a0a0b35ce5e455fa5375e7,
 * 0x2cd9855d17e01ce041953829398af7e48b24ece04ff9d0e183414de54dc52285,
-* 0x2c326a4c139eced39709b235fffa1fde7c252f3f7b505103f7b251586c35d543,
 
 
 Generates the following Ethereum addresses:
