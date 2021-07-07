@@ -61,8 +61,8 @@ const oldSupply = parseEther("987154514")
 const mintTokenAmount = parseEther("1000000")
 
 // this wallet will deploy all contracts and "own" them if applicable
-defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
-privKeyStreamRegistry = "0x4059de411f15511a85ce332e7a428f36492ab4e87c7830099dadbf130f1896ae"
+const defaultPrivateKey = "0x5e98cce00cff5dea6b454889f359a4ec06b9fa6b88e9d69b86de8e1c81887da0"
+const privKeyStreamRegistry = "0x4059de411f15511a85ce332e7a428f36492ab4e87c7830099dadbf130f1896ae"
 
 // "testrpc" mnemonic wallets, will have DATAv1 and DATAv2 tokens in them
 const privateKeys = [
