@@ -80,10 +80,15 @@ const privateKeys = [
 // single-use wallets for tests, listed projects' wallets have DATAv2 tokens on them
 // [ "project-name", testWalletCount ]
 const projects = [
-    ["streamr-client-javascript", 10],
-    ["streamr-client-java", 2],
-    ["marketplace-contracts", 5],
+    ["js-client", 100],
+    ["java-client", 20],
+    ["marketplace-contracts", 10],
     ["network-contracts", 10],
+    ["data-union-contracts", 10],
+    ["broker", 10],
+    ["network", 100],
+    ["core-api", 10],
+    ["core-frontend", 10],
     ["...add your own here", 1],
 ]
 function getTestWallet(name, index) {
