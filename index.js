@@ -324,11 +324,11 @@ async function smartContractInitialization() {
     log(`Deploying NodeRegistry contract 1 (tracker registry) from ${wallet.address}`)
     var initialNodes = []
     var initialMetadata = []
-    initialNodes.push('0xb9e7cEBF7b03AE26458E32a059488386b05798e8')
+    initialNodes.push('0xDE11165537ef6C01260ee89A850a281525A5b63F')
     initialMetadata.push('{"ws": "ws://10.200.10.1:30301", "http": "http://10.200.10.1:30301"}')
-    initialNodes.push('0x0540A3e144cdD81F402e7772C76a5808B71d2d30')
+    initialNodes.push('0xDE22222da3F861c2Ec63b03e16a1dce153Cf069c')
     initialMetadata.push('{"ws": "ws://10.200.10.1:30302", "http": "http://10.200.10.1:30302"}')
-    initialNodes.push('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2')
+    initialNodes.push('0xDE33390cC85aBf61d9c27715Fa61d8E5efC61e75')
     initialMetadata.push('{"ws": "ws://10.200.10.1:30303", "http": "http://10.200.10.1:30303"}')
     //1st NodeRegistry deployed here. 2nd below
     await deployNodeRegistry(wallet, initialNodes, initialMetadata)
