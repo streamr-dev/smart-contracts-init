@@ -12,7 +12,7 @@
     "@uniswap/v2-core": "^1.0.1",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "debug": "^4.3.1",
-    "ethers": "^4.0.47",
+    "ethers": "^5.4.4",
     "node-fetch": "2.6.1",
     "web3": "1.2.4"
   }
