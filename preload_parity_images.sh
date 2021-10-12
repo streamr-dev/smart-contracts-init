@@ -22,6 +22,7 @@ docker build -t streamr/smart-contracts-init:dev .
 echo "Starting init stack with OpenEthereum"
 docker-compose up -d
 INITSTATUS=`docker wait streamr-dev-smart-contracts-init`
+sleep 5s
 docker logs streamr-dev-smart-contracts-init &> $LOG
 echo "streamr-dev-smart-contracts-init finished with status $INITSTATUS. Logs in $LOG"
 test $INITSTATUS -ne 0 && echo "streamr-dev-smart-contracts-init failed" && exit 1
@@ -30,11 +31,11 @@ docker exec streamr-dev-parity-node0 /bin/bash -c 'mv /home/parity/parity_data /
 #echo "Stopping Streamr stack"
 #streamr-docker-dev stop
 echo "Committing OpenEthereum images locally"
-docker commit streamr-dev-parity-sidechain-node0 streamr/open-ethereum-poa-sidechain-preload1:dev
-docker commit streamr-dev-parity-node0 streamr/open-ethereum-poa-mainchain-preload1:dev
+docker commit streamr-dev-parity-sidechain-node0 streamr/open-ethereum-poa-sidechain-preload1:1kkeys
+docker commit streamr-dev-parity-node0 streamr/open-ethereum-poa-mainchain-preload1:1kkeys
 echo "Stopping all docker"
 docker-compose stop
 docker-compose rm -f
 echo "Images created. To push to dockerhub: "
-echo docker push streamr/open-ethereum-poa-sidechain-preload1:dev
-echo docker push streamr/open-ethereum-poa-mainchain-preload1:dev
+echo docker push streamr/open-ethereum-poa-sidechain-preload1:1kkeys
+echo docker push streamr/open-ethereum-poa-mainchain-preload1:1kkeys
