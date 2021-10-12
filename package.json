@@ -4,7 +4,8 @@
   "description": "Locally run Ethereum client for developing the Streamr services",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./*.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "ethers": "^4.0.47",
     "node-fetch": "2.6.1",
     "web3": "1.2.4"
+  },
+  "devDependencies": {
+    "eslint-config-streamr-ts": "^4.0.1"
   }
 }

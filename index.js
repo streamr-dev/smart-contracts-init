@@ -1,4 +1,3 @@
-const fetch = require("node-fetch")
 const fs = require("fs")
 const Web3 = require("web3")
 const {
@@ -8,7 +7,6 @@ const {
     Wallet,
     providers: {JsonRpcProvider}
 } = require("ethers")
-
 
 const TestTokenJson = require("./TestToken.json")
 const OldTokenJson = require("./CrowdsaleToken.json")
@@ -24,11 +22,10 @@ const DATAv2 = require("./DATAv2.json")
 const DataTokenMigrator = require("./DataTokenMigrator.json")
 const BinanceAdapter = require("./BinanceAdapter.json")
 
-
 //Uniswap v2
 const UniswapV2Factory = require("./node_modules/@uniswap/v2-core/build/UniswapV2Factory.json")
 const UniswapV2Router02 = require("./node_modules/@uniswap/v2-periphery/build/UniswapV2Router02.json")
-const ExampleSlidingWindowOracle = require("./node_modules/@uniswap/v2-periphery/build/ExampleSlidingWindowOracle.json");
+// const ExampleSlidingWindowOracle = require("./node_modules/@uniswap/v2-periphery/build/ExampleSlidingWindowOracle.json");
 
 const WETH9 = require("./node_modules/@uniswap/v2-periphery/build/WETH9.json")
 
@@ -49,7 +46,7 @@ const products = require('./products.json')
 const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
 const sidechainURL = process.env.SIDECHAIN_URL || "http://10.200.10.1:8546"
 
-const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
+// const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
 const log = require("debug")("eth-init")
 const futureTime = 4449513600
 
@@ -107,29 +104,27 @@ async function getProducts() {
     return products
 }
 
-function sleep(ms) {
-    return new Promise(resolve => {
-        setTimeout(resolve, ms)
-    })
-}
+// function sleep(ms) {
+//     return new Promise(resolve => {
+//         setTimeout(resolve, ms)
+//     })
+// }
 
 // AutoNonceWallet allows for omitting .wait()ing for the transactions as long as no reads are done
 // from https://github.com/ethers-io/ethers.js/issues/319
 class AutoNonceWallet extends Wallet {
-    _noncePromise = null;
+    noncePromise = null;
     sendTransaction(transaction) {
         if (transaction.nonce == null) {
-            if (this._noncePromise == null) {
-                this._noncePromise = this.provider.getTransactionCount(this.address);
+            if (this.noncePromise == null) {
+                this.noncePromise = this.provider.getTransactionCount(this.address)
             }
-            transaction.nonce = this._noncePromise;
-            this._noncePromise = this._noncePromise.then((nonce) => (nonce + 1))
+            transaction.nonce = this.noncePromise
+            this.noncePromise = this.noncePromise.then((nonce) => (nonce + 1))
         }
-        return super.sendTransaction(transaction);
+        return super.sendTransaction(transaction)
     }
 }
-
-
 
 /**
  *
@@ -141,18 +136,17 @@ class AutoNonceWallet extends Wallet {
  */
 function getRootNodeFromTLD(tld) {
     return {
-      namehash: namehash(tld),
-      sha3: Web3.utils.sha3(tld)
-    };
-  }
-
+        namehash: namehash(tld),
+        sha3: Web3.utils.sha3(tld)
+    }
+}
 
 async function deployNodeRegistry(wallet, initialNodes, initialMetadata) {
     const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
     const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
     log(`NodeRegistry deployed at ${str.address}`)
-    let nodes = await str.getNodes();
+    let nodes = await str.getNodes()
     log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
 }
 
@@ -175,7 +169,7 @@ async function deployUniswap2(wallet) {
 }
 
 async function ethersWallet(url, privateKey) {
-    let provider = new JsonRpcProvider(url);
+    let provider = new JsonRpcProvider(url)
     try {
         await provider.getNetwork()
     } catch (e) {
@@ -389,25 +383,25 @@ async function smartContractInitialization() {
     }
     log("ENS init complete")
 
-   //deploy 2nd NodeRegistry:
-   log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWallet.address}`)
-   initialNodes = []
-   initialMetadata = []
-   initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
-   initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
-   await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
+    //deploy 2nd NodeRegistry:
+    log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWallet.address}`)
+    initialNodes = []
+    initialMetadata = []
+    initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
+    initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
+    await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
 
-   log(`deploy Uniswap2 mainnet`)
-   const router = await deployUniswap2(wallet)
-   log(`deploy Uniswap2 sidechain`)
-   const uniswapRouterSidechain = await deployUniswap2(sidechainWallet)
+    log(`deploy Uniswap2 mainnet`)
+    const router = await deployUniswap2(wallet)
+    log(`deploy Uniswap2 sidechain`)
+    const uniswapRouterSidechain = await deployUniswap2(sidechainWallet)
 
-   tx = await token.approve(router.address, amt_token)
-   //await tx.wait()
-   tx = await token2.approve(router.address, amt_token2)
-   await tx.wait()
-   log(`addLiquidity Uniswap2 mainnet`)
-   tx = await router.addLiquidity(token.address, token2.address, amt_token, amt_token2, 0, 0, wallet.address, futureTime)
+    tx = await token.approve(router.address, amt_token)
+    //await tx.wait()
+    tx = await token2.approve(router.address, amt_token2)
+    await tx.wait()
+    log(`addLiquidity Uniswap2 mainnet`)
+    tx = await router.addLiquidity(token.address, token2.address, amt_token, amt_token2, 0, 0, wallet.address, futureTime)
 
     let cf = new ContractFactory(Uniswap2Adapter.abi, Uniswap2Adapter.bytecode, wallet)
     let dtx = await cf.deploy(market.address, router.address, token.address)
@@ -464,10 +458,9 @@ async function smartContractInitialization() {
         }
     }
 
-   //put additions here
+    //put additions here
 
-
-   //all TXs should now be confirmed:
+    //all TXs should now be confirmed:
     log("Loading test products from core")
     let products
     try {
@@ -477,7 +470,6 @@ async function smartContractInitialization() {
         process.exit(1)
     }
 
-
     log(`Adding ${products.length} products to Marketplace`)
     for (const p of products) {
         // free products not supported
@@ -485,12 +477,13 @@ async function smartContractInitialization() {
             continue
         }
         console.log(`create ${p.id}`)
-        const tx = await market.createProduct(`0x${p.id}`, p.name, wallet.address, p.pricePerSecond, p.priceCurrency == "DATA" ? 0 : 1, p.minimumSubscriptionInSeconds)
+        const tx = await market.createProduct(`0x${p.id}`, p.name, wallet.address, p.pricePerSecond, 
+            p.priceCurrency == "DATA" ? 0 : 1, p.minimumSubscriptionInSeconds)
         //await tx.wait(1)
         if (p.state == "NOT_DEPLOYED") {
             console.log(`delete ${p.id}`)
             await tx.wait(1)
-            const tx2 = await market.deleteProduct(`0x${p.id}`)
+            await market.deleteProduct(`0x${p.id}`)
             //await tx2.wait(1)
         }
     }
