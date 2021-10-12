@@ -41,6 +41,8 @@ const ChainlinkOracle = require('./Oracle.json')
 const ENSCache = require('./ENSCache.json')
 const StreamRegistry = require('./StreamRegistry.json')
 
+const StreamStorageRegistry = require('./StreamStorageRegistry.json')
+
 const products = require('./products.json')
 
 const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
@@ -98,6 +100,8 @@ const sidechainDataCoin = '0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF'
 const sidechainSingleTokenMediator = '0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F'
 const chainlinkNodeAddress = '0x7b5F1610920d5BAf00D684929272213BaF962eFe'
 const chainlinkJobId = 'c99333d032ed4cb8967b956c7f0329b5'
+let nodeRegistryAddress = ''
+let streamRegistryAddress = ''
 
 async function getProducts() {
     // return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
@@ -145,9 +149,17 @@ async function deployNodeRegistry(wallet, initialNodes, initialMetadata) {
     const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
     const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
+    nodeRegistryAddress = str.address
     log(`NodeRegistry deployed at ${str.address}`)
     let nodes = await str.getNodes()
     log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
+}
+
+async function deployStreamStorageRegistry(wallet) {
+    const strDeploy = new ContractFactory(StreamStorageRegistry.abi, StreamStorageRegistry.bytecode, wallet)
+    const strDeployTx = await strDeploy.deploy(streamRegistryAddress, nodeRegistryAddress, wallet.address, {gasLimit: 6000000} )
+    const str = await strDeployTx.deployed()
+    log(`StreamStorageRegistry deployed at ${str.address}`)
 }
 
 async function deployUniswap2(wallet) {
@@ -218,6 +230,7 @@ async function deployStreamRegistry() {
     const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
     const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, sidechainWalletStreamReg.address)
     const streamRegistry = await streamRegistryFactoryTx.deployed()
+    streamRegistryAddress = streamRegistry.address
     log(`Streamregistry deployed at ${streamRegistry.address}`)
 }
 
@@ -458,6 +471,7 @@ async function smartContractInitialization() {
         }
     }
 
+    await deployStreamStorageRegistry(sidechainWallet)
     //put additions here
 
     //all TXs should now be confirmed:
