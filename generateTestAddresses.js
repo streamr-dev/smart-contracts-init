@@ -1,11 +1,10 @@
-const { Wallet } = require("ethers");
+const { Wallet } = require("ethers")
 const fs = require('fs')
 const outputfile = 'genesisAddresses.json'
 const outputfileKeys = 'genesisKeys.txt'
 
-
 for (i = 1; i <= 1000; i++) {
-    const hexString = i.toString(16);
+    const hexString = i.toString(16)
     privkey = '0x' + hexString.padStart(64, '0')
     const wallet = new Wallet(privkey)
     console.log(wallet.address)
@@ -13,16 +12,16 @@ for (i = 1; i <= 1000; i++) {
         "balance": "1000000000000000000000000"
     },
     `
-    fs.appendFileSync(outputfile, content, err => {
+    fs.appendFileSync(outputfile, content, (err) => {
         if (err) {
-          console.error(err)
-          return
+            console.error(err)
+            return
         }
     })
-    fs.appendFileSync(outputfileKeys, privkey + '\n', err => {
+    fs.appendFileSync(outputfileKeys, privkey + ',\n', (err) => {
         if (err) {
-          console.error(err)
-          return
+            console.error(err)
+            return
         }
     })
 }

@@ -4,12 +4,12 @@ const {
     providers: { JsonRpcProvider }
 } = require("ethers")
 
-const DataUnionMainnet = require("./DataUnionMainnet.json")
-const DataUnionSidechain = require("./DataUnionSidechain.json")
-const DataUnionFactorySidechain = require("./DataUnionFactorySidechain.json")
-const DataUnionFactoryMainnet = require("./DataUnionFactoryMainnet.json")
-const MainnetMigrationManager = require("./MainnetMigrationManager.json")
-const SidechainMigrationManager = require("./SidechainMigrationManager.json")
+const DataUnionMainnet = require("./ethereumContractJSONs/DataUnionMainnet.json")
+const DataUnionSidechain = require("./ethereumContractJSONs/DataUnionSidechain.json")
+const DataUnionFactorySidechain = require("./ethereumContractJSONs/DataUnionFactorySidechain.json")
+const DataUnionFactoryMainnet = require("./ethereumContractJSONs/DataUnionFactoryMainnet.json")
+const MainnetMigrationManager = require("./ethereumContractJSONs/MainnetMigrationManager.json")
+const SidechainMigrationManager = require("./ethereumContractJSONs/SidechainMigrationManager.json")
 
 const log = process.env.QUIET ? (() => { }) : console.log // eslint-disable-line no-console
 // class LoggingProvider extends JsonRpcProvider {

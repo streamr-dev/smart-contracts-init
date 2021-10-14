@@ -8,19 +8,19 @@ const {
     providers: {JsonRpcProvider}
 } = require("ethers")
 
-const TestTokenJson = require("./TestToken.json")
-const OldTokenJson = require("./CrowdsaleToken.json")
-const MarketplaceJson = require("./Marketplace.json")
-const Marketplace2Json = require("./Marketplace2.json")
-const UniswapAdaptor = require("./UniswapAdaptor.json")
-const Uniswap2Adapter = require("./Uniswap2Adapter.json")
-const NodeRegistry = require("./NodeRegistry.json")
-const ENSRegistry = require("./ENSRegistry.json")
-const FIFSRegistrar = require("./FIFSRegistrar.json")
-const PublicResolver = require("./PublicResolver.json")
-const DATAv2 = require("./DATAv2.json")
-const DataTokenMigrator = require("./DataTokenMigrator.json")
-const BinanceAdapter = require("./BinanceAdapter.json")
+const TestTokenJson = require("./ethereumContractJSONs/TestToken.json")
+const OldTokenJson = require("./ethereumContractJSONs/CrowdsaleToken.json")
+const MarketplaceJson = require("./ethereumContractJSONs/Marketplace.json")
+const Marketplace2Json = require("./ethereumContractJSONs/Marketplace2.json")
+const UniswapAdaptor = require("./ethereumContractJSONs/UniswapAdaptor.json")
+const Uniswap2Adapter = require("./ethereumContractJSONs/Uniswap2Adapter.json")
+const NodeRegistry = require("./ethereumContractJSONs/NodeRegistry.json")
+const ENSRegistry = require("./ethereumContractJSONs/ENSRegistry.json")
+const FIFSRegistrar = require("./ethereumContractJSONs/FIFSRegistrar.json")
+const PublicResolver = require("./ethereumContractJSONs/PublicResolver.json")
+const DATAv2 = require("./ethereumContractJSONs/DATAv2.json")
+const DataTokenMigrator = require("./ethereumContractJSONs/DataTokenMigrator.json")
+const BinanceAdapter = require("./ethereumContractJSONs/BinanceAdapter.json")
 
 //Uniswap v2
 const UniswapV2Factory = require("./node_modules/@uniswap/v2-core/build/UniswapV2Factory.json")
@@ -36,12 +36,12 @@ const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.t
 const uniswap_factory_bytecode = fs.readFileSync("./bytecode/uniswap_factory.txt", "utf-8")
 
 // Streamregistry
-const LinkToken = require('./LinkToken.json')
-const ChainlinkOracle = require('./Oracle.json')
-const ENSCache = require('./ENSCache.json')
-const StreamRegistry = require('./StreamRegistry.json')
+const LinkToken = require('./ethereumContractJSONs/LinkToken.json')
+const ChainlinkOracle = require('./ethereumContractJSONs/Oracle.json')
+const ENSCache = require('./ethereumContractJSONs/ENSCache.json')
+const StreamRegistry = require('./ethereumContractJSONs/StreamRegistry.json')
 
-const StreamStorageRegistry = require('./StreamStorageRegistry.json')
+const StreamStorageRegistry = require('./ethereumContractJSONs/StreamStorageRegistry.json')
 
 const products = require('./products.json')
 
