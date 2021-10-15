@@ -18,6 +18,7 @@ jobs:
   include:
   - stage: Lint
     script:
+    - npm ci
     - npm run lint
   - stage: Build docker (Dev/Nightly)
     if: tag IS blank
