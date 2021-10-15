@@ -20,9 +20,11 @@ docker build -t streamr/smart-contracts-init:dev .
 #echo "Stopping OpenEthereum containers from Streamr stack"
 # streamr-docker-dev stop parity-sidechain-node0 parity-node0
 echo "Starting init stack with OpenEthereum"
-docker-compose up -d
-INITSTATUS=`docker wait streamr-dev-smart-contracts-init`
+docker-compose up -d parity-node0 parity-sidechain-node0
+echo "waiting 5s for chains to start up"
 sleep 5s
+docker-compose up -d smart-contracts-init
+INITSTATUS=`docker wait streamr-dev-smart-contracts-init`
 docker logs streamr-dev-smart-contracts-init &> $LOG
 echo "streamr-dev-smart-contracts-init finished with status $INITSTATUS. Logs in $LOG"
 test $INITSTATUS -ne 0 && echo "streamr-dev-smart-contracts-init failed" && exit 1
