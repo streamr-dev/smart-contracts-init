@@ -1,30 +1,28 @@
 const {
-    Contract,
     ContractFactory,
-    utils: { defaultAbiCoder, computeAddress, parseEther, formatEther },
     Wallet,
-    providers: { Web3Provider, JsonRpcProvider },
-    utils
+    providers: { JsonRpcProvider }
 } = require("ethers")
-const DataUnionMainnet = require("./DataUnionMainnet.json")
-const DataUnionSidechain = require("./DataUnionSidechain.json")
-const DataUnionFactorySidechain = require("./DataUnionFactorySidechain.json")
-const DataUnionFactoryMainnet = require("./DataUnionFactoryMainnet.json")
-const MainnetMigrationManager = require("./MainnetMigrationManager.json")
-const SidechainMigrationManager = require("./SidechainMigrationManager.json")
+
+const DataUnionMainnet = require("./ethereumContractJSONs/DataUnionMainnet.json")
+const DataUnionSidechain = require("./ethereumContractJSONs/DataUnionSidechain.json")
+const DataUnionFactorySidechain = require("./ethereumContractJSONs/DataUnionFactorySidechain.json")
+const DataUnionFactoryMainnet = require("./ethereumContractJSONs/DataUnionFactoryMainnet.json")
+const MainnetMigrationManager = require("./ethereumContractJSONs/MainnetMigrationManager.json")
+const SidechainMigrationManager = require("./ethereumContractJSONs/SidechainMigrationManager.json")
 
 const log = process.env.QUIET ? (() => { }) : console.log // eslint-disable-line no-console
-class LoggingProvider extends JsonRpcProvider {
-    perform(method, parameters) {
-        console.log(">>>", method, parameters);
-        return super.perform(method, parameters).then((result) => {
-            console.log("<<<", method, parameters, result);
-            return result;
-        });
-    }
-}
-const provider_foreign = new JsonRpcProvider('http://10.200.10.1:8545');
-const provider_home = new JsonRpcProvider('http://10.200.10.1:8546');
+// class LoggingProvider extends JsonRpcProvider {
+//     perform(method, parameters) {
+//         console.log(">>>", method, parameters);
+//         return super.perform(method, parameters).then((result) => {
+//             console.log("<<<", method, parameters, result);
+//             return result;
+//         });
+//     }
+// }
+const provider_foreign = new JsonRpcProvider('http://10.200.10.1:8545')
+const provider_home = new JsonRpcProvider('http://10.200.10.1:8546')
 
 const wallet_home = new Wallet('0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb', provider_home)
 const wallet_foreign = new Wallet('0xe5af7834455b7239881b85be89d905d6881dcb4751063897f12be1b0dd546bdb', provider_foreign)

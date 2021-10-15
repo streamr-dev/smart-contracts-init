@@ -1,37 +1,30 @@
-FROM ubuntu:16.04 AS builder
-ARG NODE_VERSION="v12.15.0"
+FROM node:14
 RUN apt-get update && apt-get install -y \
 	build-essential \
 	curl \
 	git \
 	python \
+	apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+	jq \
 	&& rm -rf /var/lib/apt/lists/*
+# the bridge script needs docker
+# following lines are the official way to install docker on debian
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+RUN echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt-get update
+RUN apt-get install -y docker-ce docker-ce-cli containerd.io
+
 WORKDIR /
-RUN curl -s -O "https://nodejs.org/download/release/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.gz"
-RUN tar xzf "node-${NODE_VERSION}-linux-x64.tar.gz"
-ENV PATH="/node-${NODE_VERSION}-linux-x64/bin:${PATH}"
 RUN node --version
 RUN npm --version
-RUN useradd -ms /bin/bash node
-USER node
-WORKDIR /home/node
 COPY ./ ./
 RUN npm ci --only=production
-
-FROM ubuntu:20.04
-ARG NODE_VERSION="v12.15.0"
-
-WORKDIR /
-ENV PATH="/node-$NODE_VERSION-linux-x64/bin:${PATH}"
-COPY --from=builder --chown=root:root /node-$NODE_VERSION-linux-x64/ /node-$NODE_VERSION-linux-x64/
-RUN useradd -ms /bin/bash node
-RUN apt-get update && apt-get install -y docker.io docker-compose jq
-RUN usermod -a -G docker node
-# sockets permissions dont work for user node, so I use root.
-# ANY user that can read/write to docker socket CAN ROOT THE HOST MACHINE
-# USER node
-WORKDIR /home/node
-COPY --from=builder --chown=node:node /home/node/ ./
 ENV DEBUG=*
 CMD node index.js && ./bridge/deploy_bridge_and_du2.sh
 

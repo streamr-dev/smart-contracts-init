@@ -16,6 +16,9 @@ env:
   - secure: d0cKWNL6L+IPkvCjHxjvxoQFpBdbTjxEobJ8hqEnevQA8rOkkgVBHP6h5aVhegdq1vh8c3ZOtVvHpOKFZn9LrCY4d3/fDbzjrUhoBGmw78RiX/00ukz5ZaM6m8GM9fjXRtAenr3C+9Fhb7jdwxHM13Hr75TYF+Kg+HWbKoVqbBMjd0lK//0tWzLyYbvO8FgI0xVwe4MksZfRgP8FRejAurjuhCtbYEZ714u/JmLpWUS7VhzmzYpKv/mF9LjavljP565ltXBjLC3Afd2taLqVWrVioiEzQFW8SaUH5Gefhu4DAel2gZBoJi4eEvya0MwpXkjB/cBFuT1PP0eSxyoOtel7fKEjeHKgV/wXfqyAEIgcaZ1XEaZpu4zPdoR0zrcS/TGszYqCc08b86+PnP8Zx8Ibc/MFeG4AAipLf6k54aJxoyGm14b1stknNIOpihWJC8mEXILaGjuxrCrUtlR22Sct1HkGiiSKiZgQn1hWyv/IXdzpqmg9FLBKp3HKA0SS17UM4JhmilW98e/mDO55SB7EHM3uHLhAmqgoiJboqtj3AAUE50WvyHwL1Ww6IXhC3a0kueJaHmtPkKeNE55KXrAqGeek8uyakE38zBzlY2QTxmSReNa0JwyeYn5/kdvp9co1d1eejmLOYauUyCqaOt9w3kouuBu1X4yB9UjRuAE=
 jobs:
   include:
+  - stage: Lint
+    script:
+    - npm run lint
   - stage: Build docker (Dev/Nightly)
     if: tag IS blank
     install: true

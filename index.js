@@ -1,4 +1,3 @@
-const fetch = require("node-fetch")
 const fs = require("fs")
 const Web3 = require("web3")
 const {
@@ -9,26 +8,24 @@ const {
     providers: {JsonRpcProvider}
 } = require("ethers")
 
-
-const TestTokenJson = require("./TestToken.json")
-const OldTokenJson = require("./CrowdsaleToken.json")
-const MarketplaceJson = require("./Marketplace.json")
-const Marketplace2Json = require("./Marketplace2.json")
-const UniswapAdaptor = require("./UniswapAdaptor.json")
-const Uniswap2Adapter = require("./Uniswap2Adapter.json")
-const NodeRegistry = require("./NodeRegistry.json")
-const ENSRegistry = require("./ENSRegistry.json")
-const FIFSRegistrar = require("./FIFSRegistrar.json")
-const PublicResolver = require("./PublicResolver.json")
-const DATAv2 = require("./DATAv2.json")
-const DataTokenMigrator = require("./DataTokenMigrator.json")
-const BinanceAdapter = require("./BinanceAdapter.json")
-
+const TestTokenJson = require("./ethereumContractJSONs/TestToken.json")
+const OldTokenJson = require("./ethereumContractJSONs/CrowdsaleToken.json")
+const MarketplaceJson = require("./ethereumContractJSONs/Marketplace.json")
+const Marketplace2Json = require("./ethereumContractJSONs/Marketplace2.json")
+const UniswapAdaptor = require("./ethereumContractJSONs/UniswapAdaptor.json")
+const Uniswap2Adapter = require("./ethereumContractJSONs/Uniswap2Adapter.json")
+const NodeRegistry = require("./ethereumContractJSONs/NodeRegistry.json")
+const ENSRegistry = require("./ethereumContractJSONs/ENSRegistry.json")
+const FIFSRegistrar = require("./ethereumContractJSONs/FIFSRegistrar.json")
+const PublicResolver = require("./ethereumContractJSONs/PublicResolver.json")
+const DATAv2 = require("./ethereumContractJSONs/DATAv2.json")
+const DataTokenMigrator = require("./ethereumContractJSONs/DataTokenMigrator.json")
+const BinanceAdapter = require("./ethereumContractJSONs/BinanceAdapter.json")
 
 //Uniswap v2
 const UniswapV2Factory = require("./node_modules/@uniswap/v2-core/build/UniswapV2Factory.json")
 const UniswapV2Router02 = require("./node_modules/@uniswap/v2-periphery/build/UniswapV2Router02.json")
-const ExampleSlidingWindowOracle = require("./node_modules/@uniswap/v2-periphery/build/ExampleSlidingWindowOracle.json");
+// const ExampleSlidingWindowOracle = require("./node_modules/@uniswap/v2-periphery/build/ExampleSlidingWindowOracle.json");
 
 const WETH9 = require("./node_modules/@uniswap/v2-periphery/build/WETH9.json")
 
@@ -39,17 +36,19 @@ const uniswap_exchange_bytecode = fs.readFileSync("./bytecode/uniswap_exchange.t
 const uniswap_factory_bytecode = fs.readFileSync("./bytecode/uniswap_factory.txt", "utf-8")
 
 // Streamregistry
-const LinkToken = require('./LinkToken.json')
-const ChainlinkOracle = require('./Oracle.json')
-const ENSCache = require('./ENSCache.json')
-const StreamRegistry = require('./StreamRegistry.json')
+const LinkToken = require('./ethereumContractJSONs/LinkToken.json')
+const ChainlinkOracle = require('./ethereumContractJSONs/Oracle.json')
+const ENSCache = require('./ethereumContractJSONs/ENSCache.json')
+const StreamRegistry = require('./ethereumContractJSONs/StreamRegistry.json')
+
+const StreamStorageRegistry = require('./ethereumContractJSONs/StreamStorageRegistry.json')
 
 const products = require('./products.json')
 
 const chainURL = process.env.CHAIN_URL || "http://10.200.10.1:8545"
 const sidechainURL = process.env.SIDECHAIN_URL || "http://10.200.10.1:8546"
 
-const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
+// const streamrUrl = process.env.EE_URL || "http://10.200.10.1:8081/streamr-core" // production: "https://www.streamr.com"
 const log = require("debug")("eth-init")
 const futureTime = 4449513600
 
@@ -101,35 +100,35 @@ const sidechainDataCoin = '0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF'
 const sidechainSingleTokenMediator = '0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F'
 const chainlinkNodeAddress = '0x7b5F1610920d5BAf00D684929272213BaF962eFe'
 const chainlinkJobId = 'c99333d032ed4cb8967b956c7f0329b5'
+let nodeRegistryAddress = ''
+let streamRegistryAddress = ''
 
 async function getProducts() {
     // return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
     return products
 }
 
-function sleep(ms) {
-    return new Promise(resolve => {
-        setTimeout(resolve, ms)
-    })
-}
+// function sleep(ms) {
+//     return new Promise(resolve => {
+//         setTimeout(resolve, ms)
+//     })
+// }
 
 // AutoNonceWallet allows for omitting .wait()ing for the transactions as long as no reads are done
 // from https://github.com/ethers-io/ethers.js/issues/319
 class AutoNonceWallet extends Wallet {
-    _noncePromise = null;
+    noncePromise = null;
     sendTransaction(transaction) {
         if (transaction.nonce == null) {
-            if (this._noncePromise == null) {
-                this._noncePromise = this.provider.getTransactionCount(this.address);
+            if (this.noncePromise == null) {
+                this.noncePromise = this.provider.getTransactionCount(this.address)
             }
-            transaction.nonce = this._noncePromise;
-            this._noncePromise = this._noncePromise.then((nonce) => (nonce + 1))
+            transaction.nonce = this.noncePromise
+            this.noncePromise = this.noncePromise.then((nonce) => (nonce + 1))
         }
-        return super.sendTransaction(transaction);
+        return super.sendTransaction(transaction)
     }
 }
-
-
 
 /**
  *
@@ -141,19 +140,26 @@ class AutoNonceWallet extends Wallet {
  */
 function getRootNodeFromTLD(tld) {
     return {
-      namehash: namehash(tld),
-      sha3: Web3.utils.sha3(tld)
-    };
-  }
-
+        namehash: namehash(tld),
+        sha3: Web3.utils.sha3(tld)
+    }
+}
 
 async function deployNodeRegistry(wallet, initialNodes, initialMetadata) {
     const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
     const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
+    nodeRegistryAddress = str.address
     log(`NodeRegistry deployed at ${str.address}`)
-    let nodes = await str.getNodes();
+    let nodes = await str.getNodes()
     log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
+}
+
+async function deployStreamStorageRegistry(wallet) {
+    const strDeploy = new ContractFactory(StreamStorageRegistry.abi, StreamStorageRegistry.bytecode, wallet)
+    const strDeployTx = await strDeploy.deploy(streamRegistryAddress, nodeRegistryAddress, wallet.address, {gasLimit: 6000000} )
+    const str = await strDeployTx.deployed()
+    log(`StreamStorageRegistry deployed at ${str.address}`)
 }
 
 async function deployUniswap2(wallet) {
@@ -175,7 +181,7 @@ async function deployUniswap2(wallet) {
 }
 
 async function ethersWallet(url, privateKey) {
-    let provider = new JsonRpcProvider(url);
+    let provider = new JsonRpcProvider(url)
     try {
         await provider.getNetwork()
     } catch (e) {
@@ -224,6 +230,7 @@ async function deployStreamRegistry() {
     const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
     const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, sidechainWalletStreamReg.address)
     const streamRegistry = await streamRegistryFactoryTx.deployed()
+    streamRegistryAddress = streamRegistry.address
     log(`Streamregistry deployed at ${streamRegistry.address}`)
 }
 
@@ -389,25 +396,25 @@ async function smartContractInitialization() {
     }
     log("ENS init complete")
 
-   //deploy 2nd NodeRegistry:
-   log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWallet.address}`)
-   initialNodes = []
-   initialMetadata = []
-   initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
-   initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
-   await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
+    //deploy 2nd NodeRegistry:
+    log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWallet.address}`)
+    initialNodes = []
+    initialMetadata = []
+    initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
+    initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
+    await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
 
-   log(`deploy Uniswap2 mainnet`)
-   const router = await deployUniswap2(wallet)
-   log(`deploy Uniswap2 sidechain`)
-   const uniswapRouterSidechain = await deployUniswap2(sidechainWallet)
+    log(`deploy Uniswap2 mainnet`)
+    const router = await deployUniswap2(wallet)
+    log(`deploy Uniswap2 sidechain`)
+    const uniswapRouterSidechain = await deployUniswap2(sidechainWallet)
 
-   tx = await token.approve(router.address, amt_token)
-   //await tx.wait()
-   tx = await token2.approve(router.address, amt_token2)
-   await tx.wait()
-   log(`addLiquidity Uniswap2 mainnet`)
-   tx = await router.addLiquidity(token.address, token2.address, amt_token, amt_token2, 0, 0, wallet.address, futureTime)
+    tx = await token.approve(router.address, amt_token)
+    //await tx.wait()
+    tx = await token2.approve(router.address, amt_token2)
+    await tx.wait()
+    log(`addLiquidity Uniswap2 mainnet`)
+    tx = await router.addLiquidity(token.address, token2.address, amt_token, amt_token2, 0, 0, wallet.address, futureTime)
 
     let cf = new ContractFactory(Uniswap2Adapter.abi, Uniswap2Adapter.bytecode, wallet)
     let dtx = await cf.deploy(market.address, router.address, token.address)
@@ -464,10 +471,10 @@ async function smartContractInitialization() {
         }
     }
 
-   //put additions here
+    await deployStreamStorageRegistry(sidechainWallet)
+    //put additions here
 
-
-   //all TXs should now be confirmed:
+    //all TXs should now be confirmed:
     log("Loading test products from core")
     let products
     try {
@@ -477,7 +484,6 @@ async function smartContractInitialization() {
         process.exit(1)
     }
 
-
     log(`Adding ${products.length} products to Marketplace`)
     for (const p of products) {
         // free products not supported
@@ -485,12 +491,13 @@ async function smartContractInitialization() {
             continue
         }
         console.log(`create ${p.id}`)
-        const tx = await market.createProduct(`0x${p.id}`, p.name, wallet.address, p.pricePerSecond, p.priceCurrency == "DATA" ? 0 : 1, p.minimumSubscriptionInSeconds)
+        const tx = await market.createProduct(`0x${p.id}`, p.name, wallet.address, p.pricePerSecond, 
+            p.priceCurrency == "DATA" ? 0 : 1, p.minimumSubscriptionInSeconds)
         //await tx.wait(1)
         if (p.state == "NOT_DEPLOYED") {
             console.log(`delete ${p.id}`)
             await tx.wait(1)
-            const tx2 = await market.deleteProduct(`0x${p.id}`)
+            await market.deleteProduct(`0x${p.id}`)
             //await tx2.wait(1)
         }
     }
