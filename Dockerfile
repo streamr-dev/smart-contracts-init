@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:17
 RUN apt-get update && apt-get install -y \
 	build-essential \
 	curl \
