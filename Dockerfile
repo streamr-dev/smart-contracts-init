@@ -26,5 +26,7 @@ RUN npm --version
 COPY ./ ./
 RUN npm ci --only=production
 ENV DEBUG=*
-CMD node index.js && ./bridge/deploy_bridge_and_du2.sh
+
+# run deployments and combine their outputs (addresses) into config.json
+CMD ./run.sh
 

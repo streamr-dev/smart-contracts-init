@@ -96,12 +96,11 @@ function getTestWallet(name, index) {
 }
 
 // these come from the next step, but we can predict the addresses
+// TODO: don't hard-code, just read from output values
 const sidechainDataCoin = '0x73Be21733CC5D08e1a14Ea9a399fb27DB3BEf8fF'
 const sidechainSingleTokenMediator = '0xedD2aa644a6843F2e5133Fe3d6BD3F4080d97D9F'
 const chainlinkNodeAddress = '0x7b5F1610920d5BAf00D684929272213BaF962eFe'
 const chainlinkJobId = 'c99333d032ed4cb8967b956c7f0329b5'
-let nodeRegistryAddress = ''
-let streamRegistryAddress = ''
 
 async function getProducts() {
     // return await (await fetch(`${streamrUrl}/api/v1/products?publicAccess=true`)).json()
@@ -146,20 +145,22 @@ function getRootNodeFromTLD(tld) {
 }
 
 async function deployNodeRegistry(wallet, initialNodes, initialMetadata) {
-    const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
-    const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
-    const str = await strDeployTx.deployed()
-    nodeRegistryAddress = str.address
-    log(`NodeRegistry deployed at ${str.address}`)
-    let nodes = await str.getNodes()
+    const factory = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
+    const tx = await factory.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
+    const contract = await tx.deployed()
+    nodeRegistryAddress = contract.address
+    log(`NodeRegistry deployed at ${contract.address}`)
+    let nodes = await contract.getNodes()
     log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
+    return contract
 }
 
-async function deployStreamStorageRegistry(wallet) {
+async function deployStreamStorageRegistry(wallet, nodeRegistryAddress) {
     const strDeploy = new ContractFactory(StreamStorageRegistry.abi, StreamStorageRegistry.bytecode, wallet)
     const strDeployTx = await strDeploy.deploy(streamRegistryAddress, nodeRegistryAddress, wallet.address, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
     log(`StreamStorageRegistry deployed at ${str.address}`)
+    return str
 }
 
 async function deployUniswap2(wallet) {
@@ -338,7 +339,7 @@ async function smartContractInitialization() {
     initialNodes.push('0xf2C195bE194a2C91e93Eacb1d6d55a00552a85E2')
     initialMetadata.push('{"ws": "ws://10.200.10.1:30303", "http": "http://10.200.10.1:30303"}')
     //1st NodeRegistry deployed here. 2nd below
-    await deployNodeRegistry(wallet, initialNodes, initialMetadata)
+    const trackerNodeRegistry = await deployNodeRegistry(wallet, initialNodes, initialMetadata)
 
     const ethwei = parseEther("1")
     let rate = await datatokenExchange.getTokenToEthInputPrice(ethwei)
@@ -402,7 +403,7 @@ async function smartContractInitialization() {
     initialMetadata = []
     initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
     initialMetadata.push('{"http": "http://10.200.10.1:8891"}')
-    await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
+    const storageNodeRegistry = await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
 
     log(`deploy Uniswap2 mainnet`)
     const router = await deployUniswap2(wallet)
@@ -463,15 +464,18 @@ async function smartContractInitialization() {
     log('Old token getUpgradeState: %d, expected: 3', await oldToken.getUpgradeState())
 
     log(`Minting ${mintTokenAmount} DATAv2 tokens to following addresses:`)
+    const keys = {}
     for (const [projectName, testWalletCount] of projects) {
+        keys[projectName] = []
         for (let i = 0; i < testWalletCount; i++) {
             const testWallet = getTestWallet(projectName, i)
             log("    %s (%s #%d)", testWallet.address, projectName, i)
             await token.mint(testWallet.address, mintTokenAmount)
+            keys[projectName].push(testWallet.privateKey)
         }
     }
 
-    await deployStreamStorageRegistry(sidechainWallet)
+    const streamStorageRegistry = await deployStreamStorageRegistry(sidechainWallet, storageNodeRegistry)
     //put additions here
 
     //all TXs should now be confirmed:
@@ -501,6 +505,49 @@ async function smartContractInitialization() {
             //await tx2.wait(1)
         }
     }
+
+    // DataUnion and bridge (AMB) configs will be added in deploy_du2_factories.js and combined with this in Dockerfile into config.json
+    fs.writeFileSync("addresses.json", JSON.stringify({
+        mainnet: {
+            url: "http://10.200.10.1:8545",
+            chainId: 8995,
+            coreApi: "0xf3E5A65851C3779f468c9EcB32E6f25D9D68601a",
+
+            token: token.address,
+            oldToken: oldToken.address,
+            otherToken: token2.address,
+            nodeRegistry: trackerNodeRegistry.address,
+
+            // Uniswap adapters (for Marketplace)
+            uniswapAdapter: uniswapAdaptor.address,
+            uniswapFactory: uniswapFactory.address,
+            uniswap2Adapter: uniswap2Adapter.address,
+            uniswap2Router: router.address,
+            
+            // ENS
+            ens: ens.address,
+            fifs: fifs.address,
+            ensResolver: resolver.address,
+        },
+        xdai: {
+            url: "http://10.200.10.1:8546",
+            chainId: 8997,
+
+            streamRegistry: streamRegistry.address,
+            storageNodeRegistry: storageNodeRegistry.address,
+            streamStorageRegistry: streamStorageRegistry.address,
+            
+            // DU2, for withdrawing from Data Union to other chains (e.g. BSC)
+            binanceAdapter: binanceAdapter.address,
+            uniswap2Router: uniswapRouterSidechain.address,
+
+            // ENS caching in sidechain, to be able to tell who owns an ENS name (and has the right to create streams to that namespace)
+            ensCache: ensCache.address,
+            chainlinkOracle: oracle.address,
+            linkToken: linkToken.address,
+        },
+        keys
+    }))
 }
 
 smartContractInitialization()

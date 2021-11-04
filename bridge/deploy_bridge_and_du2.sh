@@ -9,6 +9,7 @@ CONTRACTS=streamr/tokenbridge-contracts
 
 AMBRESULTS="bridgeDeploymentResultsAMB.json"
 ERC677RESULTS="bridgeDeploymentResultsERC677.json"
+OMNIBRIDGERESULTS="bridgeDeploymentResultsOmnibridge.json"
 
 echo "1. Deploying AMB"
 TASK=amb
@@ -39,8 +40,11 @@ CONTRACTS=poanetwork/omnibridge
 TASK=omnibridge
 ENV="-e HOME_AMB_BRIDGE=$HOME_AMB_BRIDGE -e FOREIGN_AMB_BRIDGE=$FOREIGN_AMB_BRIDGE"
 docker run --name $TASK $ENV --env-file omnibridgeMediator.env $CONTRACTS deploy.sh
-docker cp $TASK:/contracts/deploy/bridgeDeploymentResults.json $ERC677RESULTS
+docker cp $TASK:/contracts/deploy/bridgeDeploymentResults.json $OMNIBRIDGERESULTS
 docker rm $TASK
+
+export FOREIGN_OMNIBRIDGE=`jq -r .foreignBridge.foreignBridgeMediator.address` < $OMNIBRIDGERESULTS
+export HOME_OMNIBRIDGE=`jq -r .homeBridge.homeBridgeMediator.address` < $OMNIBRIDGERESULTS
 
 echo "3. Deploying DataUnion and Factory Contracts"
 node ../deploy_du2_factories.js
