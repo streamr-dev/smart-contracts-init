@@ -116,7 +116,7 @@ async function getProducts() {
 // AutoNonceWallet allows for omitting .wait()ing for the transactions as long as no reads are done
 // from https://github.com/ethers-io/ethers.js/issues/319
 class AutoNonceWallet extends Wallet {
-    noncePromise = null;
+    noncePromise = null
     sendTransaction(transaction) {
         if (transaction.nonce == null) {
             if (this.noncePromise == null) {
@@ -155,7 +155,7 @@ async function deployNodeRegistry(wallet, initialNodes, initialMetadata) {
     return contract
 }
 
-async function deployStreamStorageRegistry(wallet, nodeRegistryAddress) {
+async function deployStreamStorageRegistry(wallet, nodeRegistryAddress, streamRegistryAddress) {
     const strDeploy = new ContractFactory(StreamStorageRegistry.abi, StreamStorageRegistry.bytecode, wallet)
     const strDeployTx = await strDeploy.deploy(streamRegistryAddress, nodeRegistryAddress, wallet.address, {gasLimit: 6000000} )
     const str = await strDeployTx.deployed()
@@ -231,8 +231,8 @@ async function deployStreamRegistry() {
     const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
     const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, sidechainWalletStreamReg.address)
     const streamRegistry = await streamRegistryFactoryTx.deployed()
-    streamRegistryAddress = streamRegistry.address
     log(`Streamregistry deployed at ${streamRegistry.address}`)
+    return streamRegistry
 }
 
 async function smartContractInitialization() {
@@ -428,7 +428,7 @@ async function smartContractInitialization() {
     const binanceAdapter = await dtx.deployed()
     log(`sidechain binanceAdapter ${binanceAdapter.address}`)
 
-    await deployStreamRegistry()
+    const streamRegistry = await deployStreamRegistry()
 
     // TODO: move these deployments to the top once address change pains are solved
     log(`Deploying test DATAv1 from ${wallet.address}`)
@@ -475,7 +475,7 @@ async function smartContractInitialization() {
         }
     }
 
-    const streamStorageRegistry = await deployStreamStorageRegistry(sidechainWallet, storageNodeRegistry)
+    const streamStorageRegistry = await deployStreamStorageRegistry(sidechainWallet, storageNodeRegistry.address, streamRegistry.address)
     //put additions here
 
     //all TXs should now be confirmed:
@@ -507,7 +507,7 @@ async function smartContractInitialization() {
     }
 
     // DataUnion and bridge (AMB) configs will be added in deploy_du2_factories.js and combined with this in Dockerfile into config.json
-    fs.writeFileSync("addresses.json", JSON.stringify({
+    const addressJsonString = JSON.stringify({
         mainnet: {
             url: "http://10.200.10.1:8545",
             chainId: 8995,
@@ -547,7 +547,9 @@ async function smartContractInitialization() {
             linkToken: linkToken.address,
         },
         keys
-    }))
+    })
+    console.log(addressJsonString)
+    fs.writeFileSync("addresses.json", addressJsonString)
 }
 
 smartContractInitialization()
