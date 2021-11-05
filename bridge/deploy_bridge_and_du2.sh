@@ -43,6 +43,9 @@ docker run --name $TASK $ENV --env-file omnibridgeMediator.env $CONTRACTS deploy
 docker cp $TASK:/contracts/deploy/bridgeDeploymentResults.json $OMNIBRIDGERESULTS
 docker rm $TASK
 
+# TODO: the following set env vars to empty because $OMNIBRIDGERESULTS is empty
+#       reason is probably that /contracts/deploy/bridgeDeploymentResults.json isn't where expected
+#       need to investigate what the poanetwork/omnibridge deploy.sh produces
 export FOREIGN_OMNIBRIDGE=`jq -r .foreignBridge.foreignBridgeMediator.address` < $OMNIBRIDGERESULTS
 export HOME_OMNIBRIDGE=`jq -r .homeBridge.homeBridgeMediator.address` < $OMNIBRIDGERESULTS
 
