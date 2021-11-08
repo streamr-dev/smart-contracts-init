@@ -1,3 +1,5 @@
+const fs = require("fs")
+
 const {
     ContractFactory,
     Wallet,
@@ -81,6 +83,29 @@ async function deployDUFactories(){
     let factMainnet = await dtx.deployed()
     console.log(`factMainnet: ${factMainnet.address}`)
 
+    fs.writeFileSync("du-addresses.json", JSON.stringify({
+        mainnet: {
+            dataUnionFactory: factMainnet.address,
+            dataUnionTemplate: duforeign.address,
+            tokenMigrator: mainnetMigrationMgr.address,
+
+            // env variables that are set in deploy_bridge_and_du2.sh
+            tokenMediator: process.env.FOREIGN_ERC677_MEDIATOR,
+            amb: process.env.FOREIGN_AMB_BRIDGE,
+            omnibridge: process.env.FOREIGN_OMNIBRIDGE,
+        },
+        xdai: {
+            dataUnionFactory: factSidechain.address,
+            dataUnionTemplate: duhome.address,
+            tokenMigrator: sidechainMigrationMgr.address,
+
+            // env variables that are set in deploy_bridge_and_du2.sh
+            token: process.env.HOME_ERC677,
+            tokenMediator: process.env.HOME_ERC677_MEDIATOR,
+            amb: process.env.HOME_AMB_BRIDGE,
+            omnibridge: process.env.HOME_OMNIBRIDGE,
+        }
+    }))
 }
 
 async function start() {

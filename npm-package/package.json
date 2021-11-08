@@ -1,0 +1,9 @@
+{
+  "name": "streamr-dev-config",
+  "version": "1.0.1",
+  "description": "Addresses of Streamr-related contracts (and other Ethereum configuration) in the Docker dev environment",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "author": "Streamr Network AG",
+  "license": "MIT"
+}
