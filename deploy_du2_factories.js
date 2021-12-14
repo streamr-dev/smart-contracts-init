@@ -1,7 +1,8 @@
 const {
     ContractFactory,
     Wallet,
-    providers: { JsonRpcProvider }
+    providers: { JsonRpcProvider },
+    utils: { getAddress },
 } = require("ethers")
 
 const DataUnionMainnet = require("./ethereumContractJSONs/DataUnionMainnet.json")
@@ -29,13 +30,16 @@ const wallet_foreign = new Wallet('0xe5af7834455b7239881b85be89d905d6881dcb47510
 const home_erc_mediator = process.env.HOME_ERC677_MEDIATOR
 const foreign_erc_mediator = process.env.FOREIGN_ERC677_MEDIATOR
 
-const foreign_erc20 = process.env.ERC20_TOKEN_ADDRESS
-const home_erc677 = process.env.HOME_ERC677
+// getAddress throws if bad address or env var not set
+const foreign_erc20 = getAddress(process.env.ERC20_TOKEN_ADDRESS)
+const home_erc677 = getAddress(process.env.HOME_ERC677)
+const foreign_mediator = getAddress(process.env.FOREIGN_ERC677_MEDIATOR)
+const home_mediator = getAddress(process.env.HOME_ERC677_MEDIATOR)
 const zeroAddress = "0x0000000000000000000000000000000000000000"
 
 log(`foreign_erc20 ${foreign_erc20} home_erc677 ${home_erc677}`)
 
-async function deployDUFactories(){
+async function deployDUFactories() {
     log(`Deploying template DU home contract from ${wallet_home.address}`)
     let deployer = new ContractFactory(DataUnionSidechain.abi, DataUnionSidechain.bytecode, wallet_home)
     let dtx = await deployer.deploy({ gasLimit: 6000000 })
@@ -63,21 +67,33 @@ async function deployDUFactories(){
     // constructor( address _token_mediator, address _data_union_sidechain_template) public {
     log(`Deploying sidechain DU factory contract from ${wallet_home.address}`)
     deployer = new ContractFactory(DataUnionFactorySidechain.abi, DataUnionFactorySidechain.bytecode, wallet_home)
-    dtx = await deployer.deploy(sidechainMigrationMgr.address, duhome.address, { gasLimit: 6000000 })
+    dtx = await deployer.deploy(duhome.address, { gasLimit: 6000000 })
     let factSidechain = await dtx.deployed()
     console.log(`factorySidechain: ${factSidechain.address}`)
 
-    /*
-    ( address _token_mediator, 
-                address _data_union_mainnet_template,
-                address _data_union_sidechain_template,
-                address _data_union_sidechain_factory,
-                uint256 _sidechain_maxgas)
+    /*  constructor(
+            address _dataUnionMainnetTemplate,
+            address _dataUnionSidechainTemplate,
+            address _dataUnionSidechainFactory,
+            address _defaultTokenMainnet,
+            address _defaultTokenMediatorMainnet,
+            address _defaultTokenSidechain,
+            address _defaultTokenMediatorSidechain,
+            uint256 _sidechainMaxGas)
     */
-    // constructor( address _token_mediator, address _data_union_sidechain_template) public {
     log(`Deploying DU mainnet factory contract from ${wallet_foreign.address}`)
     deployer = new ContractFactory(DataUnionFactoryMainnet.abi, DataUnionFactoryMainnet.bytecode, wallet_foreign)
-    dtx = await deployer.deploy(mainnetMigrationMgr.address, duforeign.address, duhome.address, factSidechain.address, 2000000, { gasLimit: 6000000 })
+    dtx = await deployer.deploy(
+        duforeign.address,
+        duhome.address,
+        factSidechain.address,
+        foreign_erc20,
+        foreign_mediator,
+        home_erc677,
+        home_mediator,
+        2000000,
+        { gasLimit: 6000000 }
+    )
     let factMainnet = await dtx.deployed()
     console.log(`factMainnet: ${factMainnet.address}`)
 
@@ -85,7 +101,7 @@ async function deployDUFactories(){
 
 async function start() {
     try {
-        await deployDUFactories() 
+        await deployDUFactories()
     }
     catch (err) {
         console.error(err)
