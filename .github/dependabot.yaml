@@ -15,7 +15,8 @@ updates:
     labels:
       - actions
       - dependencies
-
+    assignees:
+      - DaisyDomergue
   - package-ecosystem: npm
     directory: /
     schedule:
