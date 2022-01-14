@@ -10,19 +10,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ethersproject/bignumber": "^5.5.0",
+    "@openzeppelin/hardhat-upgrades": "^1.13.0",
     "@uniswap/v2-core": "^1.0.1",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "debug": "^4.3.1",
-    "ethers": "^4.0.47",
+    "ethers": "^5.0.0",
     "node-fetch": "2.6.1",
     "web3": "1.2.4"
   },
   "devDependencies": {
-    "eslint-config-streamr-ts": "^4.0.1",
-    "eslint": "^7.25.0",
-    "eslint-plugin-promise": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/parser": "^4.22.1",
+    "eslint": "^7.25.0",
+    "eslint-config-streamr-ts": "^4.0.1",
+    "eslint-plugin-promise": "^5.1.0",
     "typescript": "^4.4.4"
   }
 }

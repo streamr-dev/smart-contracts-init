@@ -3,10 +3,13 @@ const Web3 = require("web3")
 const {
     Contract,
     ContractFactory,
-    utils: {computeAddress, parseEther, formatEther, namehash, id, bigNumberify},
+    constants,
+    utils: {computeAddress, parseEther, formatEther, namehash, id},
     Wallet,
     providers: {JsonRpcProvider}
 } = require("ethers")
+const { upgrades } = require('hardhat')
+const { BigNumber } = require('@ethersproject/bignumber')
 
 const TestTokenJson = require("./ethereumContractJSONs/TestToken.json")
 const OldTokenJson = require("./ethereumContractJSONs/CrowdsaleToken.json")
@@ -15,6 +18,7 @@ const Marketplace2Json = require("./ethereumContractJSONs/Marketplace2.json")
 const UniswapAdaptor = require("./ethereumContractJSONs/UniswapAdaptor.json")
 const Uniswap2Adapter = require("./ethereumContractJSONs/Uniswap2Adapter.json")
 const NodeRegistry = require("./ethereumContractJSONs/NodeRegistry.json")
+const TrackerRegistry = require("./ethereumContractJSONs/TrackerRegistry.json")
 const ENSRegistry = require("./ethereumContractJSONs/ENSRegistry.json")
 const FIFSRegistrar = require("./ethereumContractJSONs/FIFSRegistrar.json")
 const PublicResolver = require("./ethereumContractJSONs/PublicResolver.json")
@@ -146,18 +150,21 @@ function getRootNodeFromTLD(tld) {
 }
 
 async function deployNodeRegistry(wallet, initialNodes, initialMetadata) {
-    const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, wallet)
+    const strDeploy = new ContractFactory(TrackerRegistry.abi, TrackerRegistry.bytecode, wallet)
     const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
-    const str = await strDeployTx.deployed()
-    nodeRegistryAddress = str.address
-    log(`NodeRegistry deployed at ${str.address}`)
-    let nodes = await str.getNodes()
-    log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
+    await strDeployTx.deployed()
+    // nodeRegistryAddress = str.address
+    // log(`NodeRegistry deployed at ${str.address}`)
+    // let nodes = await str.getNodes()
+    // log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
 }
 
 async function deployStreamStorageRegistry(wallet) {
     const strDeploy = new ContractFactory(StreamStorageRegistry.abi, StreamStorageRegistry.bytecode, wallet)
-    const strDeployTx = await strDeploy.deploy(streamRegistryAddress, nodeRegistryAddress, wallet.address, {gasLimit: 6000000} )
+    // const strDeployTx = await strDeploy.deploy(streamRegistryAddress, nodeRegistryAddress, wallet.address, {gasLimit: 6000000} )
+    const strDeployTx = await upgrades.deployProxy(strDeploy, [streamRegistryAddress, nodeRegistryAddress, constants.AddressZero], {
+        kind: 'uups'
+    })
     const str = await strDeployTx.deployed()
     log(`StreamStorageRegistry deployed at ${str.address}`)
 }
@@ -191,7 +198,7 @@ async function ethersWallet(url, privateKey) {
     return new AutoNonceWallet(privateKey, provider)
 }
 
-async function deployStreamRegistry() {
+async function deployStreamRegistries() {
     const sidechainWalletStreamReg = await ethersWallet(sidechainURL, privKeyStreamRegistry)
 
     log('Sending some Ether to chainlink node address')
@@ -199,6 +206,10 @@ async function deployStreamRegistry() {
         to: chainlinkNodeAddress,
         value: parseEther('100')
     })
+
+    // const strDeploy = await ethers.getContractFactory('NodeRegistry')
+    // const strDeployTx = await upgrades.deployProxy(strDeploy, [accounts[0].address, false, initialNodes, initialMetadata], { kind: 'uups' })
+    // nodeRegAsCreator = await strDeployTx.deployed()
 
     log('Deploying Streamregistry and chainlink contracts to sidechain:')
     const linkTokenFactory = new ContractFactory(LinkToken.abi, LinkToken.bytecode, sidechainWalletStreamReg)
@@ -219,19 +230,37 @@ async function deployStreamRegistry() {
     log(`Chainlink Oracle permission for ${chainlinkNodeAddress} is ${permission}`)
 
     const ensCacheFactory = new ContractFactory(ENSCache.abi, ENSCache.bytecode, sidechainWalletStreamReg)
-    const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, chainlinkJobId, linkToken.address)
+    const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, chainlinkJobId)
     const ensCache = await ensCacheFactoryTx.deployed()
     log(`ENSCache deployed at ${ensCache.address}`)
     log(`ENSCache setting Link token address ${linkToken.address}`)
     await ensCache.setChainlinkTokenAddress(linkToken.address)
 
     log('Sending some Link to ENSCache')
-    await linkToken.transfer(ensCache.address, bigNumberify('1000000000000000000000')) // 1000 link
+    await linkToken.transfer(ensCache.address, BigNumber.from('1000000000000000000000')) // 1000 link
 
     const wallet1 = new Wallet('0x000000000000000000000000000000000000000000000000000000000000000a')
 
+    log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWalletStreamReg.address}`)
+    initialNodes = []
+    initialMetadata = []
+    initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
+    initialMetadata.push('{"http": "http://10.200.10.1:8891/api/v1"}')
+    const strDeploy = new ContractFactory(NodeRegistry.abi, NodeRegistry.bytecode, sidechainWalletStreamReg)
+    // const strDeploy = await ethers.getContractFactory('NodeRegistry')
+    const strDeployTx = await upgrades.deployProxy(strDeploy, 
+        [sidechainWalletStreamReg.address, false, initialNodes, initialMetadata], { kind: 'uups' })
+    // const strDeployTx = await strDeploy.deploy(wallet.address, false, initialNodes, initialMetadata, {gasLimit: 6000000} )
+    const nodeRegDeployed = await strDeployTx.deployed()
+    nodeRegistryAddress = nodeRegDeployed.address
+    log(`NodeRegistry deployed at ${nodeRegDeployed.address}`)
+    let nodes = await nodeRegDeployed.getNodes()
+    log(`NodeRegistry nodes : ${JSON.stringify(nodes)}`)
+
     const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
-    const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, wallet1.address)
+    const streamRegistryFactoryTx = await upgrades.deployProxy(streamRegistryFactory, [ensCache.address, wallet1.address], {
+        kind: 'uups'
+    })
     const streamRegistry = await streamRegistryFactoryTx.deployed()
     streamRegistryAddress = streamRegistry.address
     log(`Streamregistry deployed at ${streamRegistry.address}`)
@@ -255,7 +284,7 @@ async function smartContractInitialization() {
     // const tokenDeployTx = await tokenDeployer.deploy("Test DATAv2", "\ud83e\udd84") // unicorn
     // const token = await tokenDeployTx.deployed()
     // log(`New DATAv2 ERC20 deployed at ${token.address}`)
-
+    await deployStreamRegistries()
     // log(`Deploying test DATAv2 from ${wallet.address}`)
     const tokenDeployer = await new ContractFactory(DATAv2.abi, DATAv2.bytecode, wallet)
     const tokenDeployTx = await tokenDeployer.deploy()
@@ -408,12 +437,15 @@ async function smartContractInitialization() {
     }
     log("ENS init complete")
 
-    //deploy 2nd NodeRegistry:
-    log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWallet.address}`)
+    // deploy 2nd NodeRegistry:
+    // TODO remove this node registry deployment
+    // this is not used any more, but still needs to be here because otherwise all following addresses would change
+    // currently used ones is in deployRegistries() and is deployed proxified
+    // log(`Deploying NodeRegistry contract 2 (storage node registry) to sidechain from ${sidechainWallet.address}`)
     initialNodes = []
     initialMetadata = []
-    initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
-    initialMetadata.push('{"http": "http://10.200.10.1:8891/api/v1"}')
+    // initialNodes.push('0xde1112f631486CfC759A50196853011528bC5FA0')
+    // initialMetadata.push('{"http": "http://10.200.10.1:8891/api/v1"}')
     await deployNodeRegistry(sidechainWallet, initialNodes, initialMetadata)
 
     log(`deploy Uniswap2 mainnet`)
@@ -439,7 +471,7 @@ async function smartContractInitialization() {
     const binanceAdapter = await dtx.deployed()
     log(`sidechain binanceAdapter ${binanceAdapter.address}`)
 
-    await deployStreamRegistry()
+    await deployStreamRegistries()
 
     // TODO: move these deployments to the top once address change pains are solved
     log(`Deploying test DATAv1 from ${wallet.address}`)
