@@ -1,4 +1,11 @@
 # Smart Contract init
+
+
+
+**NOTE: This repo is deprecated! See** https://github.com/streamr-dev/network-contracts
+
+
+
 This repo is used to build the parity images streamr/open-ethereum-poa-mainchain-preload1 and streamr/open-ethereum-poa-sidechain-preload1, which are preloaded mainchain and sidechain images for use with streamr-docker.dev. The following are setup:
  * Marketplace
    * Also test products are loaded (see products.json)
