@@ -213,12 +213,13 @@ async function deployStreamRegistry() {
     log(`Chainlink Oracle deployed at ${oracle.address}`)
     const tokenaddrFromOracle = await oracle.getChainlinkToken()
     log(`Chainlink Oracle token pointing to ${tokenaddrFromOracle}`)
-    await oracle.setFulfillmentPermission(chainlinkNodeAddress, true)
+    const fulfilmentPermissionTX = await oracle.setFulfillmentPermission(chainlinkNodeAddress, true)
+    await fulfilmentPermissionTX.wait()
     const permission = await oracle.getAuthorizationStatus(chainlinkNodeAddress)
     log(`Chainlink Oracle permission for ${chainlinkNodeAddress} is ${permission}`)
 
     const ensCacheFactory = new ContractFactory(ENSCache.abi, ENSCache.bytecode, sidechainWalletStreamReg)
-    const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, chainlinkJobId)
+    const ensCacheFactoryTx = await ensCacheFactory.deploy(oracle.address, chainlinkJobId, linkToken.address)
     const ensCache = await ensCacheFactoryTx.deployed()
     log(`ENSCache deployed at ${ensCache.address}`)
     log(`ENSCache setting Link token address ${linkToken.address}`)
@@ -227,11 +228,22 @@ async function deployStreamRegistry() {
     log('Sending some Link to ENSCache')
     await linkToken.transfer(ensCache.address, bigNumberify('1000000000000000000000')) // 1000 link
 
+    const wallet1 = new Wallet('0x000000000000000000000000000000000000000000000000000000000000000a')
+
     const streamRegistryFactory = new ContractFactory(StreamRegistry.abi, StreamRegistry.bytecode, sidechainWalletStreamReg)
-    const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, sidechainWalletStreamReg.address)
+    const streamRegistryFactoryTx = await streamRegistryFactory.deploy(ensCache.address, wallet1.address)
     const streamRegistry = await streamRegistryFactoryTx.deployed()
     streamRegistryAddress = streamRegistry.address
     log(`Streamregistry deployed at ${streamRegistry.address}`)
+    
+    log(`setting Streamregistry address in ENSCache`)
+    await ensCache.setStreamRegistry(streamRegistry.address)
+    log(`setting enscache address as trusted role in streamregistry`)
+    
+    const ensa = ensCache.address
+    const role = await streamRegistry.TRUSTED_ROLE()
+    log(`granting role ${role} ensaddress ${ensa}`)
+    await streamRegistry.grantRole(role, ensa)
 }
 
 async function smartContractInitialization() {
